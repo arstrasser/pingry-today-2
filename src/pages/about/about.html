@@ -1,0 +1,31 @@
+<!--
+  Generated template for the AboutPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>About</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+  <ion-list>
+		<ion-item><b>Version: </b>{{appVersion}}</ion-item>
+		<ion-item><b>Author: </b>Alex Strasser '19</ion-item>
+		<ion-item>
+			<div><b>Credits: </b></div>
+			<span>Dillon Shu '19</span><span style="float:right">Android Assistant</span>
+			<br>
+			<span>Brian Kaplan '19</span><span style="float:right">iOS Assistant</span>
+			<br>
+			<span>Steve Frantz</span><span style="float:right">Backend Logistics</span>
+		</ion-item>
+		<a ion-item (click)="openHelp()">Found a bug or have a request?</a>
+	</ion-list>
+</ion-content>

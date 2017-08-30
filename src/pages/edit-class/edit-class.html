@@ -1,0 +1,94 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Class Editor</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+  <ion-list>
+    <ion-item id="className">
+      <ion-label fixed>Name</ion-label>
+      <ion-input type="text" [(ngModel)]="cls.name"></ion-input>
+    </ion-item>
+		<ion-item (click)="openColorPicker()" [ngStyle]="{'background-color':cls.color, 'text-align':'center'}">
+			Color
+		</ion-item>
+    <ion-item>
+      <ion-label>Type</ion-label>
+      <ion-select [(ngModel)]="cls.type" (ngModelChange)="cls.time.id=false; cls.time.day='';">
+        <ion-option value="block">Class</ion-option>
+        <ion-option value="flex">Flex</ion-option>
+        <ion-option value="CP">CP</ion-option>
+      </ion-select>
+    </ion-item>
+		<ion-item style="pointer-events:initial !important" *ngIf="cls.type=='block'">
+			<ion-label (click)="lunchHelp()">First Lunch<ion-icon name="help-circled"></ion-icon></ion-label>
+			<ion-toggle [(ngModel)]="cls.firstLunch"></ion-toggle>
+		</ion-item>
+    <ion-item *ngIf="cls.type=='block'">
+			<ion-label>Science</ion-label>
+			<ion-toggle [(ngModel)]="cls.takesFlex"></ion-toggle>
+		</ion-item>
+    <ion-item *ngIf="cls.type=='block'">
+      <ion-label>Period</ion-label>
+      <ion-select [(ngModel)]="cls.time.id">
+        <ion-option value="1">1</ion-option>
+        <ion-option value="2">2</ion-option>
+        <ion-option value="3">3</ion-option>
+        <ion-option value="4">4</ion-option>
+        <ion-option value="5">5</ion-option>
+        <ion-option value="6">6</ion-option>
+        <ion-option value="7">7</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item *ngIf="cls.type=='flex'">
+			<ion-label>First Flex</ion-label>
+			<ion-toggle [(ngModel)]="cls.time.id"></ion-toggle>
+		</ion-item>
+    <ion-item *ngIf="cls.type=='flex'||cls.type=='CP'">
+      <ion-label>Timing Type</ion-label>
+      <ion-select [(ngModel)]="cls.timeType">
+        <ion-option value="weekday">Day of the Week</ion-option>
+        <ion-option value="letter">Letter Day</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item *ngIf="(cls.type=='flex'||cls.type=='CP')&&cls.timeType=='letter'">
+      <ion-label>Letter</ion-label>
+      <ion-select [(ngModel)]="cls.time.day">
+        <ion-option value="A">A</ion-option>
+        <ion-option value="B">B</ion-option>
+        <ion-option value="C">C</ion-option>
+        <ion-option value="D">D</ion-option>
+        <ion-option value="E">E</ion-option>
+        <ion-option value="F">F</ion-option>
+        <ion-option value="G">G</ion-option>
+      </ion-select>
+    </ion-item>    
+    <ion-item *ngIf="(cls.type=='flex'||cls.type=='CP')&&cls.timeType=='weekday'">
+      <ion-label>Letter</ion-label>
+      <ion-select [(ngModel)]="cls.time.day">
+        <ion-option value="1">Monday</ion-option>
+        <ion-option value="2">Tuesday</ion-option>
+        <ion-option value="3">Wednesday</ion-option>
+        <ion-option value="4">Thursday</ion-option>
+        <ion-option value="5">Friday</ion-option>
+      </ion-select>
+    </ion-item>
+
+		<button ion-button full color="primary" (click)="update(cls)" *ngIf="modifying" [disabled]="!isValid(cls)">Update</button>
+		<button ion-button full color="danger" (click)="delete()" *ngIf="modifying" class="submit-btn">Delete Class</button>
+		<button ion-button full color="primary" (click)="submit(cls)" *ngIf="!modifying" [disabled]="!isValid(cls)">Submit</button>
+    <button ion-button full color="light" (click)="back()" class="submit-btn">Cancel</button>
+		<!-- Type Dropdown               Class, Flex, CP, -->
+		<!-- Timing Selection -->
+			<!-- First Lunch Toggle      Class    -->
+			<!-- Takes Flex Toggle       Class    -->
+			<!-- Block Period            Class    -->
+			<!-- Repeating Toggle        Flex, CP -->
+			<!-- Flex 1st/2nd            Flex     -->
+			<!-- Letter vs Day           Flex, CP -->
+				<!-- Letter Selection        Flex, CP -->
+				<!-- Day Selection           Flex, CP -->
+	</ion-list>
+</ion-content>

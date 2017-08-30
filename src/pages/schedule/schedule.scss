@@ -1,0 +1,103 @@
+page-schedule {
+  ion-datetime {
+    position: relative;
+  }
+  .toolbar-content {
+    display: flex;
+  }
+
+  .row {
+    padding: 3px;
+  }
+
+  .ddd-icon {
+    width:34px;
+    height:34px;
+    flex: 0 1;
+    margin-right: 10px;
+  }
+
+  .class-name.block {
+    line-height: 3.6em;
+  }
+
+  .class-name.staticblock {
+    line-height: 2.4em;
+  }
+
+  #nonSchoolDay {
+  	font-weight:bold;
+  	font-size:25px;
+  	text-align:center;
+  	padding:30px;
+  }
+
+  #changeDayMenu {
+  	display:inline-block;
+  	max-width:calc(100% - 62px);
+  	min-width:calc(100% - 62px);
+  	height:55px;
+  	text-align:center;
+  }
+
+  #currentDay {
+  	display:inline-block;
+    padding: 5px;
+  	padding-top:10px;
+  	padding-bottom:10px;
+  	width: calc(100% - 80px);
+  }
+
+  #changeDayLeft, #changeDayRight {
+  	font-size:40px;
+  	display:inline-block;
+    vertical-align: center;
+  }
+
+  #changeDayLeft, #changeDayRight {
+    width:40px;
+  }
+
+  .changeDayIcon.icon-ios {
+    font-size:1em;
+  }
+
+  #changeDayLeft {
+  	float:left;
+  }
+
+  #changeDayRight {
+  	float:right;
+  }
+
+  #letterMenu {
+  	float:right;
+  	text-align:center;
+  	background-color:#ddd;
+  	padding:10px;
+  	padding-bottom:2px;
+    padding-top:2px;
+  	max-width:61px;
+  }
+
+  #letter {
+  	font-family:sans-serif;
+  	font-size:35px;
+  }
+
+  #mySchedule div{
+  	color:#000 !important;
+  }
+
+  #periods {
+  	font-size:10px;
+  }
+}
+
+.ios {
+  .ddd-icon {
+    position:absolute;
+    margin-top: -1.2em;
+    right:0px;
+  }
+}

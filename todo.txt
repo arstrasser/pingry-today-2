@@ -1,0 +1,26 @@
+TODO:
+
+Bugs:
+ - Change HTML element ID's to classes
+ - Add an easter egg
+ - What is angular query?
+ - Check Caching of http requests
+ - Announcement/News RSS description
+
+Schedule Page:
+ - Weird date delay for swiping (Manually update angular scope?)
+
+New Remote Database:
+ - calendar URL's
+ - Snow Days
+ - Change file location
+
+Features:
+ - LocalForage or IndexedDB or SQLite
+ - Push Notifications
+ - Veracross Connection
+ - Replace Cordova Toast
+ - Notifications
+ - Timed Todo's
+
+Search for other TODO's
