@@ -1,19 +1,15 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, Events, Content } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Events, Content, ModalController } from 'ionic-angular';
 
 import { DateFunctionsProvider } from '../../providers/date-functions/date-functions';
 import { LetterDayProvider } from '../../providers/letter-day/letter-day';
 import { ScheduleProvider } from '../../providers/schedule/schedule';
 import { MyScheduleProvider } from '../../providers/my-schedule/my-schedule';
 import { MessagesProvider } from '../../providers/messages/messages';
+import { NotificationsProvider } from '../../providers/notifications/notifications';
 
+import { TodoConfigPage } from '../todo-config/todo-config';
 
-/**
- * Generated class for the AboutPage page.
- *
- * See http://ionicframework.com/docs/components/#navigation for more info
- * on Ionic pages and navigation.
- */
 @IonicPage()
 @Component({
   selector: 'page-todo',
@@ -22,9 +18,14 @@ import { MessagesProvider } from '../../providers/messages/messages';
 export class TodoPage {
   @ViewChild(Content) content:Content;
   classes:Array<any>;
+  timeouts:any = {};
+  maxDay:string = "";
+  minDay:string = "";
   constructor(public navCtrl: NavController, public navParams:NavParams, public dfp:DateFunctionsProvider, public messages: MessagesProvider, public events: Events,
-              public letterDay:LetterDayProvider, public schedule:ScheduleProvider, public mySched:MyScheduleProvider) {
+              public letterDay:LetterDayProvider, public schedule:ScheduleProvider, public mySched:MyScheduleProvider, public modalCtrl:ModalController, public notifications:NotificationsProvider) {
     this.refresh();
+    this.maxDay = (new Date().getFullYear() + 1)+"-08-31";
+    this.minDay = (new Date().getFullYear() - 1)+"-08-31";
   }
 
   ionViewDidEnter(){
@@ -47,8 +48,6 @@ export class TodoPage {
   refresh() {
     let startingClass;
     let nextDate = this.letterDay.nextLetterDayDate(new Date());
-    console.log(nextDate);
-    let scheduleCurrentDay = this.schedule.getCurrentDay();
     console.log(nextDate);
     if(nextDate !== undefined){
       var classes = this.letterDay.classesOf(nextDate);
@@ -86,13 +85,13 @@ export class TodoPage {
       else{
         startingClass = classes[0];
       }
-      this.schedule.changeDay(scheduleCurrentDay);
     }else{
       startingClass = 1;
     }
 
     var classList = [];
     for(var i = 0; i < 7; i++){
+      console.log(startingClass);
       var thisClass = this.mySched.get("block", (startingClass-1+i)%7 + 1);
       if(thisClass != undefined){
         classList.push(thisClass);
@@ -106,15 +105,61 @@ export class TodoPage {
           j--;
         }
       }
+      classList[i].tasks.sort((a,b)=> {
+        if(!a.date) return 1;
+        if(!b.date) return -1;
+        let d1 = new Date(a.date.substring(0,4), a.date.substring(5,7), a.date.substring(8,10)).getTime();
+        let d2 = new Date(b.date.substring(0,4), b.date.substring(5,7), b.date.substring(8,10)).getTime();
+        if(d1==d2) return 0;
+        if(d1<d2) return -1;
+        return 1;
+      });
     }
     this.classes = classList;
+    //this.classes[0].tasks[0].date = this.dateToISO(new Date());
+    console.log(this.classes);
+  }
+
+  openTodoConfig(clsIndex, taskIndex){
+    let modal = this.modalCtrl.create(TodoConfigPage, {clsId:this.classes[clsIndex].time.id, taskIndex});
+    modal.present();
+    modal.onWillDismiss(()=>{
+      this.refresh();
+    })
+  }
+
+  dateToISO(date){
+    //return date.getHours()+":"+(date.getMinutes()<10?"0":"")+date.getMinutes();
+    return date.getFullYear()+"-"+
+      (date.getMonth()+1<10?"0":"")+(date.getMonth()+1)+"-"+
+      (date.getDate()<10?"0":"")+date.getDate()+"T"+
+      (date.getHours()<10?"0":"")+date.getHours()+":"+
+      (date.getMinutes()<10?"0":"")+date.getMinutes()+":00";
+  }
+
+  ISOtoDate(str){
+    return new Date(str.substring(0,4), (parseInt(str.substring(5,7))-1), str.substring(8,10), str.substring(11,13), str.substring(14, 16));
+  }
+
+  getColor(task){
+    let dueDate = new Date(task.date.substring(0,4), (parseInt(task.date.substring(5,7))-1), task.date.substring(8,10));
+    const now = new Date();
+    if(dueDate.getFullYear() == now.getFullYear() && dueDate.getMonth() == now.getMonth() && dueDate.getDate() == now.getDate()){
+      return '#f49842'; //Orange since it is due today
+    }
+
+    if(dueDate.getTime() < now.getTime()){
+      return '#f44141'; //Red since it was due before today
+    }
+    if(task.reminder && this.ISOtoDate(task.reminder).getTime() > Date.now()){
+      return '#11bbf7' //Blue since a reminder is set
+    }
+    return '#000' //Black since nothing
   }
 
   formatDate (str){
-    if(!str){
-      return "";
-    }
-    return parseInt(str.substring(4, 6))+"/"+parseInt(str.substring(6,8));
+    if(!str) return "";
+    return str.substring(5, 7)+"/"+str.substring(8, 10);
   }
 
   addTask(elem, clsIndex){
@@ -128,15 +173,17 @@ export class TodoPage {
 
   removeTask(taskIndex, clsIndex, elem) {
     elem.parentNode.style.opacity = "0";
-    window.setTimeout(() => {
-      if(elem.parentNode.style.opacity == "0"){
-        this.classes[clsIndex].tasks.splice(taskIndex, 1);
-        this.mySched.save();
-      }
+    this.timeouts[taskIndex+""+clsIndex] = window.setTimeout(() => {
+      elem.parentNode.style.display = "none";
+      this.notifications.scheduleAll();
+      this.mySched.save();
     }, 1000);
   }
 
-  readdTask(elem) {
+  readdTask(taskIndex, clsIndex, elem) {
+    if(this.timeouts[taskIndex+""+clsIndex]){
+      window.clearTimeout(this.timeouts[taskIndex+""+clsIndex]);
+    }
     elem.parentNode.style["transition-duration"] = '0s';
     elem.parentNode.style.opacity = 1;
     setTimeout(()=>elem.parentNode.style["transition-duration"] = '1s', 5);
@@ -157,7 +204,6 @@ export class TodoPage {
   }
 
   newClassKeypress(e, clsId){
-    console.log(e.target);
     if(e.keyCode == 13 || e.target.value == ""){
       this.newTaskUnfocus(e.target, clsId);
     }else if(e.target.value != ""){

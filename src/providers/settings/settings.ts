@@ -39,7 +39,7 @@ export class SettingsProvider {
   }
 
   refreshRemoteOverride(){
-    this.http.get("/assets/img/app.overrides.json").map(data => data.json()).subscribe(data => {
+    this.http.get("http://compsci.pingry.k12.nj.us/astrasser2019/app.overrides.json?d="+Date.now()).map(data => data.json()).subscribe(data => {
       this.remoteOverride = data;
       localStorage.setItem("remoteOverride", JSON.stringify(data));
       this.events.publish("remoteOverrideRefresh");

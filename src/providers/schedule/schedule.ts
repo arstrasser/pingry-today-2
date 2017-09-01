@@ -195,14 +195,6 @@ export class ScheduleProvider {
       this.refresh();
     }
 
-    /*temp = localStorage.getItem("manualOverriddenSchedules");
-    if(temp == null || temp == undefined){
-      this.manualOverriddenSchedules = {};
-      localStorage.setItem("manualOverriddenSchedules", "{}");
-    }else{
-      this.manualOverriddenSchedules = JSON.parse(temp);
-    }*/
-
     //Community Time event schedule
     temp = localStorage.getItem("scheduledEvents");
     if(temp != null){this.scheduledEvents = JSON.parse(temp);}
@@ -218,7 +210,7 @@ export class ScheduleProvider {
   }
 
   refresh(callback?){
-    const specialScheduleURL = "http://calendar.google.com/calendar/ical/pingry.org_kg3ab8ps5pa70oj41igegj9kjo%40group.calendar.google.com/public/basic.ics";
+    const specialScheduleURL = "https://calendar.google.com/calendar/ical/pingry.org_kg3ab8ps5pa70oj41igegj9kjo%40group.calendar.google.com/public/basic.ics";
     const collabDatesURL = "http://www.pingry.org/calendar/calendar_388.ics";
 
     this.refreshing = true;
@@ -264,37 +256,69 @@ export class ScheduleProvider {
         for(let i=0; i < calEvents.length; i++){
           //If it's a timed event (not a day-long event)
           if(calEvents[i].type == "time" && !!calEvents[i].endTime){
-            //Assembly
-            if(calEvents[i].title.indexOf("Assembly") != -1){
-              if(calEvents[i].startTime)
+            //Community Time
+            if(
+              ((calEvents[i].startTime.getHours() == 9 && calEvents[i].startTime.getMinutes() == 45) ||   //Starts at 9:45
+                (calEvents[i].startTime.getHours() == 9 && calEvents[i].startTime.getMinutes() == 50)) && //  or      9:50
+              ((calEvents[i].endTime.getHours() == 10 && calEvents[i].endTime.getMinutes() == 10) ||      //Ends   at 10:10
+                (calEvents[i].endTime.getHours() == 10 && calEvents[i].endTime.getMinutes() == 15))) {    //  or      10:15
 
-              //Switch based on assembly length
-              switch ((calEvents[i].endTime.getTime() - calEvents[i].startTime.getTime())/60000){
-                case 60:  //60 minutes
-                  specialSchedule[this.dfp.dateToDayString(calEvents[i].endTime)] = "Assembly 60 Minutes";
-                  break;
-                case 35:  //35 minutes
-                  specialSchedule[this.dfp.dateToDayString(calEvents[i].endTime)] = "Assembly 35 Minutes";
-                  break;
-                case 40:
-                  specialSchedule[this.dfp.dateToDayString(calEvents[i].endTime)] = "Assembly 40 Minutes";
-                  break;
-                default:  //Else
-                  //Check for Winter Festival Schedule
-                  if(calEvents[i].title.indexOf("Winter Festival") != -1){
-                    specialSchedule[this.dfp.dateToDayString(calEvents[i].endTime)] = "Winter Festival";
-                  }
-                  //Unknown assembly
-                  else{
-                    console.log("Unknown Assembly:");
-                    console.log(calEvents[i]);
-                    console.log((calEvents[i].endTime.getTime() - calEvents[i].startTime.getTime())/60000);
-                    specialSchedule[this.dfp.dateToDayString(calEvents[i].endTime)] = "Unknown Assembly";
-                  }
-                  break;
+              //If community time already has an event scheduled, appends event name
+              if(CT[this.dfp.dateToDayString(calEvents[i].startTime)]){
+                //Fixes Duplicate events - TODO: Figure out why this bug occurs
+                if(CT[this.dfp.dateToDayString(calEvents[i].startTime)].indexOf(calEvents[i].title) != -1){
+                  CT[this.dfp.dateToDayString(calEvents[i].startTime)] += " & "+calEvents[i].title;
+                }
+              }
+              //Otherwise, just set the variable to the event title
+              else {
+                CT[this.dfp.dateToDayString(calEvents[i].startTime)] = calEvents[i].title;
+              }
+            }
+            //CP
+            else if(
+                ((calEvents[i].startTime.getHours() == 14 && calEvents[i].startTime.getMinutes() == 45) || //Starts at 2:45
+                (calEvents[i].startTime.getHours() == 14 && calEvents[i].startTime.getMinutes() == 40) ||  //  or      2:40
+                (calEvents[i].startTime.getHours() == 14 && calEvents[i].startTime.getMinutes() == 35))    //  or      2:35
+
+              && ((calEvents[i].endTime.getHours() == 15 && calEvents[i].endTime.getMinutes() == 25) ||    //Ends at   3:25
+                (calEvents[i].endTime.getHours() == 15 && calEvents[i].endTime.getMinutes() == 30) ||      //  or      3:30
+                (calEvents[i].endTime.getHours() == 15 && calEvents[i].endTime.getMinutes() == 15))){      //  or      3:15
+
+              //If CP already has an event scheduled, append current event name
+              if(CP[this.dfp.dateToDayString(calEvents[i].startTime)]){
+                CP[this.dfp.dateToDayString(calEvents[i].startTime)] += " & "+calEvents[i].title;
+              }
+              //Otherwise, just set the variable to the event title
+              else{
+                CP[this.dfp.dateToDayString(calEvents[i].startTime)] = calEvents[i].title;
+              }
+            }
+
+            //Assembly
+            else if(calEvents[i].title.indexOf("Assembly") != -1){
+              if(calEvents[i].startTime.getHours() == 9 && calEvents[i].startTime.getMinutes() == 35 && calEvents[i].endTime.getHours() == 10 && calEvents[i].endTime.getMinutes() == 35)
+                specialSchedule[this.dfp.dateToDayString(calEvents[i].endTime)] = "Assembly 60 Minutes";
+              else if(calEvents[i].startTime.getHours() == 9 && calEvents[i].startTime.getMinutes() == 35 && calEvents[i].endTime.getHours() == 10 && calEvents[i].endTime.getMinutes() == 15)
+                specialSchedule[this.dfp.dateToDayString(calEvents[i].endTime)] = "Assembly 40 Minutes";
+              else if(calEvents[i].startTime.getHours() == 9 && calEvents[i].startTime.getMinutes() == 40 && calEvents[i].endTime.getHours() == 10 && calEvents[i].endTime.getMinutes() == 15)
+                specialSchedule[this.dfp.dateToDayString(calEvents[i].endTime)] = "Assembly 35 Minutes";
+              else if(calEvents[i].startTime.getHours() == 9 && calEvents[i].startTime.getMinutes() == 45 && calEvents[i].endTime.getHours() == 10 && calEvents[i].endTime.getMinutes() == 15)
+                specialSchedule[this.dfp.dateToDayString(calEvents[i].endTime)] = "Assembly 30 Minutes";
+              else {
+                //Check for Winter Festival Schedule
+                if(calEvents[i].title.indexOf("Winter Festival") != -1){
+                  specialSchedule[this.dfp.dateToDayString(calEvents[i].endTime)] = "Winter Festival";
+                }
+                //Unknown assembly
+                else{
+                  console.warn("Unknown Assembly:");
+                  console.log(calEvents[i]);
+                  specialSchedule[this.dfp.dateToDayString(calEvents[i].endTime)] = "Unknown Assembly";
+                }
               }
             }else{
-              console.log("Unknown: "+calEvents[i].startTime.getHours() +" : "+calEvents[i].startTime.getMinutes()+" - "+calEvents[i].endTime.getHours() +" : "+calEvents[i].endTime.getMinutes());
+              console.log("Unknown: "+calEvents[i].startTime.getHours() +":"+calEvents[i].startTime.getMinutes()+" - "+calEvents[i].endTime.getHours() +":"+calEvents[i].endTime.getMinutes());
             }
 
           }
@@ -375,11 +399,13 @@ export class ScheduleProvider {
         //Updates the current schedule type to reflect new information
         this.updateCurrentSchedule();
       }
-      return true;
-    }, () => false).add(val =>{
       this.refreshing = false;
-      this.events.publish("scheduleRefreshComplete", {success:val});
-      return val;
+      this.events.publish("scheduleRefreshComplete", {success:true});
+      return true;
+    }, () => {
+      this.refreshing = false;
+      this.events.publish("scheduleRefreshComplete", {success:false});
+      return false;
     });
   }
 
@@ -399,24 +425,24 @@ export class ScheduleProvider {
             return;
           }
         }
-        console.log("OVERRIDE NOT FOUND: "+override.name);
+        console.error("OVERRIDE NOT FOUND: "+override.name);
       }
     }
     else if(this.scheduledDays != null && this.scheduledDays[this.dfp.dateToDayString(this.curDay)] != undefined){
       //Iterate over the schedule types
       for(let i = 0; i < this.typeList.length; i++){
         //if found the respective schedule for the day
-        if(this.typeList[i][0] == this.scheduledDays[this.dfp.dateToDayString(this.curDay)]){
+        if(this.typeList[i].name == this.scheduledDays[this.dfp.dateToDayString(this.curDay)]){
           this.curSchedule = this.typeList[i].schedule;
           this.curScheduleName = this.typeList[i].name;
           return;
         }
       }
+      console.error("Couldn't find schedule: "+this.scheduledDays[this.dfp.dateToDayString(this.curDay)]);
     }
-    else { //Fallback
-      this.curSchedule = this.typeList[0].schedule;
-      this.curScheduleName = this.typeList[0].name;
-    }
+    //Fallback
+    this.curSchedule = this.typeList[0].schedule;
+    this.curScheduleName = this.typeList[0].name;
   }
 
   get(id){

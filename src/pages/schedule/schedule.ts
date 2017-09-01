@@ -25,7 +25,6 @@ export class SchedulePage {
   minISOday:string;
   letter:string = "";
   periodList:string = "";
-  displayDate:string;
   schedRefreshOverride:boolean = false;
   gesture:Gesture;
   ddd:string = "";
@@ -50,11 +49,16 @@ export class SchedulePage {
       }else{
         this.messages.showError("Couldn't connect to the internet!");
       }
-    })
+    });
+
+    this.events.subscribe("myClassesReady", () => this.refresh())
 
     this.events.subscribe("remoteOverrideRefresh", () => {
+      console.log("override refreshing");
       this.refresh();
     })
+
+    this.letterDay.getNextDatesOf("A");
   }
 
   ionViewDidEnter(){
@@ -70,16 +74,7 @@ export class SchedulePage {
     this.updateDate();
   }
 
-  ngOnInit(){
-    const elem:any = document.getElementById("scheduleSwipe").parentNode;
-    this.gesture = new Gesture(elem);
-    this.gesture.listen();
-    this.gesture.on("swiperight", ()=>this.prevDay());
-    this.gesture.on("swipeleft", ()=>this.nextDay());
-  }
-
   dateToISO(date){
-    //return date.getHours()+":"+(date.getMinutes()<10?"0":"")+date.getMinutes();
     return date.getFullYear()+"-"+
       (date.getMonth()+1<10?"0":"")+(date.getMonth()+1)+"-"+
       (date.getDate()<10?"0":"")+date.getDate()+"T"+
@@ -284,15 +279,21 @@ export class SchedulePage {
         }
         this.classes.push(tClass);
       }
-      //Add a dash between each of the classes in the class list for friendly display
-      let c = "";
-      for(let i=0; i < this.letterDay.classes().length; i++){
-        c+=this.letterDay.classes()[i];
-        if(i+1 < this.letterDay.classes().length){
-          c+="-";
+
+
+      if(this.letter == "R"){
+        this.periodList = "Review";
+      }else{
+        //Add a dash between each of the classes in the class list for friendly display
+        let c = "";
+        for(let i=0; i < this.letterDay.classes().length; i++){
+          c+=this.letterDay.classes()[i];
+          if(i+1 < this.letterDay.classes().length){
+            c+="-";
+          }
         }
+        this.periodList = c;
       }
-      this.periodList = c;
 
       if(this.schedule.getCurrentScheduleName() == "Unknown Assembly"){
         this.messages.popup("Unknown Assembly Schedule", "This day has an assembly schedule that is not recognized.\n"+
@@ -322,8 +323,16 @@ export class SchedulePage {
         this.messages.showNormal("Refreshing...");
       }
     }
-    //Sets the display date
-    this.displayDate = this.formatDate(this.curDay);
+    console.log(this.letter);
+  }
+
+  swipeEvent(e:any){
+    if(e.isFinal){
+      if(Math.abs(e.deltaX) > Math.abs(e.deltaY)){
+        if(e.deltaX > 0) this.prevDay();
+        else this.nextDay();
+      }
+    }
   }
 
   //Updates the date in the Letterday and Schedule functions to match the time the user selected

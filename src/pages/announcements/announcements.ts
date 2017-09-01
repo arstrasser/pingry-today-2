@@ -22,18 +22,10 @@ export class AnnouncementsPage {
   constructor(public iab: InAppBrowser, public http:Http, public modalCtrl: ModalController,
      public feedParse:FeedParseProvider, public messages: MessagesProvider, public loadingCtrl:LoadingController) {
 
+    this.localRefresh();
     const lastRefresh = localStorage.getItem("pingryRSSRefreshTime");
     //If it's been over an hour, run a full refresh
-    if(lastRefresh != null && lastRefresh != ""){
-      if(parseInt(lastRefresh) + 360000 < Date.now()){
-        this.l = this.loadingCtrl.create();
-        this.l.present();
-        this.refresh();
-      }else{
-        this.localRefresh();
-      }
-    }
-    else{
+    if(lastRefresh == null || lastRefresh =="" || (lastRefresh != null && lastRefresh != "" && parseInt(lastRefresh) + 360000 < Date.now())){
       this.l = this.loadingCtrl.create();
       this.l.present();
       this.refresh();
@@ -46,12 +38,12 @@ export class AnnouncementsPage {
 
   //Refreshes the announcements
   refresh(refresher?){
-    this.http.get("http://www.pingry.org/rss.cfm?news=16").map(data => data.text()).subscribe((data) => {
+    this.http.get("http://www.pingry.org/rss.cfm?news=16&d="+Date.now()).map(data => data.text()).subscribe((data) => {
       var obj = this.feedParse.parseRSS(data);
       localStorage.setItem("announceRSS", JSON.stringify(obj));
       localStorage.setItem("announceRSSRefreshTime", ""+Date.now());
       this.rss = obj;
-    }, ()=>this.localRefresh()).add(() =>{
+    }, ()=>this.messages.showError("Couldn't connect to the internet!")).add(() =>{
       if(refresher) refresher.complete();
       if(!!this.l){ this.l.dismissAll(); this.l = null; }
     });
@@ -62,8 +54,6 @@ export class AnnouncementsPage {
     var obj = localStorage.getItem("announceRSS");
     if(obj != undefined){
       this.rss = JSON.parse(obj);
-    }else{
-      this.messages.showError("Couldn't connect to the internet!");
     }
   }
 

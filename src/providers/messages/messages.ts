@@ -1,29 +1,22 @@
 import { Injectable } from '@angular/core';
-import { Toast } from '@ionic-native/toast';
-import { AlertController } from 'ionic-angular';
+import { AlertController, ToastController } from 'ionic-angular';
 
 @Injectable()
 export class MessagesProvider {
 
-  constructor(public toast:Toast, public alertCtrl: AlertController) {}
+  constructor(public toast:ToastController, public alertCtrl: AlertController) {}
 
-  hide(){
-    return this.toast.hide();
+
+  showError(message:string){
+    return this.toast.create({message, duration:3000, cssClass:"toast-error"}).present();
   }
 
-  showError(msg:string){
-    this.hide();
-    return this.toast.showWithOptions({message:msg, position:"bottom", duration:3000, styling:{backgroundColor:"#F73333"}});
+  showSuccess(message:string){
+    return this.toast.create({message, duration:3000, cssClass:"toast-success"}).present();
   }
 
-  showSuccess(msg:string){
-    this.hide();
-    return this.toast.showWithOptions({message:msg, position:"bottom", duration:3000, styling:{backgroundColor:"#53ed53"}});
-  }
-
-  showNormal(msg:string){
-    this.hide();
-    return this.toast.showShortBottom(msg);
+  showNormal(message:string){
+    return this.toast.create({message, duration:3000}).present();
   }
 
   popup(title:string, message:string){

@@ -1,7 +1,7 @@
 page-todo {
   .todo-class {
   	background-color: #fff;
-    padding:10px;
+    padding: 3px;
     border: 1px solid white;
     transition-duration: 500ms;
   }
@@ -13,7 +13,6 @@ page-todo {
 
   .todo-list-element {
   	margin-left:10px;
-  	margin-right:5px;
   	margin-top:10px;
   	margin-bottom:10px;
   	font-size:18px;
@@ -22,6 +21,7 @@ page-todo {
 
   .todo-list-box {
   	padding:10px;
+    padding-left:3px;
   }
 
   .todo-list-box.icon-ios {
@@ -29,8 +29,8 @@ page-todo {
   }
 
   .todo-assignment {
-  	display:inline-block;
-  	width:calc(100% - 45px);
+  	display:inline-flex;
+  	width: calc(100% - 45px);
   }
 
   .todo-new-assignment-name {
@@ -46,17 +46,24 @@ page-todo {
   }
 
   .todo-assignment-name {
-  	display:inline-block;
+  	flex: 1;
   	background-color: rgba(255, 255, 255, 0);
   	font-size:17px !important;
     border:none;
     border-bottom: 1px solid black;
-    width:100%;
   }
 
   .todo-assignment-date {
-  	display:inline-block;
+    padding: 0;
+    flex: 0 1 0;
+    margin-left: 10px;
   	float:right;
+    position:relative;
+    text-align:right;
+  }
+
+  .todo-assignment-add-date {
+
   }
 
 }

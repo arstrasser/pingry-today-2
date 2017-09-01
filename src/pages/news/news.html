@@ -15,7 +15,7 @@
 
 
 <ion-content padding>
-  <ion-refresher (ionRefresh)="refresh();">
+  <ion-refresher (ionRefresh)="refresh($event)">
     <ion-refresher-content>Pull to Refresh</ion-refresher-content>
 	</ion-refresher>
 	<ion-list>
@@ -23,7 +23,8 @@
       <ion-avatar item-start>
         <img [src]="!!article.image?article.image:'assets/img/logo2.jpg'" (error)="article.image = 'assets/img/logo2.jpg'"/>
       </ion-avatar>
-			<div class="rssTitle">{{article.title}}</div>
+      <h2 class="rssTitle">{{article.title}}</h2>
+      <p class="rssDescription">{{article.description}}</p>
 		</ion-item>
 	</ion-list>
 </ion-content>

@@ -15,11 +15,12 @@
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
 
-.rssTitle {
-	text-overflow: ellipsis;
-	overflow: hidden;
-	font-weight:bold;
-	display:inline;
+.toast-error .toast-wrapper {
+  background-color:#F73333;
+}
+
+.toast-success .toast-wrapper {
+  background-color:#53ed53;
 }
 
 .toolbar-background {

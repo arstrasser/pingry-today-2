@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
-import { Observable } from 'rxjs/Rx';
+import { Storage } from '@ionic/storage';
+import localForage from "localforage";
 
 import { Events } from 'ionic-angular';
 
@@ -17,39 +18,37 @@ import { Events } from 'ionic-angular';
 */
 @Injectable()
 export class MyScheduleProvider {
-  myClasses:{block:Array<any>, flex:Array<any>, CP:Array<any>} = {"block":[], "flex":[], "CP":[]};;
+  myClasses:any/*{block:Array<any>, flex:Array<any>, CP:Array<any>}*/ = {"block":[], "flex":[], "CP":[]};;
   modified:boolean = false;
-  constructor(public http: Http, public events:Events) {
-    this.reload();
-  }
+  constructor(public http: Http, public events:Events, public storage:Storage) {
+    localForage.config({
+      name        : 'lf',
+      storeName   : 'keyvaluepairs', // Should be alphanumeric, with underscores.
+    });
+    //localForage.setItem("myClasses", JSON.parse('{"block":[{"name":"Test","color":"#EE9A00","type":"block","firstLunch":true,"takesFlex":false,"firstFlex":true,"timeType":"","time":{"day":"","id":"4"},"tasks":[]},{"name":"Test 2","color":"#fff","type":"block","firstLunch":false,"takesFlex":true,"firstFlex":true,"timeType":"","time":{"day":"","id":"2"},"tasks":[]}],"flex":[],"CP":[]}'))
+    //For old versions of the app
+    localForage.getItem("myClasses").then(a => {
+      const b:any = a; //Weird bug to satisfy typescript
+      if(b){
+        console.log("Restoring classes from LocalForage");
+        this.myClasses = b;
+        this.save();
+        this.events.publish("myClassesReady");
+        localForage.setItem("myClasses", null);
+      }
+    })
 
-  reload(){
-    let temp = localStorage.getItem("myClasses");
-    if(temp != null){
-      this.myClasses = JSON.parse(temp);
-    }else{
-      localStorage.setItem("myClasses", JSON.stringify(this.myClasses));
-    }
-    //If invalid storage or myClasses
-    if(!!this.myClasses && !!this.myClasses.block){
-
-      //$localForage.setItem("myClasses", myClasses);
-    }else{
-      /*$localForage.getItem("myClasses").then(function(value){
-        if(value != null){
-          myClasses = value;
-        }
-      })*/
-    }
+    //Typical Refreshing
+    this.storage.get("myClasses").then(val => {
+      if(val){
+        this.myClasses = val;
+        this.events.publish("myClassesReady");
+      }
+    });
   }
 
   setChanged(val){
     this.modified = val; //Modifier for whether or not user classes were updated
-  }
-
-  load(){
-    this.reload();
-    this.modified = true;
   }
 
   getAll(){
@@ -101,9 +100,9 @@ export class MyScheduleProvider {
     console.warn("Add Class with Type is deprecated, please use Add Class");
     this.myClasses[type].push(cls);
   }
+
   save(){
-    //$localForage.setItem("myClasses", myClasses);
-    localStorage.setItem("myClasses", JSON.stringify(this.myClasses));
+    this.storage.set("myClasses", this.myClasses);
     this.modified = true;
   }
 }

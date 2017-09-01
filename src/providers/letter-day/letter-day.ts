@@ -18,17 +18,12 @@ class Dates{
   G:Array<number>;
   R:Array<number>; //Review Days
 }
-/*
-  Generated class for the LetterDayProvider provider.
 
-  See https://angular.io/docs/ts/latest/guide/dependency-injection.html
-  for more info on providers and Angular 2 DI.
-*/
+
 @Injectable()
 export class LetterDayProvider {
-  time:number;
-  dates:Dates;
-  times:Array<{letter:string, schedule:Array<number>, dates:Array<number>}>;
+  dates = {"A":[], "B":[], "C":[], "D":[], "E":[], "F":[], "G":[], "R":[]};
+  times:Array<{letter:string, schedule:Array<number>, dates:Array<string>}>;
   refreshing:boolean;
   curDay:number;
   d:any;
@@ -37,16 +32,12 @@ export class LetterDayProvider {
       public schedule:ScheduleProvider, public settings:SettingsProvider){
     let temp:string = localStorage.getItem("lastLetterRefresh");
 
-    if(temp == null || temp == undefined || parseInt(temp) + 604800000 < Date.now() ){ //Refresh if not refreshed or if it's been a week
+    if(temp == null || temp == undefined || (temp != null && temp != undefined && parseInt(temp) + 604800000 < Date.now())){ //Refresh if not refreshed or if it's been a week
       this.refresh();
-    }else{
-      this.time = parseInt(temp);
     }
 
     temp = localStorage.getItem("letterDayDates");
-    if(temp == undefined || temp == null || temp == ""){
-      this.dates = {"A":[], "B":[], "C":[], "D":[], "E":[], "F":[], "G":[], "R":[]};
-    }else{
+    if(temp){
       this.dates = JSON.parse(temp);
     }
 
@@ -58,7 +49,7 @@ export class LetterDayProvider {
       {"letter":"E", "schedule":[3,4,5,6], "dates":this.dates.E},
       {"letter":"F", "schedule":[7,1,2,3], "dates":this.dates.F},
       {"letter":"G", "schedule":[4,5,6,7], "dates":this.dates.G},
-      {"letter":"R", "schedule":[], "dates":(this.dates.R || [])}
+      {"letter":"R", "schedule":[1,2,3,4,5,6,7], "dates":(this.dates.R || [])}
     ];
 
     this.events.subscribe("newReviewDay", obj => {
@@ -108,11 +99,13 @@ export class LetterDayProvider {
 
       //Updates the letter day if there are different letter days for the current date
       this.updateDay(this.d);
-      return true;
-    }, () => false).add(val => {
       this.refreshing = false;
-      this.events.publish("letterRefreshComplete", {success:val});
-      return val;
+      this.events.publish("letterRefreshComplete", {success:true});
+      return true;
+    }, () => {
+      this.refreshing = false;
+      this.events.publish("letterRefreshComplete", {success:false});
+      return false;
     });
   }
 
@@ -128,7 +121,7 @@ export class LetterDayProvider {
       //Iterate through each date
       for(let j = 0; j < this.times[i].dates.length; j++){
         //If the date equals the date we're looking for
-        if(this.times[i].dates[j] == parseInt(date)){
+        if(this.times[i].dates[j] == date){
           //Return the index
           return i;
         }
@@ -201,8 +194,16 @@ export class LetterDayProvider {
     return [];
   }
 
-  getDatesOf(letter){ //Gets all the dates for a given letter day
-    return this.times[this.letterToNumber(letter)].dates;
+  getNextDatesOf(letter){ //Gets all the dates for a given letter day
+    let dates = [];
+    let original:any = this.times[this.letterToNumber(letter)].dates;
+    for(let i = 0; i < original.length; i++){
+      //Day after that date since minutes and seconds cause for round upwards
+      if(new Date(original[i].substring(0,4), parseInt(original[i].substring(4,6))-1, parseInt(original[i].substring(6,8))+1).getTime() > Date.now()){
+        dates.push(original[i]);
+      }
+    }
+    return dates;
   }
 
   classesOf(day){ //Returns the classes of the given date

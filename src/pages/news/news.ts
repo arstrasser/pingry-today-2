@@ -23,18 +23,10 @@ export class NewsPage {
   constructor(public iab: InAppBrowser, public http:Http, public modalCtrl: ModalController, public loadingCtrl:LoadingController,
      public feedParse:FeedParseProvider, public messages: MessagesProvider) {
 
-    const lastRefresh = localStorage.getItem("pingryRSSRefreshTime");
+    this.localRefresh();
+    const lastRefresh = localStorage.getItem("newsRSSRefreshTime");
     //If it's been over an hour, run a full refresh
-    if(lastRefresh != null && lastRefresh != ""){
-      if(parseInt(lastRefresh) + 360000 < Date.now()){
-        this.l = this.loadingCtrl.create();
-        this.l.present();
-        this.refresh();
-      }else{
-        this.localRefresh();
-      }
-    }
-    else{
+    if(lastRefresh == null || lastRefresh =="" || (lastRefresh != null && lastRefresh != "" && parseInt(lastRefresh) + 360000 < Date.now())){
       this.l = this.loadingCtrl.create();
       this.l.present();
       this.refresh();
@@ -48,8 +40,8 @@ export class NewsPage {
   //Refreshes the announcements
   refresh(refresher?){
     Observable.forkJoin([
-      this.http.get("http://www.pingry.org/rss.cfm?news=13").map(data => this.feedParse.parseRSS(data.text())),
-      this.http.get("http://www.pingry.org/rss.cfm?news=14").map(data => this.feedParse.parseRSS(data.text()))
+      this.http.get("http://www.pingry.org/rss.cfm?news=13&d="+Date.now()).map(data => this.feedParse.parseRSS(data.text())),
+      this.http.get("http://www.pingry.org/rss.cfm?news=14&d="+Date.now()).map(data => this.feedParse.parseRSS(data.text()))
     ]).subscribe((values) => {
       let obj = values[0].concat(values[1]);
       obj.sort(function(a, b){
@@ -58,7 +50,7 @@ export class NewsPage {
       localStorage.setItem("newsRSS", JSON.stringify(obj));
       localStorage.setItem("newsRSSRefreshTime", ""+Date.now());
       this.news = obj;
-    }, ()=>this.localRefresh()).add(() =>{
+    }, ()=> this.messages.showError("Couldn't connect!")).add(() =>{
       if(refresher) refresher.complete();
       if(!!this.l) { this.l.dismissAll(); this.l = null; }
     });
@@ -69,8 +61,6 @@ export class NewsPage {
     const obj = localStorage.getItem("newsRSS");
     if(obj != undefined){
       this.news = JSON.parse(obj);
-    }else{
-      this.messages.showError("Couldn't connect to the internet!");
     }
   }
 

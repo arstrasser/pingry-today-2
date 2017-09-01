@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "868457237501",
+    "firebase_url": "https://pingry-app.firebaseio.com",
+    "project_id": "pingry-app",
+    "storage_bucket": "pingry-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:868457237501:android:9729896d0d6ffa9e",
+        "android_client_info": {
+          "package_name": "org.pingry.pingryappandroid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "868457237501-dq0vh0rvaerpkpqimel87udbaginvinp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDp-86i0fTTk10AmnE-0a8cbW7zRfRTPP8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

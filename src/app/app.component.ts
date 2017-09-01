@@ -7,12 +7,15 @@ import { InAppBrowser } from '@ionic-native/in-app-browser';
 import { SchedulePage } from '../pages/schedule/schedule';
 import { AnnouncementsPage } from '../pages/announcements/announcements';
 import { AboutPage } from '../pages/about/about';
-import { ClubCalendarPage } from '../pages/club-calendar/club-calendar';
+//import { ClubCalendarPage } from '../pages/club-calendar/club-calendar';
 import { NewsPage } from '../pages/news/news';
 import { AthleticsPage } from '../pages/athletics/athletics';
 import { SettingsPage } from '../pages/settings/settings';
 import { TodoPage } from '../pages/todo/todo';
 
+import { MessagesProvider } from '../providers/messages/messages';
+
+declare var FCMPlugin:any;
 
 
 @Component({
@@ -22,11 +25,14 @@ export class MyApp {
   @ViewChild(Nav) nav: Nav;
   rootPage:any = SchedulePage;
   pages:Array<{title:string, page?:any, localUrl?:string, systemUrl?:string}>
-  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, public iab:InAppBrowser) {
-
+  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, public iab:InAppBrowser, public messages:MessagesProvider) {
     platform.ready().then(() => {
-      // Okay, so the platform is ready and our plugins are available.
-      // Here you can do any higher level native things you might need.
+      try {
+        FCMPlugin.onNotification(data => {
+          console.log(data);
+          this.messages.popup(data.title, data.body);
+        });
+      }catch(e){console.warn("Unable to register FCM notification handler")}
       statusBar.styleDefault();
       splashScreen.hide();
     });
