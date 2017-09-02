@@ -418,6 +418,7 @@ export class ScheduleProvider {
       if(override.type == "manual"){
         this.curSchedule = override.classes;
         this.curScheduleName = "manual";
+        return;
       }else{
         for(let i = 0; i < this.typeList.length; i++){
           //if found the respective schedule for the day

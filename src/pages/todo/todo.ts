@@ -106,6 +106,7 @@ export class TodoPage {
         }
       }
       classList[i].tasks.sort((a,b)=> {
+        if(!a.date && !b.date){return 0}
         if(!a.date) return 1;
         if(!b.date) return -1;
         let d1 = new Date(a.date.substring(0,4), a.date.substring(5,7), a.date.substring(8,10)).getTime();
