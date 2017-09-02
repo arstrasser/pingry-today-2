@@ -10,21 +10,21 @@
       <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title>Schedule</ion-title>
-    <img (click)="dddHelp()" *ngIf="ddd=='charity'" class="ddd-icon" src="assets/img/charity-icon.png" />
-    <img (click)="dddHelp()" *ngIf="ddd=='spirit'" class="ddd-icon" src="assets/img/spirit-icon.png" />
-    <img (click)="dddHelp()" *ngIf="ddd=='free'" class="ddd-icon" src="assets/img/tshirt-icon.png" />
-    <img (click)="dddHelp()" *ngIf="ddd=='fancy'" class="ddd-icon" src="assets/img/tie-icon.png" />
+    <img (click)="dddHelp()" tappable *ngIf="ddd=='charity'" class="ddd-icon" src="assets/img/charity-icon.png" />
+    <img (click)="dddHelp()" tappable *ngIf="ddd=='spirit'" class="ddd-icon" src="assets/img/spirit-icon.png" />
+    <img (click)="dddHelp()" tappable *ngIf="ddd=='free'" class="ddd-icon" src="assets/img/tshirt-icon.png" />
+    <img (click)="dddHelp()" tappable *ngIf="ddd=='fancy'" class="ddd-icon" src="assets/img/tie-icon.png" />
   </ion-navbar>
 </ion-header>
 
 
-<ion-content padding class="has-header" id="scheduleContent">
+<ion-content no-bounce padding class="has-header" id="scheduleContent">
   <div class="scroll-content" (swipe)="swipeEvent($event)">
   	<div style="display:block">
   		<div id="changeDayMenu" (press)="resetDate()">
-  			<div id="changeDayLeft" (click)="prevDay()"><ion-icon name="arrow-dropleft" class="changeDayIcon"></ion-icon></div>
+  			<div id="changeDayLeft" tappable (click)="prevDay()"><ion-icon name="arrow-dropleft" class="changeDayIcon"></ion-icon></div>
         <ion-datetime id="currentDay" [max]="maxISOday" [min]="minISOday" displayFormat="DDD MMM D YYYY" pickerFormat="MMM D YYYY" [(ngModel)]="curISOday" (ngModelChange)="dateChange()"></ion-datetime>
-  			<div id="changeDayRight" (click)="nextDay()"><ion-icon name="arrow-dropright" class="changeDayIcon"></ion-icon></div>
+  			<div id="changeDayRight" tappable (click)="nextDay()"><ion-icon name="arrow-dropright" class="changeDayIcon"></ion-icon></div>
   		</div>
   		<div id="letterMenu" *ngIf="isLetter(letter)">
   			<div id="letter">{{letter}}</div>
@@ -33,7 +33,7 @@
   	</div>
   	<div id="nonSchoolDay" *ngIf="letter==''">No school!</div>
     <ion-grid style="padding:0" id="scheduleSwipe">
-      <ion-row *ngFor="let cls of classes" (click)="clickedClass(cls)" class="row class-{{cls.type}}" [ngStyle]="{background: cls.color}">
+      <ion-row *ngFor="let cls of classes" tappable (click)="clickedClass(cls)" class="row class-{{cls.type}}" [ngStyle]="{background: cls.color}">
         <ion-col col-4 class="class-time">
           <div style="display: inline" class="startTime">{{formatTime(cls.startTime)}}</div>
   				<div style="display: inline" *ngIf="cls.type == 'block'"><br><br></div>

@@ -32,14 +32,13 @@ export class SettingsProvider {
 
     temp = localStorage.getItem("remoteOverride");
     if(temp != "" && temp != undefined){
-      this.remoteOverride = JSON.parse(localStorage.getItem("remoteOverride"));
+      this.remoteOverride = JSON.parse(temp);
     }
-
     this.refreshRemoteOverride();
   }
 
   refreshRemoteOverride(){
-    this.http.get("http://compsci.pingry.k12.nj.us/astrasser2019/app.overrides.json?d="+Date.now()).map(data => data.json()).subscribe(data => {
+    this.http.get("http://mirror.pingry.k12.nj.us/software/RemoteConfig.json?d="+Date.now()).map(data => data.json()).subscribe(data => {
       this.remoteOverride = data;
       localStorage.setItem("remoteOverride", JSON.stringify(data));
       this.events.publish("remoteOverrideRefresh");
@@ -143,21 +142,6 @@ export class SettingsProvider {
       //["Wrestling - Boys MS", "http://www.pingry.org/calendar/team_180.ics"],
       ["Wrestling - Boys Varsity", "http://www.pingry.org/calendar/team_181.ics"]
     ];
-  }
-
-
-  refreshExtraOptions(){
-    if(this.extraOptions.indexOf("hackerTheme") != -1){
-      var elem = document.createElement("link");
-      elem.rel = "stylesheet";
-      elem.href = "css/hackerStyles.css";
-      elem.id = "hacker-style";
-      document.body.appendChild(elem);
-    }else{
-      if(document.getElementById("hacker-style") != null){
-        document.body.removeChild(document.getElementById("hacker-style"));
-      }
-    }
   }
 
   getAthleticSubscription(){

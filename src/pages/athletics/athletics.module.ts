@@ -13,4 +13,4 @@ import { AthleticsPage } from './athletics';
     AthleticsPage
   ]
 })
-export class AnnouncementsPageModule {}
+export class AthleticsPageModule {}

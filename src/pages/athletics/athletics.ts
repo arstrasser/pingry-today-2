@@ -19,6 +19,7 @@ import { DateFunctionsProvider } from '../../providers/date-functions/date-funct
 })
 export class AthleticsPage {
   events:Array<any> = [];
+  displayEvents:Array<any> = [];
   l:any;
   constructor(public iab: InAppBrowser, public http:Http, public feedParse:FeedParseProvider, public messages: MessagesProvider,
     public settings:SettingsProvider, public dfp:DateFunctionsProvider, public loadingCtrl:LoadingController) {
@@ -39,13 +40,17 @@ export class AthleticsPage {
       this.l.present();
       this.refresh();
     }
-    console.log(this.events);
+    this.displayEvents = this.events.slice(0,25);
+  }
+
+  displayMore(infiniteScroll?){
+    this.displayEvents = this.events.slice(0, Math.min(this.displayEvents.length+25, this.events.length));
+    if(infiniteScroll){infiniteScroll.complete();}
   }
 
   ionViewBeforeEnter(){
     if(this.settings.getAthleticSubscriptionChanged()){
       this.events = [];
-      //$ionicLoading.show({template: 'Loading...'});
       this.refresh();
       this.settings.setAthleticSubscriptionChanged(false);
     }
@@ -85,7 +90,7 @@ export class AthleticsPage {
     for(var i = 0; i < calendars.length; i++){
       if(this.settings.athleticSubscription == "" || this.settings.athleticSubscription == calendars[i][1]){
         queuedEvents.push(
-          this.http.get(calendars[i][1]).map(data => this.feedParse.parseCalendar(data.json().data))
+          this.http.get(calendars[i][1]).map(data => this.feedParse.parseCalendar(data.text()))
         );
       }
     }
@@ -95,8 +100,6 @@ export class AthleticsPage {
       for(let i = 0; i < values.length; i++){
         rawEvents = rawEvents.concat(values[i]);
       }
-      console.log(values);
-      console.log(rawEvents);
       for(var i = 0; i < rawEvents.length; i++){
         //TODO: FIGURE OUT WHAT THE HECK THIS LINE DOES
         if(!!rawEvents[i].startTime){
@@ -160,16 +163,12 @@ export class AthleticsPage {
         }
       );
 
-      //Only take the first 15 events
-      if(rawEvents.length > 25){
-        rawEvents = rawEvents.slice(0,25);
-      }
       //Update local storage
       localStorage.setItem("athleticEvents", JSON.stringify(rawEvents));
       localStorage.setItem("athleticEventsRefreshTime", ""+Date.now());
       this.events = rawEvents;
-      //$ionicLoading.hide();
-    }, ()=>this.localRefresh()).add(() =>{
+      this.displayEvents = this.events.slice(0,25);
+    }, ()=>{this.localRefresh();}).add(() => {
       if(refresher) refresher.complete();
       if(!!this.l){ this.l.dismissAll(); this.l = null; }
     });

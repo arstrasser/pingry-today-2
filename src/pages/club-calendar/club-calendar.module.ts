@@ -13,4 +13,4 @@ import { ClubCalendarPage } from './club-calendar';
     ClubCalendarPage
   ]
 })
-export class AnnouncementsPageModule {}
+export class ClubCalendarPageModule {}

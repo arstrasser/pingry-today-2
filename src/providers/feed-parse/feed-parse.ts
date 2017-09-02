@@ -37,7 +37,6 @@ export class FeedParseProvider {
   constructor(public http: Http, private dfp: DateFunctionsProvider) {}
 
   parseRSS(data:string){
-    console.log(data);
     let list = [];
     while(data.indexOf("<item>") != -1){ //While there are still items in the feed
       data = data.substring(data.indexOf("<item>"));

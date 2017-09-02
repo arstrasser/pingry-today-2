@@ -20,7 +20,6 @@ export class MessagesProvider {
   }
 
   popup(title:string, message:string){
-    //TODO: Implement Cordova Dialogs
     let alert = this.alertCtrl.create({
       title,
       message

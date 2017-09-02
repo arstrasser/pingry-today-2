@@ -14,21 +14,21 @@
 </ion-header>
 
 
-<ion-content padding>
+<ion-content padding no-bounce>
   <ion-list>
-		<ion-item (click)="openClassManagement()">Class Management</ion-item>
+		<ion-item tappable (click)="openClassManagement()">Class Management</ion-item>
 		<ion-item>
       <ion-label>Athletic Event Maps</ion-label>
       <ion-toggle [(ngModel)]="athleticMaps" (ngModelChange)="updateAthleticMaps(athleticMaps)"></ion-toggle>
 		</ion-item>
     <ion-item>
       <ion-label>Athletic Team Subscription</ion-label><br>
-      <ion-select [(ngModel)]="selectedAthleticsCalendar" (ngModelChange)="updateAthleticSubscription(selectedAthleticCalendar)">
+      <ion-select [(ngModel)]="selectedAthleticCalendar" (ngModelChange)="updateAthleticSubscription(selectedAthleticCalendar)">
         <ion-option value="">All Calendars</ion-option>
         <ion-option *ngFor="let cal of athleticCalendars" [value]="cal[1]" [selected]="cal[0] == selectedAthleticsCalendar">{{cal[0]}}</ion-option>
       </ion-select>
     </ion-item>
-    <ion-item (click)="calendarRefresh()">Force Calendar Refresh</ion-item>
-    <ion-item (click)="letterRefresh()">Force Letter Day Refresh</ion-item>
+    <ion-item tappable (click)="calendarRefresh()">Force Calendar Refresh</ion-item>
+    <ion-item tappable (click)="letterRefresh()">Force Letter Day Refresh</ion-item>
 	</ion-list>
 </ion-content>

@@ -1,24 +1,20 @@
 TODO:
 
 Bugs:
- - Change HTML element ID's to classes
  - Add an easter egg
- - What is angular query?
- - Check Caching of http requests
- - Announcement/News RSS description
+ - Change DDD icon to white
 
-New Remote Database:
+Remote Database:
  - calendar URL's
  - Snow Days
- - Change file location
 
 Features:
- - Push Notifications
  - Veracross Connection
- - Replace Cordova Toast
- - Local Notifications
-
 
 Disable forced refresh for schedule and letter day
 
 Search for other TODO's
+
+
+Bounciness
+Button delays

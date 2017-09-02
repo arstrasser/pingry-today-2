@@ -13,4 +13,4 @@ import { NewsPage } from './news';
     NewsPage
   ]
 })
-export class AnnouncementsPageModule {}
+export class NewsPageModule {}

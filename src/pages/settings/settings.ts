@@ -43,7 +43,7 @@ export class SettingsPage {
     if(this.refreshEnable){
       this.messages.showNormal("Refreshing...");
       this.refreshEnable = false;
-      this.schedule.refresh().add(val=>{
+      this.schedule.refresh(val=>{
         if(val){
           this.messages.showSuccess("Success!");
         }else{
@@ -59,7 +59,7 @@ export class SettingsPage {
     if(this.refreshEnable){
       this.messages.showNormal("Refreshing...");
       this.refreshEnable = false;
-      this.letterDay.refresh().add(val => {
+      this.letterDay.refresh(val => {
         if(val){
           this.messages.showSuccess("Success!");
         }else{

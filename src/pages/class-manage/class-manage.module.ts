@@ -13,4 +13,4 @@ import { ClassManagePage } from './class-manage';
     ClassManagePage
   ]
 })
-export class ClassManagemnetPageModule {}
+export class ClassManagePageModule {}

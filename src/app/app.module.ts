@@ -11,18 +11,31 @@ import { LocalNotifications } from '@ionic-native/local-notifications';
 
 import { MyApp } from './app.component';
 import { AboutPage } from '../pages/about/about';
+import { AboutPageModule } from '../pages/about/about.module';
 import { AnnouncementsPage } from '../pages/announcements/announcements';
+import { AnnouncementsPageModule } from '../pages/announcements/announcements.module';
 import { AnnouncementsPopupPage } from '../pages/announcements-popup/announcements-popup';
+import { AnnouncementsPopupPageModule } from '../pages/announcements-popup/announcements-popup.module';
 import { ArticlePage } from '../pages/article/article';
+import { ArticlePageModule } from '../pages/article/article.module';
 import { AthleticsPage } from '../pages/athletics/athletics';
+import { AthleticsPageModule } from '../pages/athletics/athletics.module';
 import { ClassManagePage } from '../pages/class-manage/class-manage';
+import { ClassManagePageModule } from '../pages/class-manage/class-manage.module';
 import { ClubCalendarPage } from '../pages/club-calendar/club-calendar';
+import { ClubCalendarPageModule } from '../pages/club-calendar/club-calendar.module';
 import { EditClassPage } from '../pages/edit-class/edit-class';
+import { EditClassPageModule } from '../pages/edit-class/edit-class.module';
 import { NewsPage } from '../pages/news/news';
+import { NewsPageModule } from '../pages/news/news.module';
 import { SchedulePage } from '../pages/schedule/schedule';
+import { SchedulePageModule } from '../pages/schedule/schedule.module';
 import { SettingsPage } from '../pages/settings/settings';
+import { SettingsPageModule } from '../pages/settings/settings.module';
 import { TodoPage } from '../pages/todo/todo';
+import { TodoPageModule } from '../pages/todo/todo.module';
 import { TodoConfigPage } from '../pages/todo-config/todo-config';
+import { TodoConfigPageModule } from '../pages/todo-config/todo-config.module';
 
 import { DateFunctionsProvider } from '../providers/date-functions/date-functions';
 import { FeedParseProvider } from '../providers/feed-parse/feed-parse';
@@ -35,26 +48,26 @@ import { SettingsProvider } from '../providers/settings/settings';
 
 @NgModule({
   declarations: [
-    MyApp,
-    AboutPage,
-    AnnouncementsPage,
-    AnnouncementsPopupPage,
-    ArticlePage,
-    AthleticsPage,
-    ClassManagePage,
-    ClubCalendarPage,
-    EditClassPage,
-    NewsPage,
-    SettingsPage,
-    SchedulePage,
-    TodoPage,
-    TodoConfigPage
+    MyApp
   ],
   imports: [
     BrowserModule,
     HttpModule,
     IonicModule.forRoot(MyApp),
-    IonicStorageModule.forRoot()
+    IonicStorageModule.forRoot(),
+    AboutPageModule,
+    AnnouncementsPageModule,
+    AnnouncementsPopupPageModule,
+    ArticlePageModule,
+    AthleticsPageModule,
+    ClassManagePageModule,
+    ClubCalendarPageModule,
+    EditClassPageModule,
+    NewsPageModule,
+    SettingsPageModule,
+    SchedulePageModule,
+    TodoPageModule,
+    TodoConfigPageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [

@@ -11,7 +11,7 @@
       <ion-label fixed>Name</ion-label>
       <ion-input type="text" [(ngModel)]="cls.name"></ion-input>
     </ion-item>
-		<ion-item (click)="openColorPicker()" [ngStyle]="{'background-color':cls.color, 'text-align':'center'}">
+		<ion-item tappable (click)="openColorPicker()" [ngStyle]="{'background-color':cls.color, 'text-align':'center'}">
 			Color
 		</ion-item>
     <ion-item>
@@ -64,7 +64,7 @@
         <ion-option value="F">F</ion-option>
         <ion-option value="G">G</ion-option>
       </ion-select>
-    </ion-item>    
+    </ion-item>
     <ion-item *ngIf="(cls.type=='flex'||cls.type=='CP')&&cls.timeType=='weekday'">
       <ion-label>Day of Week</ion-label>
       <ion-select [(ngModel)]="cls.time.day">

@@ -15,13 +15,14 @@
 
 
 <ion-content padding>
+  <h2 style="text-align:center; margin-top:25px" *ngIf="classes.length==0">No Classes!</h2>
   <div id="todo-class-{{cls.time.id}}" class="todo-class" *ngFor="let cls of classes; let i = index;">
 		<span class="todo-class-title">{{cls.name}}</span>
 		<div class="todo-list">
 			<div class="todo-list-element" *ngFor="let task of cls.tasks; let j = index;">
-        <ion-icon name="square-outline" class="todo-list-box" [hidden]="task.completed" (click)="task.completed=!task.completed; removeTask(j, i, $event.target)"></ion-icon>
-				<ion-icon name="checkbox-outline" class="todo-list-box" [hidden]="!task.completed" (click)="task.completed=!task.completed; readdTask(j, i, $event.target)"></ion-icon>
-				<div class="todo-assignment" (click)="openTodoConfig(i, j)">
+        <ion-icon tappable name="square-outline" class="todo-list-box" [hidden]="task.completed" (click)="task.completed=!task.completed; removeTask(j, i, $event.target)"></ion-icon>
+				<ion-icon tappable name="checkbox-outline" class="todo-list-box" [hidden]="!task.completed" (click)="task.completed=!task.completed; readdTask(j, i, $event.target)"></ion-icon>
+				<div class="todo-assignment" tappable (click)="openTodoConfig(i, j)">
 					<div class="todo-assignment-name">{{task.name}}</div>
           <div class="todo-assignment-date" [ngStyle]="{color:getColor(task)}">{{formatDate(task.date)}}</div>
 				</div>

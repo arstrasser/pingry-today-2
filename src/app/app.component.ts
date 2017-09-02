@@ -30,7 +30,11 @@ export class MyApp {
       try {
         FCMPlugin.onNotification(data => {
           console.log(data);
-          this.messages.popup(data.title, data.body);
+          if(data.text){ //Local notification uses .text instead of .body
+            this.messages.popup(data.title, data.text);
+          }else{
+            this.messages.popup(data.title, data.body);
+          }
         });
       }catch(e){console.warn("Unable to register FCM notification handler")}
       statusBar.styleDefault();

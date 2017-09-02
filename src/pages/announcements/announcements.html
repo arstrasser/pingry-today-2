@@ -19,7 +19,7 @@
     <ion-refresher-content>Pull to Refresh</ion-refresher-content>
 	</ion-refresher>
 	<ion-list>
-		<ion-item *ngFor="let feedItem of rss" (click)="openAnnounce(feedItem)">
+		<ion-item tappable *ngFor="let feedItem of rss" (click)="openAnnounce(feedItem)">
 			<h2 class="rssTitle">{{feedItem.title}}</h2>
       <p class="rssDescription">{{feedItem.description}}</p>
 		</ion-item>

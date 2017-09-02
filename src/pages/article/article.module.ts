@@ -13,4 +13,4 @@ import { ArticlePage } from './article';
     ArticlePage
   ]
 })
-export class AnnouncementsPopupPageModule {}
+export class ArticlePageModule {}

@@ -401,10 +401,12 @@ export class ScheduleProvider {
       }
       this.refreshing = false;
       this.events.publish("scheduleRefreshComplete", {success:true});
+      if(callback){callback(true)}
       return true;
     }, () => {
       this.refreshing = false;
       this.events.publish("scheduleRefreshComplete", {success:false});
+      if(callback){callback(false)}
       return false;
     });
   }

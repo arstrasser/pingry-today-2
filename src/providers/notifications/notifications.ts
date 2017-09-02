@@ -42,14 +42,6 @@ export class NotificationsProvider {
   }
 
   scheduleNotification(id, date, desc){
-    console.log("Scheduling Notification:");
-    console.log({
-      id: id,
-      at: date,
-      text: desc,
-      title: "Pingry",
-      led: 'FFFFFF'
-    });
     //Schedules a notification with the given parameters
     if(date.getTime() >= Date.now()){
       this.notifications.schedule({
