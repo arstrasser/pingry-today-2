@@ -220,25 +220,20 @@ export class ScheduleProvider {
       this.http.get(specialScheduleURL).map(data => data.text())
     ]).subscribe((values) =>{
       let data = values[0];
+      this.scheduledDays = {};
 
       //Deal with the faculty collaboration day schedule
       {
         //Parses the calendar
         let calEvents = this.feedParse.parseCalendar(data);
-        let days = [];
         //Iterate over the events
         for(let i=0; i<calEvents.length; i++){
           //If the event title contains the text Faculty Collaboration Day
           if(calEvents[i].title.indexOf("Faculty Collaboration Day") != -1){
             //Add the date string to a temporary array
-            days.push(this.dfp.dateToDayString(calEvents[i].time));
+            this.scheduledDays[this.dfp.dateToDayString(calEvents[i].time)] = "Faculty Collaboration";
           }
         }
-
-        for(let i = 0; i < days.length; i++){
-          this.scheduledDays[days[i]] = "Faculty Collaboration";
-        }
-
         //Update the local storage
         localStorage.setItem("scheduledDays", JSON.stringify(this.scheduledDays));
       }
