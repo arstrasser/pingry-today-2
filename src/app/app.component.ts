@@ -7,7 +7,7 @@ import { InAppBrowser } from '@ionic-native/in-app-browser';
 import { SchedulePage } from '../pages/schedule/schedule';
 import { AnnouncementsPage } from '../pages/announcements/announcements';
 import { AboutPage } from '../pages/about/about';
-//import { ClubCalendarPage } from '../pages/club-calendar/club-calendar';
+import { ClubCalendarPage } from '../pages/club-calendar/club-calendar';
 import { NewsPage } from '../pages/news/news';
 import { AthleticsPage } from '../pages/athletics/athletics';
 import { SettingsPage } from '../pages/settings/settings';
@@ -45,7 +45,7 @@ export class MyApp {
         {title:"To Do List", page:TodoPage},
         {title:"News", page:NewsPage},
         {title:"Announcements", page:AnnouncementsPage},
-        //{title:"Club Calendar", page:ClubCalendarPage},
+        {title:"Club Calendar", page:ClubCalendarPage},
         {title:"Athletics", page:AthleticsPage},
         {title:"Lunch Menu", localUrl:"http://www.sagedining.com/menus/pingry"},
         {title:"Web Portal", systemUrl:"https://www.pingry.org/pingrytoday"},

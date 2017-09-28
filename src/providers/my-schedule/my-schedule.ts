@@ -41,6 +41,19 @@ export class MyScheduleProvider {
     //Typical Refreshing
     this.storage.get("myClasses").then(val => {
       if(val){
+
+        //Correct old science classes
+        for(let i = 0; i < val.block.length; i++){
+          if(val.block[i].takesFlex !== "" && val.block[i].takesFlex !== "both" && val.block[i].takesFlex !== "before" && val.block[i].takesFlex !== "after" && val.block[i].takesFlex !== "cp"){
+            if(val.block[i].takesFlex){
+              val.block[i].takesFlex = "both";
+            }else{
+              val.block[i].takesFlex = "";
+            }
+          }
+          console.log(val.block[i]);
+        }
+        console.log(val);
         this.myClasses = val;
         this.events.publish("myClassesReady");
       }

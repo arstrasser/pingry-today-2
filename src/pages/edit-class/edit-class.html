@@ -16,7 +16,7 @@
 		</ion-item>
     <ion-item>
       <ion-label>Type</ion-label>
-      <ion-select [(ngModel)]="cls.type" (ngModelChange)="cls.time.id=false; cls.time.day='';">
+      <ion-select [(ngModel)]="cls.type" (ngModelChange)="cls.time.id=false; cls.time.day=''; cls.takesFlex='';">
         <ion-option value="block">Class</ion-option>
         <ion-option value="flex">Flex</ion-option>
         <ion-option value="CP">CP</ion-option>
@@ -28,7 +28,13 @@
 		</ion-item>
     <ion-item *ngIf="cls.type=='block'">
 			<ion-label>Science</ion-label>
-			<ion-toggle [(ngModel)]="cls.takesFlex"></ion-toggle>
+			<ion-select [(ngModel)]="cls.takesFlex">
+        <ion-option value="">No flexes</ion-option>
+        <ion-option value="both">All adjacent flexes</ion-option>
+        <ion-option value="before">Only flexes before the class</ion-option>
+        <ion-option value="after">Only flexes after the class</ion-option>
+        <ion-option value="cp">All adjacent flexes and CP</ion-option>
+      </ion-select>
 		</ion-item>
     <ion-item *ngIf="cls.type=='block'">
       <ion-label>Period</ion-label>

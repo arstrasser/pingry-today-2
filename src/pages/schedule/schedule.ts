@@ -204,7 +204,7 @@ export class SchedulePage {
             if(tClass.id == 1){
               //Checks to see if first period takes flex
               var adjBlock = this.mySched.get("block", this.letterDay.classes()[0]);
-              if(adjBlock !== undefined && adjBlock.takesFlex){
+              if(adjBlock !== undefined && (adjBlock.takesFlex == "both" || adjBlock.takesFlex == "cp" || adjBlock.takesFlex == "after")){
                 if(modified){
                   tClass.name += " & "+adjBlock.name;
                 }else{
@@ -218,7 +218,7 @@ export class SchedulePage {
             else if(tClass.id == 0){
               //Checks if 3rd class of the day takes the flex
               var adjBlock = this.mySched.get("block", this.letterDay.classes()[2]);
-              if(adjBlock !== undefined && adjBlock.takesFlex){
+              if(adjBlock !== undefined && (adjBlock.takesFlex == "both" || adjBlock.takesFlex == "cp" || adjBlock.takesFlex == "after")){
                 tClass.color = adjBlock.color;
                 if(modified){
                   tClass.name += " & "+adjBlock.name;
@@ -230,7 +230,7 @@ export class SchedulePage {
 
               //Checks if the 4th class of the day takes the flex
               adjBlock = this.mySched.get("block", this.letterDay.classes()[3]);
-              if(adjBlock !== undefined && adjBlock.takesFlex){
+              if(adjBlock !== undefined && (adjBlock.takesFlex == "both" || adjBlock.takesFlex == "cp" || adjBlock.takesFlex == "before")){
                 tClass.color = adjBlock.color;
                 if(modified){
                   tClass.name += " & "+adjBlock.name;
@@ -246,6 +246,17 @@ export class SchedulePage {
         else if(tClass.type == "CP"){
           //Gets the current assembly schedule for scheduled CP's
           tClass.name = this.schedule.getCPSchedule();
+
+          adjBlock = this.mySched.get("block", this.letterDay.classes()[3]);
+          if(adjBlock !== undefined && adjBlock.takesFlex == "cp"){
+            tClass.color = adjBlock.color;
+            if(tClass.name == "CP"){
+              tClass.name = adjBlock.name;
+            }else{
+              tClass.name += " & "+adjBlock.name;
+            }
+          }
+
           //Gets user scheduled CP's
           var CPs = this.mySched.getAllType("CP");
           //Iterate through user scheduled CP's

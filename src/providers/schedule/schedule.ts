@@ -266,7 +266,7 @@ export class ScheduleProvider {
               //If community time already has an event scheduled, appends event name
               if(CT[this.dfp.dateToDayString(calEvents[i].startTime)]){
                 //Fixes Duplicate events - TODO: Figure out why this bug occurs
-                if(CT[this.dfp.dateToDayString(calEvents[i].startTime)].indexOf(calEvents[i].title) != -1){
+                if(CT[this.dfp.dateToDayString(calEvents[i].startTime)].indexOf(calEvents[i].title) == -1){
                   CT[this.dfp.dateToDayString(calEvents[i].startTime)] += " & "+calEvents[i].title;
                 }
               }
@@ -287,7 +287,9 @@ export class ScheduleProvider {
 
               //If CP already has an event scheduled, append current event name
               if(CP[this.dfp.dateToDayString(calEvents[i].startTime)]){
-                CP[this.dfp.dateToDayString(calEvents[i].startTime)] += " & "+calEvents[i].title;
+                if(CP[this.dfp.dateToDayString(calEvents[i].startTime)].indexOf(calEvents[i].title) == -1){
+                  CP[this.dfp.dateToDayString(calEvents[i].startTime)] += " & "+calEvents[i].title;
+                }
               }
               //Otherwise, just set the variable to the event title
               else{
@@ -320,7 +322,6 @@ export class ScheduleProvider {
             }else{
               console.log("Unknown: "+calEvents[i].startTime.getHours() +":"+calEvents[i].startTime.getMinutes()+" - "+calEvents[i].endTime.getHours() +":"+calEvents[i].endTime.getMinutes());
             }
-
           }
           //If it's a day type event (occurs for the whole day)
           else if(calEvents[i].type == "day"){
@@ -341,48 +342,6 @@ export class ScheduleProvider {
             //Unknown event type
             console.log("Unknown type: ");
             console.log(calEvents[i]);
-          }
-        }
-
-        for(let i=0; i < calEvents.length; i++){
-          //If it's a timed event (not a day-long event)
-          if(calEvents[i].type == "time" && !!calEvents[i].endTime){
-            if((calEvents[i].startTime.getHours() == 9 && calEvents[i].startTime.getMinutes() == 45) && //  or      9:50
-              (calEvents[i].endTime.getHours() == 10 && calEvents[i].endTime.getMinutes() == 10)) {    //  or      10:15
-
-              //If community time already has an event scheduled, appends event name
-              if(CT[this.dfp.dateToDayString(calEvents[i].startTime)]) {
-
-                //Fixes Duplicate events - TODO: Figure out why this bug occurs
-                if(CT[this.dfp.dateToDayString(calEvents[i].startTime)] != calEvents[i].title){
-                  CT[this.dfp.dateToDayString(calEvents[i].startTime)] += " & "+calEvents[i].title;
-                }
-              }
-              //Otherwise, just set the variable to the event title
-              else {
-                CT[this.dfp.dateToDayString(calEvents[i].startTime)] = calEvents[i].title;
-              }
-            }
-
-            //CP
-            else if(
-                ((calEvents[i].startTime.getHours() == 14 && calEvents[i].startTime.getMinutes() == 45) || //Starts at 2:45
-                (calEvents[i].startTime.getHours() == 14 && calEvents[i].startTime.getMinutes() == 40) ||  //  or      2:40
-                (calEvents[i].startTime.getHours() == 14 && calEvents[i].startTime.getMinutes() == 35))    //  or      2:35
-
-              && ((calEvents[i].endTime.getHours() == 15 && calEvents[i].endTime.getMinutes() == 25) ||    //Ends at   3:25
-                (calEvents[i].endTime.getHours() == 15 && calEvents[i].endTime.getMinutes() == 30) ||      //  or      3:30
-                (calEvents[i].endTime.getHours() == 15 && calEvents[i].endTime.getMinutes() == 15))){      //  or      3:15
-
-              //If CP already has an event scheduled, append current event name
-              if(CP[this.dfp.dateToDayString(calEvents[i].startTime)]){
-                CP[this.dfp.dateToDayString(calEvents[i].startTime)] += " & "+calEvents[i].title;
-              }
-              //Otherwise, just set the variable to the event title
-              else{
-                CP[this.dfp.dateToDayString(calEvents[i].startTime)] = calEvents[i].title;
-              }
-            }
           }
         }
 

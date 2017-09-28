@@ -20,18 +20,10 @@ export class ClubCalendarPage {
   constructor(public http:Http, public loadingCtrl:LoadingController,
      public feedParse:FeedParseProvider, public messages: MessagesProvider, public dfp:DateFunctionsProvider) {
 
+    this.localRefresh();
     const lastRefresh = localStorage.getItem("clubEventsRefreshTime");
     //If it's been over an hour, run a full refresh
-    if(lastRefresh != null && lastRefresh != ""){
-      if(parseInt(lastRefresh) + 360000 < Date.now()){
-        this.l = this.loadingCtrl.create();
-        this.l.present();
-        this.refresh();
-      }else{
-        this.localRefresh();
-      }
-    }
-    else{
+    if(lastRefresh == null || lastRefresh =="" || (lastRefresh != null && lastRefresh != "" && parseInt(lastRefresh) + 360000 < Date.now())){
       this.l = this.loadingCtrl.create();
       this.l.present();
       this.refresh();
@@ -63,6 +55,7 @@ export class ClubCalendarPage {
   refresh(refresher?){
     this.http.get("http://www.pingry.org/calendar/calendar_391.ics").map(data => this.feedParse.parseCalendar(data.text())).subscribe((value) => {
       let rawEvents:Array<any> = value;
+      console.log(JSON.parse(JSON.stringify(rawEvents)));
       for(var i = 0; i < rawEvents.length; i++){
         //TODO: FIGURE OUT WHAT THE HECK THIS LINE DOES
         if(!!rawEvents[i].startTime){
@@ -99,23 +92,12 @@ export class ClubCalendarPage {
         }
       }
 
-      //Add descriptions for each event and fix titles
-      for(var i = 0; i < rawEvents.length; i++){
-        if(rawEvents[i].desc == undefined){
-          var title = rawEvents[i].title;
-          var desc = title.substring(title.indexOf(" - ")+3);
-          title = title.substring(0, title.indexOf(" - "));
-          rawEvents[i].title = title;
-          rawEvents[i].desc = desc;
-        }
-      }
-
       //Sorts the event by time, then by title, then by description
       rawEvents.sort(
         function(a,b){
           if(a.startTime==b.startTime){
             if(a.title == b.title){
-              return a.desc.localeCompare(b.desc);
+              return a.location.localeCompare(b.location);
             }else{
               return a.title.localeCompare(b.title);
             }
@@ -134,8 +116,7 @@ export class ClubCalendarPage {
       localStorage.setItem("clubEvents", JSON.stringify(rawEvents));
       localStorage.setItem("clubEventsRefreshTime", ""+Date.now());
       this.events = rawEvents;
-      //$ionicLoading.hide();
-    }, ()=>this.localRefresh()).add(() =>{
+    }, ()=>this.messages.showError("Couldn't connect to the internet!")).add(() =>{
       if(refresher) refresher.complete();
       if(!!this.l){ this.l.dismissAll(); this.l = null; }
     });
@@ -148,10 +129,6 @@ export class ClubCalendarPage {
     const obj = localStorage.getItem("clubEvents");
     if(obj != undefined){
       this.events = JSON.parse(obj);
-    }else{
-      this.messages.showError("Couldn't connect to the internet!");
     }
   }
-
-
 }

@@ -15,15 +15,15 @@
 
 
 <ion-content padding>
-  <ion-refresher (ionRefresh)="refresh();">
+  <ion-refresher (ionRefresh)="refresh($event);">
     <ion-refresher-content>Pull to Refresh</ion-refresher-content>
 	</ion-refresher>
 	<ion-list>
 		<h2 ion-item style="text-align:center; margin-top:25px" *ngIf="events.length == 0">No meetings found!</h2>
-		<ion-item class="clubMeeting" [class]="{'cancelled':event.desc.toLowerCase().indexOf('cancelled')!=-1}" *ngFor="let event of events">
+		<ion-item tappable class="clubMeeting" *ngFor="let event of events">
 			<h2>{{event.title}}</h2>
 			<h3>{{formatTime(event.startTime)}}</h3>
-			<p style="text-overflow: ellipsis; whitespace: none; overflow:hidden">{{event.desc}}</p>
+			<p style="text-overflow: ellipsis; whitespace: none; overflow:hidden">{{event.location}}</p>
 		</ion-item>
 	</ion-list>
 </ion-content>

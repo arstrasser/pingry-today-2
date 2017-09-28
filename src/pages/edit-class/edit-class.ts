@@ -11,7 +11,7 @@ import { MyScheduleProvider } from '../../providers/my-schedule/my-schedule';
   templateUrl: 'edit-class.html',
 })
 export class EditClassPage {
-  cls:any = {"name":"", "color":"", "type":"", "firstLunch":false, "takesFlex":false, "firstFlex":true, "timeType":"", "time":{"day":"", "id":false}, "tasks":[]};;
+  cls:any = {"name":"", "color":"", "type":"", "firstLunch":false, "takesFlex":"", "firstFlex":true, "timeType":"", "time":{"day":"", "id":false}, "tasks":[]};;
   clsType:string;
   clsId:number;
   modifying:boolean = false;
@@ -80,7 +80,6 @@ export class EditClassPage {
   }
 
   isValid(cls){
-    console.log(cls);
     //Class has a name
     if(cls.name == ""){
       return false;

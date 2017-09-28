@@ -2,7 +2,6 @@ TODO:
 
 Bugs:
  - Add an easter egg
- - Change DDD icon to white
 
 Remote Database:
  - calendar URL's
