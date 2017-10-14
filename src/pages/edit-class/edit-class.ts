@@ -31,8 +31,15 @@ export class EditClassPage {
     }
   }
 
-  lunchHelp(){
+  lunchHelp(e){
     this.messages.popup("First Lunch", "First lunch is for:\nScience, Health, Art, Math, and Economic Classes");
+    e.cancelBubble = true;
+  }
+  
+  takesFlexChange(){
+    if(this.cls.takesFlex !== "" && this.cls.takesFlex !== "before"){
+      this.cls.firstLunch = true;
+    }
   }
 
   openColorPicker(){

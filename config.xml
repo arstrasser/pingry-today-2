@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="org.pingry.pingryapp" version="2.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="org.pingry.pingryappandroid" version="2.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Pingry Today</name>
     <description>Pingry Today - Any students' necessities at Pingry (By Alex Strasser)</description>
     <author email="astrasser2019@pingry.org" href="http://pingry.org/">Alex Strasser '19'</author>
@@ -7,12 +7,6 @@
     <access origin="*" />
     <allow-navigation href="http://ionic.local/*" />
     <allow-navigation href="http://ionic.local/*" />
-    <allow-navigation href="http://10.13.84.7:8101" />
-    <allow-navigation href="http://10.13.81.153:8101" />
-    <allow-navigation href="http://192.168.1.85:8101" />
-    <allow-navigation href="http://10.0.0.8:8101" />
-    <allow-navigation href="http://10.0.0.23:8100" />
-    <allow-navigation href="http://10.0.0.23:8101" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
     <allow-intent href="tel:*" />

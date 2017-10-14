@@ -23,6 +23,7 @@ export class ClassManagePage {
   myCPs:Array<any> = [];
   constructor(public mySched:MyScheduleProvider, public modalCtrl: ModalController) {
      this.myClasses = this.mySched.getAll().block;
+     this.myClasses.sort((a,b) => {return a.time.id - b.time.id});
      this.myFlexes = this.mySched.getAll().flex;
      this.myCPs = this.mySched.getAll().CP;
   }
@@ -30,10 +31,12 @@ export class ClassManagePage {
   addClass(){
     let modal = this.modalCtrl.create(EditClassPage, {});
     modal.present();
+    this.myClasses.sort((a,b) => {return a.time.id - b.time.id});
   }
 
   editClass(clsType:string, clsId:number){
     let modal = this.modalCtrl.create(EditClassPage, {clsType, clsId});
     modal.present();
+    this.myClasses.sort((a,b) => {return a.time.id - b.time.id});
   }
 }

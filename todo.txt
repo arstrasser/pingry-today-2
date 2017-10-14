@@ -1,5 +1,3 @@
-TODO:
-
 Bugs:
  - Add an easter egg
 
@@ -10,10 +8,4 @@ Remote Database:
 Features:
  - Veracross Connection
 
-Disable forced refresh for schedule and letter day
-
 Search for other TODO's
-
-
-Bounciness
-Button delays

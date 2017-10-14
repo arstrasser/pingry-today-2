@@ -23,12 +23,12 @@
       </ion-select>
     </ion-item>
 		<ion-item style="pointer-events:initial !important" *ngIf="cls.type=='block'">
-			<ion-label (click)="lunchHelp()">First Lunch<ion-icon name="help-circled"></ion-icon></ion-label>
+			<ion-label><span (click)="lunchHelp($event)" tappable>First Lunch<ion-icon name="help" style="vertical-align:top; padding-left: 5px; font-size:0.6em"></ion-icon></span></ion-label>
 			<ion-toggle [(ngModel)]="cls.firstLunch"></ion-toggle>
 		</ion-item>
     <ion-item *ngIf="cls.type=='block'">
 			<ion-label>Science</ion-label>
-			<ion-select [(ngModel)]="cls.takesFlex">
+			<ion-select [(ngModel)]="cls.takesFlex" (ngModelChange)="takesFlexChange()">
         <ion-option value="">No flexes</ion-option>
         <ion-option value="both">All adjacent flexes</ion-option>
         <ion-option value="before">Only flexes before the class</ion-option>
