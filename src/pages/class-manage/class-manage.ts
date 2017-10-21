@@ -37,6 +37,6 @@ export class ClassManagePage {
   editClass(clsType:string, clsId:number){
     let modal = this.modalCtrl.create(EditClassPage, {clsType, clsId});
     modal.present();
-    this.myClasses.sort((a,b) => {return a.time.id - b.time.id});
+    modal.onDidDismiss(()=>this.myClasses.sort((a,b) => {return a.time.id - b.time.id}));
   }
 }

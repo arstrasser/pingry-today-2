@@ -164,8 +164,6 @@ export class LetterDayProvider {
   }
 
   //Initialize the date to be the current date
-
-
   letter() {
     if(this.curDay != -1){
       return this.times[this.curDay].letter;

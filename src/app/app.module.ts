@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
+import { ColorPickerModule } from 'ngx-color-picker';
 import { IonicStorageModule } from '@ionic/storage';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
@@ -26,6 +27,8 @@ import { ClubCalendarPage } from '../pages/club-calendar/club-calendar';
 import { ClubCalendarPageModule } from '../pages/club-calendar/club-calendar.module';
 import { EditClassPage } from '../pages/edit-class/edit-class';
 import { EditClassPageModule } from '../pages/edit-class/edit-class.module';
+import { FullColorPickerPage } from '../pages/full-color-picker/full-color-picker';
+import { FullColorPickerPageModule } from '../pages/full-color-picker/full-color-picker.module';
 import { NewsPage } from '../pages/news/news';
 import { NewsPageModule } from '../pages/news/news.module';
 import { SchedulePage } from '../pages/schedule/schedule';
@@ -55,6 +58,7 @@ import { SettingsProvider } from '../providers/settings/settings';
     HttpModule,
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot(),
+    ColorPickerModule,
     AboutPageModule,
     AnnouncementsPageModule,
     AnnouncementsPopupPageModule,
@@ -63,6 +67,7 @@ import { SettingsProvider } from '../providers/settings/settings';
     ClassManagePageModule,
     ClubCalendarPageModule,
     EditClassPageModule,
+    FullColorPickerPageModule,
     NewsPageModule,
     SettingsPageModule,
     SchedulePageModule,
@@ -80,6 +85,7 @@ import { SettingsProvider } from '../providers/settings/settings';
     ClassManagePage,
     ClubCalendarPage,
     EditClassPage,
+    FullColorPickerPage,
     NewsPage,
     SettingsPage,
     SchedulePage,

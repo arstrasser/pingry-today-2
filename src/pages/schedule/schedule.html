@@ -31,7 +31,8 @@
   			<div id="periods">{{periodList}}</div>
   		</div>
   	</div>
-  	<div id="nonSchoolDay" *ngIf="letter==''">No school!</div>
+  	<div class="nonSchoolDay" *ngIf="letter==''">No school!</div>
+    <div class="nonSchoolDay" *ngIf="letter!='' && !isLetter(letter) && letter !='refreshing' && letter!='empty'">{{letter}}</div>
     <ion-grid style="padding:0" id="scheduleSwipe">
       <ion-row *ngFor="let cls of classes" tappable (click)="clickedClass(cls)" class="row class-{{cls.type}}" [ngStyle]="{background: cls.color}">
         <ion-col col-4 class="class-time">

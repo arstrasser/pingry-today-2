@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { IonicPage, ViewController, NavParams, ActionSheetController } from 'ionic-angular';
+import { IonicPage, ViewController, NavParams, ActionSheetController, ModalController } from 'ionic-angular';
 
+import { FullColorPickerPage } from '../full-color-picker/full-color-picker';
 import { SettingsProvider } from '../../providers/settings/settings';
 import { MessagesProvider } from '../../providers/messages/messages';
 import { MyScheduleProvider } from '../../providers/my-schedule/my-schedule';
@@ -16,7 +17,7 @@ export class EditClassPage {
   clsId:number;
   modifying:boolean = false;
   constructor(public viewCtrl: ViewController, public navParams: NavParams, public mySched:MyScheduleProvider, public settings:SettingsProvider,
-     public messages:MessagesProvider, public actionSheetCtrl:ActionSheetController) {
+     public messages:MessagesProvider, public actionSheetCtrl:ActionSheetController, public modalCtrl:ModalController) {
 
     this.clsType = navParams.get("clsType");
     this.clsId = navParams.get("clsId");
@@ -35,7 +36,7 @@ export class EditClassPage {
     this.messages.popup("First Lunch", "First lunch is for:\nScience, Health, Art, Math, and Economic Classes");
     e.cancelBubble = true;
   }
-  
+
   takesFlexChange(){
     if(this.cls.takesFlex !== "" && this.cls.takesFlex !== "before"){
       this.cls.firstLunch = true;
@@ -43,18 +44,29 @@ export class EditClassPage {
   }
 
   openColorPicker(){
-    const colors = ["#E41010", "#EE9A00", "#fff705", "#00e000", "#40ff9f", "#57efff", "#0066ff", "#c826f1", "#FF3E96", "#e2e2e2", "#fff"];
+    const colors = ["#ea3c3c", "#f9981f", "#fbf432", "#40ef40", "#40ff9f", "#56e8ff", "#1f78ff", "#c348e2", "#ff4d9e", "#e2e2e2", "#fff"];
     let buttons = [];
     for(let i = 0; i < colors.length; i++){
       let j = i;
       buttons.push({text:".", handler:() => {this.cls.color = colors[j]}, cssClass:"color-picker-"+i+" color-picker"})
     }
+    buttons.push({text:"Other...", handler:()=>this.openFullColorPicker()})
     buttons.push({text:"Cancel", role:"cancel"});
     let alert = this.actionSheetCtrl.create({
       title:"Color Picker",
       buttons
     });
     alert.present();
+  }
+
+  openFullColorPicker(){
+    let modal = this.modalCtrl.create(FullColorPickerPage, {color:this.cls.color});
+    modal.present();
+    modal.onDidDismiss((color) => {
+      if(color){
+        this.cls.color = color;
+      }
+    })
   }
 
   delete(){
