@@ -1,11 +1,13 @@
 Bugs:
- - Add an easter egg
+ - change API key
+ - check that news local refresh works
 
 Remote Database:
  - calendar URL's
  - Snow Days
 
 Features:
+ - Add an easter egg
  - Veracross Connection
 
 Search for other TODO's

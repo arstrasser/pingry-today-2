@@ -3,7 +3,6 @@ import { Http } from '@angular/http';
 import { Events } from 'ionic-angular';
 import 'rxjs/add/operator/map';
 
-import { FeedParseProvider } from "../feed-parse/feed-parse";
 import { DateFunctionsProvider } from "../date-functions/date-functions";
 import { ScheduleProvider } from "../schedule/schedule";
 import { SettingsProvider } from "../settings/settings";
@@ -22,42 +21,36 @@ class Dates{
 
 @Injectable()
 export class LetterDayProvider {
-  dates = {"A":[], "B":[], "C":[], "D":[], "E":[], "F":[], "G":[], "R":[]};
   times:Array<{letter:string, schedule:Array<number>, dates:Array<string>}>;
   refreshing:boolean;
   curDay:number;
   d:any;
 
-  constructor(public http:Http, public feedParse:FeedParseProvider, public dfp:DateFunctionsProvider, public events:Events,
+  constructor(public http:Http, public dfp:DateFunctionsProvider, public events:Events,
       public schedule:ScheduleProvider, public settings:SettingsProvider){
-    let temp:string = localStorage.getItem("lastLetterRefresh");
-
-    if(temp == null || temp == undefined || (temp != null && temp != undefined && parseInt(temp) + 604800000 < Date.now())){ //Refresh if not refreshed or if it's been a week
-      this.refresh();
-    }
-
-    temp = localStorage.getItem("letterDayDates");
+    let temp = localStorage.getItem("letterDays");
     if(temp){
-      this.dates = JSON.parse(temp);
+      this.times = JSON.parse(temp);
+    }else{
+      this.times = [
+        {"letter":"A", "schedule":[1,2,3,4], "dates":[]},
+        {"letter":"B", "schedule":[5,6,7,1], "dates":[]},
+        {"letter":"C", "schedule":[2,3,4,5], "dates":[]},
+        {"letter":"D", "schedule":[6,7,1,2], "dates":[]},
+        {"letter":"E", "schedule":[3,4,5,6], "dates":[]},
+        {"letter":"F", "schedule":[7,1,2,3], "dates":[]},
+        {"letter":"G", "schedule":[4,5,6,7], "dates":[]},
+        {"letter":"R", "schedule":[1,2,3,4,5,6,7], "dates":[]}
+      ];
     }
 
-    this.times = [
-      {"letter":"A", "schedule":[1,2,3,4], "dates":this.dates.A},
-      {"letter":"B", "schedule":[5,6,7,1], "dates":this.dates.B},
-      {"letter":"C", "schedule":[2,3,4,5], "dates":this.dates.C},
-      {"letter":"D", "schedule":[6,7,1,2], "dates":this.dates.D},
-      {"letter":"E", "schedule":[3,4,5,6], "dates":this.dates.E},
-      {"letter":"F", "schedule":[7,1,2,3], "dates":this.dates.F},
-      {"letter":"G", "schedule":[4,5,6,7], "dates":this.dates.G},
-      {"letter":"R", "schedule":[1,2,3,4,5,6,7], "dates":(this.dates.R || [])}
-    ];
+
 
     this.events.subscribe("newReviewDay", obj => {
       if(this.times[7].dates.indexOf(obj.date) == -1){
         this.times[7].dates.push(obj.date);
-        this.dates.R.push(obj.date);
       }
-      localStorage.setItem("letterDayDates", JSON.stringify(this.dates));
+      localStorage.setItem("letterDays", JSON.stringify(this.times));
     })
 
     this.updateDay(new Date());
@@ -66,36 +59,14 @@ export class LetterDayProvider {
   //Function to refresh all data from the letter day ical
   refresh(callback?){
     this.refreshing = true;
-    const letterDayURL = "http://www.pingry.org/calendar/calendar_384.ics"; //URL of the LetterDay calendar for the Upper School
-    //Returns a promise so that you can run async functions after this function completes
+    const letterDayURL = "http://compsci.pingry.k12.nj.us:3000/letter?api_key="+this.settings.apiKey; //URL of the LetterDay calendar for the Upper School
+    //Returns a subscription so that you can run async functions after this function completes
     //(e.g.Calling LetterDay.refresh.then(function(){code here}))
-    return this.http.get(letterDayURL).map((data)=>data.text()).subscribe((data) => {
-      const calEvents = this.feedParse.parseCalendar(data);
-      this.dates = {"A":[], "B":[], "C":[], "D":[], "E":[], "F":[], "G":[], "R":[]};
-      //Iterate through calendar events
-      for(let i = 0; i < calEvents.length; i++){
-        //Ensures that it is a day long event
-        if(calEvents[i].type == "day"){
-          //Adds the first letter of that event to the calendar
-          if(calEvents[i].title.length == 1 && this.dates.hasOwnProperty(calEvents[i].title.substring(0,1))){
-            this.dates[calEvents[i].title.substring(0,1)].push(this.dfp.dateToDayString(calEvents[i].time));
-          }
-        }
-      }
+    return this.http.get(letterDayURL).map(res => res.json()).subscribe((data) => {
+      this.times = data;
 
       //Update localStorage items
-      localStorage.setItem("letterDayDates", JSON.stringify(this.dates));
-      localStorage.setItem("lastLetterRefresh", JSON.stringify(Date.now()));
-
-      //Updates the arrays in current memory
-      this.times[0].dates = this.dates.A;
-      this.times[1].dates = this.dates.B;
-      this.times[2].dates = this.dates.C;
-      this.times[3].dates = this.dates.D;
-      this.times[4].dates = this.dates.E;
-      this.times[5].dates = this.dates.F;
-      this.times[6].dates = this.dates.G;
-      this.times[7].dates = this.dates.R;
+      localStorage.setItem("letterDays", JSON.stringify(this.times));
 
       //Updates the letter day if there are different letter days for the current date
       this.updateDay(this.d);
@@ -113,11 +84,6 @@ export class LetterDayProvider {
 
   //Function to get the index of the current date in one of the date arrays
   getIndexOf(date:string):number{
-    //Check override first
-    if(this.settings.remoteOverride.letterOverride[date] != undefined){
-      return this.letterToNumber(this.settings.remoteOverride.letterOverride[date]);
-    }
-
     //Iterate through each letter
     for(let i = 0; i < this.times.length; i+=1){
       //Iterate through each date
