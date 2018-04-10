@@ -57,7 +57,8 @@ export class ClubCalendarPage {
       let rawEvents:Array<any> = value;
       console.log(JSON.parse(JSON.stringify(rawEvents)));
       for(var i = 0; i < rawEvents.length; i++){
-        //TODO: FIGURE OUT WHAT THE HECK THIS LINE DOES
+
+        //Convert from Javascript dates into numbers
         if(!!rawEvents[i].startTime){
           rawEvents[i].startTime = rawEvents[i].startTime.getTime();
         }

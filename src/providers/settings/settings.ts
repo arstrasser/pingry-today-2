@@ -8,8 +8,8 @@ import 'rxjs/add/operator/map';
 export class SettingsProvider {
   public apiKey:string = "rpuChVS3LdQR2qcFSaV0NIxcWm5Q0ep4NInfQRvu";
   athleticMaps:boolean;
-  athleticSubscription:string;
-  athleticCalendars:string[] = [];
+  athleticSubscriptions:number[];
+  athleticCalendars:Array<{id:number, name:string, url:string}> = [];
   superMode:boolean;
   extraOptions:Array<string>;
   athleticSubscriptionChanged:boolean = false;
@@ -30,11 +30,11 @@ export class SettingsProvider {
       this.athleticCalendars = JSON.parse(temp);
     }
 
-    temp = localStorage.getItem("athleticSubscription");
+    temp = localStorage.getItem("athleticSubscriptions");
     if(temp == "" || temp == undefined){
-      this.athleticSubscription = "";
+      this.athleticSubscriptions = [];
     }else{
-      this.athleticSubscription = temp;
+      this.athleticSubscriptions = JSON.parse(temp);
     }
 
     temp = localStorage.getItem("ddd");
@@ -61,14 +61,14 @@ export class SettingsProvider {
     return this.athleticCalendars;
   }
 
-  getAthleticSubscription(){
-    return this.athleticSubscription;
+  getAthleticSubscriptions(){
+    return this.athleticSubscriptions;
   }
 
   setAthleticSubscription(newVal){
-    this.athleticSubscription = newVal;
+    this.athleticSubscriptions = newVal;
     this.athleticSubscriptionChanged = true;
-    localStorage.setItem("athleticSubscription", this.athleticSubscription);
+    localStorage.setItem("athleticSubscriptions", JSON.stringify(this.athleticSubscriptions));
     localStorage.setItem("athleticEvents", null);
     localStorage.setItem("athleticEventsRefreshTime", "");
   }

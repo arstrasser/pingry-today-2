@@ -39,7 +39,7 @@ export class NewsPage {
       this.news = data;
     }, ()=> {
       this.localRefresh();
-      this.messages.showError("Couldn't connect!")
+      this.messages.showError("Couldn't connect to the internet!")
     }).add(() =>{
       if(refresher) refresher.complete();
       if(!!this.l) { this.l.dismissAll(); this.l = null; }

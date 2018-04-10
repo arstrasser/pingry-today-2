@@ -23,12 +23,10 @@
 		</ion-item>
     <ion-item>
       <ion-label>Athletic Team Subscription</ion-label><br>
-      <ion-select [(ngModel)]="selectedAthleticCalendar" (ngModelChange)="updateAthleticSubscription(selectedAthleticCalendar)">
+      <ion-select [(ngModel)]="subscriptions" (ngModelChange)="updateAthleticSubscription()" multiple="true">
         <ion-option value="">All Calendars</ion-option>
-        <ion-option *ngFor="let cal of athleticCalendars" [value]="cal[1]" [selected]="cal[0] == selectedAthleticsCalendar">{{cal[0]}}</ion-option>
+        <ion-option *ngFor="let cal of athleticCalendars" [value]="cal.id" [selected]="subscriptions.indexOf(cal.id) != -1">{{cal.name}}</ion-option>
       </ion-select>
     </ion-item>
-    <ion-item tappable (click)="calendarRefresh()">Force Calendar Refresh</ion-item>
-    <ion-item tappable (click)="letterRefresh()">Force Letter Day Refresh</ion-item>
 	</ion-list>
 </ion-content>

@@ -1,6 +1,9 @@
-Bugs:
+MAIN:
  - change API key
  - check that news local refresh works
+ - check that athletic subscriptions work
+ - Remove Club Calendar?
+ - Add Athletic Calendar to configuration interface
 
 Remote Database:
  - calendar URL's

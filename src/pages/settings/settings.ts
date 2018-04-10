@@ -22,15 +22,14 @@ import { ClassManagePage } from '../class-manage/class-manage';
   templateUrl: 'settings.html',
 })
 export class SettingsPage {
-  refreshEnable:boolean = true;
   athleticCalendars:Array<any>;
-  selectedAthleticCalendar:string;
+  subscriptions:number[];
   athleticMaps:boolean;
   constructor(public navCtrl: NavController, public navParams: NavParams, public iab:InAppBrowser, public settings:SettingsProvider,
      public messages:MessagesProvider, public schedule:ScheduleProvider, public letterDay:LetterDayProvider) {
 
        this.athleticCalendars = this.settings.getAthleticCalendars();
-       this.selectedAthleticCalendar = this.settings.getAthleticSubscription();
+       this.subscriptions = this.settings.getAthleticSubscriptions();
        this.athleticMaps = this.settings.getAthleticMaps();
   }
 
@@ -38,41 +37,9 @@ export class SettingsPage {
     this.navCtrl.push(ClassManagePage);
   }
 
-  calendarRefresh(){
-    //Only refresh if not currently refreshing
-    if(this.refreshEnable){
-      this.messages.showNormal("Refreshing...");
-      this.refreshEnable = false;
-      this.schedule.refresh(val=>{
-        if(val){
-          this.messages.showSuccess("Success!");
-        }else{
-          this.messages.showError("Couldn't connect to the internet!");
-        }
-        this.refreshEnable = true;
-      });
-    }
-  }
-
-  letterRefresh(){
-    //Only refresh if not currently refreshing
-    if(this.refreshEnable){
-      this.messages.showNormal("Refreshing...");
-      this.refreshEnable = false;
-      this.letterDay.refresh(val => {
-        if(val){
-          this.messages.showSuccess("Success!");
-        }else{
-          this.messages.showError("Couldn't connect to the internet!");
-        }
-        this.refreshEnable = true;
-      });
-    }
-  }
-
   //Updates the athletic maps option to true or false
-  updateAthleticSubscription(val){
-    this.settings.setAthleticSubscription(val);
+  updateAthleticSubscription(){
+    this.settings.setAthleticSubscription(this.subscriptions);
   }
 
   updateAthleticMaps(val){

@@ -23,24 +23,9 @@ export class AthleticsPage {
   l:any;
   constructor(public iab: InAppBrowser, public http:Http, public feedParse:FeedParseProvider, public messages: MessagesProvider,
     public settings:SettingsProvider, public dfp:DateFunctionsProvider, public loadingCtrl:LoadingController) {
-    console.log(this.events);
-    const lastRefresh = localStorage.getItem("athleticEventsRefreshTime");
-    //If it's been over an hour, run a full refresh
-    if(lastRefresh != null && lastRefresh != ""){
-      if(parseInt(lastRefresh) + 360000 < Date.now()){
-        this.l = this.loadingCtrl.create();
-        this.l.present();
-        this.refresh();
-      }else{
-        this.localRefresh();
-      }
-    }
-    else{
-      this.l = this.loadingCtrl.create();
-      this.l.present();
-      this.refresh();
-    }
-    this.displayEvents = this.events.slice(0,25);
+    this.l = this.loadingCtrl.create();
+    this.l.present();
+    this.refresh();
   }
 
   displayMore(infiniteScroll?){
@@ -51,6 +36,8 @@ export class AthleticsPage {
   ionViewBeforeEnter(){
     if(this.settings.getAthleticSubscriptionChanged()){
       this.events = [];
+      this.displayEvents = [];
+      localStorage.removeItem("athleticEvents");
       this.refresh();
       this.settings.setAthleticSubscriptionChanged(false);
     }
@@ -86,105 +73,43 @@ export class AthleticsPage {
   //Refreshes the announcements
   refresh(refresher?){
     let calendars = this.settings.getAthleticCalendars();
-    var queuedEvents = [];
-    for(var i = 0; i < calendars.length; i++){
-      if(this.settings.athleticSubscription == "" || this.settings.athleticSubscription == calendars[i][1]){
-        queuedEvents.push(
-          this.http.get(calendars[i][1]).map(data => this.feedParse.parseCalendar(data.text()))
-        );
+    let url = "";
+    if(this.settings.athleticSubscriptions.length > 0){
+      url = "http://compsci.pingry.k12.nj.us:3000/athletics/sports?api_key"+this.settings.apiKey;
+      for(let i = 0; i < this.settings.athleticSubscriptions.length; i++){
+        url += "&sport="+this.settings.athleticSubscriptions[i];
       }
+    }else{
+      url = "http://compsci.pingry.k12.nj.us:3000/athletics/sports/all?api_key"+this.settings.apiKey;
     }
 
-    Observable.forkJoin(queuedEvents).subscribe((values) => {
-      let rawEvents = [];
-      for(let i = 0; i < values.length; i++){
-        rawEvents = rawEvents.concat(values[i]);
-      }
-      for(var i = 0; i < rawEvents.length; i++){
-        //TODO: FIGURE OUT WHAT THE HECK THIS LINE DOES
-        if(!!rawEvents[i].startTime){
-          rawEvents[i].startTime = rawEvents[i].startTime.getTime();
-        }
-        if(!!rawEvents[i].endTime){
-          rawEvents[i].endTime = rawEvents[i].endTime.getTime();
-        }
-      }
+    this.http.get(url).map(data => data.json()).subscribe(data => {
 
-      //Iterate over the events to fix Javscript Time objecs and such (also removing past events)
-      for(var i = 0; i < rawEvents.length; i++){
-        //Time type event
-        if(rawEvents[i].type == "time"){
-          //If the event end time is less than the current time
-          if(rawEvents[i].startTime < Date.now()){
-            //Remove the event
-            rawEvents.splice(i,1);
-            i--;
-          }
-        }
-        //Day type event
-        else if(rawEvents[i].type == "day"){
-          //If the event's time is less than the current time and the event isn't today
-          if(rawEvents[i].time < Date.now() && this.dfp.dateToDayString(this.dfp.parseStringForDate(rawEvents[i].time)) != this.dfp.dateToDayString(new Date())){
-            //Remove the event
-            rawEvents.splice(i,1);
-            i--;
-          }
-          else{
-            //Set the start time to be the time (makes for easier sorting and display)
-            rawEvents[i].startTime = rawEvents[i].time;
-          }
-        }
-      }
-
-      //Add descriptions for each event and fix titles
-      for(var i = 0; i < rawEvents.length; i++){
-        if(rawEvents[i].desc == undefined){
-          var title = rawEvents[i].title;
-          var desc = title.substring(title.indexOf(" - ")+3);
-          title = title.substring(0, title.indexOf(" - "));
-          rawEvents[i].title = title;
-          rawEvents[i].desc = desc;
-        }
-      }
-
-      //Sorts the event by time, then by title, then by description
-      rawEvents.sort(
-        function(a,b){
-          if(a.startTime==b.startTime){
-            if(a.title == b.title){
-              return a.desc.localeCompare(b.desc);
-            }else{
-              return a.title.localeCompare(b.title);
-            }
-          }
-          else{
-            return a.startTime>b.startTime?1:-1;
-          }
-        }
-      );
+      //Delete past events
+      let i = 0;
+      let now = Date.now()
+      while(data[i].startTime < now) i++;
+      data.splice(i);
 
       //Update local storage
-      localStorage.setItem("athleticEvents", JSON.stringify(rawEvents));
-      localStorage.setItem("athleticEventsRefreshTime", ""+Date.now());
-      this.events = rawEvents;
+      localStorage.setItem("athleticEvents", JSON.stringify(data));
+      this.events = data;
       this.displayEvents = this.events.slice(0,25);
-    }, ()=>{this.localRefresh();}).add(() => {
+    }, ()=>{
+      this.messages.showError("Couldn't connect to the internet!");
+      this.localRefresh();
+    }).add(() => {
       if(refresher) refresher.complete();
       if(!!this.l){ this.l.dismissAll(); this.l = null; }
     });
   }
-
-
 
   //Locally refreshes from local storage
   localRefresh(){
     const obj = localStorage.getItem("athleticEvents");
     if(obj != undefined){
       this.events = JSON.parse(obj);
-    }else{
-      this.messages.showError("Couldn't connect to the internet!");
+      this.displayEvents = this.events.slice(0,25);
     }
   }
-
-
 }

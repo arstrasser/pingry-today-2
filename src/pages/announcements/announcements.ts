@@ -8,6 +8,7 @@ import { AnnouncementsPopupPage } from '../announcements-popup/announcements-pop
 
 import { FeedParseProvider } from '../../providers/feed-parse/feed-parse';
 import { MessagesProvider } from '../../providers/messages/messages';
+import { SettingsProvider } from '../../providers/settings/settings';
 
 
 
@@ -20,16 +21,11 @@ export class AnnouncementsPage {
   rss:Array<any> = [];
   l:any;
   constructor(public iab: InAppBrowser, public http:Http, public modalCtrl: ModalController,
-     public feedParse:FeedParseProvider, public messages: MessagesProvider, public loadingCtrl:LoadingController) {
+     public settings: SettingsProvider, public messages: MessagesProvider, public loadingCtrl:LoadingController) {
 
-    this.localRefresh();
-    const lastRefresh = localStorage.getItem("pingryRSSRefreshTime");
-    //If it's been over an hour, run a full refresh
-    if(lastRefresh == null || lastRefresh =="" || (lastRefresh != null && lastRefresh != "" && parseInt(lastRefresh) + 360000 < Date.now())){
-      this.l = this.loadingCtrl.create();
-      this.l.present();
-      this.refresh();
-    }
+    this.l = this.loadingCtrl.create();
+    this.l.present();
+    this.refresh();
   }
 
   openSystemLink(url){
@@ -38,12 +34,13 @@ export class AnnouncementsPage {
 
   //Refreshes the announcements
   refresh(refresher?){
-    this.http.get("http://www.pingry.org/rss.cfm?news=16&d="+Date.now()).map(data => data.text()).subscribe((data) => {
-      var obj = this.feedParse.parseRSS(data);
-      localStorage.setItem("announceRSS", JSON.stringify(obj));
-      localStorage.setItem("announceRSSRefreshTime", ""+Date.now());
-      this.rss = obj;
-    }, ()=>this.messages.showError("Couldn't connect to the internet!")).add(() =>{
+    this.http.get("http://compsci.pingry.k12.nj.us:3000/announcements?api_key="+this.settings.apiKey).map(data => data.json()).subscribe((data) => {
+      localStorage.setItem("announceRSS", JSON.stringify(data));
+      this.rss = data;
+    }, ()=>{
+      this.localRefresh();
+      this.messages.showError("Couldn't connect to the internet!")
+    }).add(() =>{
       if(refresher) refresher.complete();
       if(!!this.l){ this.l.dismissAll(); this.l = null; }
     });
