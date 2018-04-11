@@ -6,7 +6,6 @@ import 'rxjs/add/operator/map';
 
 import { AnnouncementsPopupPage } from '../announcements-popup/announcements-popup';
 
-import { FeedParseProvider } from '../../providers/feed-parse/feed-parse';
 import { MessagesProvider } from '../../providers/messages/messages';
 import { SettingsProvider } from '../../providers/settings/settings';
 

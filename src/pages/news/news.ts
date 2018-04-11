@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { IonicPage, ModalController, LoadingController } from 'ionic-angular';
 import { InAppBrowser } from '@ionic-native/in-app-browser';
 import { Http } from '@angular/http';
-import { Observable }     from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 
 import { ArticlePage } from '../article/article';

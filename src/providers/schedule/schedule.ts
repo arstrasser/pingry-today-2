@@ -14,8 +14,8 @@ export class ScheduleProvider {
   scheduledDays: any = {};
   manualSchedules: any = {};
   scheduledEvents:{CP:any, CT:any} = {CP: {}, CT:{}};
-  curSchedule:Array<any>;
-  curScheduleName:string;
+  curSchedule:Array<any> = [];
+  curScheduleName:string = "";
   curDay:Date;
   refreshing:boolean = false;
   constructor(public http: Http, public dfp:DateFunctionsProvider, public events:Events, public settings:SettingsProvider) {
@@ -38,9 +38,11 @@ export class ScheduleProvider {
     temp = localStorage.getItem("manualSchedules");
     if(temp != null){this.manualSchedules = JSON.parse(temp);}
 
-    //Initialize current schedule to be the normal schedule
-    this.curSchedule = this.typeList[0].schedule;
-    this.curScheduleName = this.typeList[0].name;
+    if(this.typeList.length > 0){
+      //Initialize current schedule to be the normal schedule
+      this.curSchedule = this.typeList[0].schedule;
+      this.curScheduleName = this.typeList[0].name;
+    }
 
     this.refresh();
   }
@@ -70,12 +72,18 @@ export class ScheduleProvider {
         //Get CP and CT events
         this.scheduledEvents = values[2];
         localStorage.setItem("scheduledEvents", JSON.stringify(this.scheduledEvents));
-        this.updateCurrentSchedule();
 
         //Get default schedule configurations
         this.typeList = values[3];
         localStorage.setItem("typeList", JSON.stringify(this.typeList));
 
+        console.log(this.typeList);
+        if(this.curScheduleName == ""){
+          this.curSchedule = this.typeList[0].schedule;
+          this.curScheduleName = this.typeList[0].name;
+        }
+
+        this.updateCurrentSchedule();
         this.refreshing = false;
         this.events.publish("scheduleRefreshComplete", {success:true});
         if(callback){callback(true)}
@@ -90,6 +98,9 @@ export class ScheduleProvider {
   }
 
   updateCurrentSchedule() {
+    if(this.typeList.length == 0){
+      return;
+    }
     var d = this.dfp.dateToDayString(this.curDay);
     if(this.scheduledDays && this.scheduledDays[d] != undefined){
       if(this.scheduledDays[d] == "manual"){

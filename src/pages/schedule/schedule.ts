@@ -125,7 +125,7 @@ export class SchedulePage {
 
   refresh(){
     //Dress Down Days
-    this.ddd = this.settings.remoteOverride.ddd[this.dfp.dateToDayString(this.curDay)];
+    this.ddd = this.settings.ddd[this.dfp.dateToDayString(this.curDay)];
     //Stores the schedule for the day
     this.classes = [];
     //Stores the letter day
@@ -200,10 +200,11 @@ export class SchedulePage {
             }
           }
           if(tClass.type =="flex"){
+            var adjBlock;
             //If this is first flex
             if(tClass.id == 1){
               //Checks to see if first period takes flex
-              var adjBlock = this.mySched.get("block", this.letterDay.classes()[0]);
+              adjBlock = this.mySched.get("block", this.letterDay.classes()[0]);
               if(adjBlock !== undefined && (adjBlock.takesFlex == "both" || adjBlock.takesFlex == "cp" || adjBlock.takesFlex == "after")){
                 if(modified){
                   tClass.name += " & "+adjBlock.name;
@@ -217,7 +218,7 @@ export class SchedulePage {
             //If this is second flex (It's a 0 because addClass persistence requires a boolean value which is either a 0 or a 1)
             else if(tClass.id == 0){
               //Checks if 3rd class of the day takes the flex
-              var adjBlock = this.mySched.get("block", this.letterDay.classes()[2]);
+              adjBlock = this.mySched.get("block", this.letterDay.classes()[2]);
               if(adjBlock !== undefined && (adjBlock.takesFlex == "both" || adjBlock.takesFlex == "cp" || adjBlock.takesFlex == "after")){
                 tClass.color = adjBlock.color;
                 if(modified){

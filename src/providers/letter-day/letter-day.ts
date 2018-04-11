@@ -7,18 +7,6 @@ import { DateFunctionsProvider } from "../date-functions/date-functions";
 import { ScheduleProvider } from "../schedule/schedule";
 import { SettingsProvider } from "../settings/settings";
 
-class Dates{
-  A:Array<number>;
-  B:Array<number>;
-  C:Array<number>;
-  D:Array<number>;
-  E:Array<number>;
-  F:Array<number>;
-  G:Array<number>;
-  R:Array<number>; //Review Days
-}
-
-
 @Injectable()
 export class LetterDayProvider {
   times:Array<{letter:string, schedule:Array<number>, dates:Array<string>}>;

@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { IonicPage, LoadingController } from 'ionic-angular';
 import { InAppBrowser } from '@ionic-native/in-app-browser';
 import { Http } from '@angular/http';
-import { Observable }     from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 
 import { FeedParseProvider } from '../../providers/feed-parse/feed-parse';
@@ -72,15 +71,14 @@ export class AthleticsPage {
 
   //Refreshes the announcements
   refresh(refresher?){
-    let calendars = this.settings.getAthleticCalendars();
     let url = "";
     if(this.settings.athleticSubscriptions.length > 0){
-      url = "http://compsci.pingry.k12.nj.us:3000/athletics/sports?api_key"+this.settings.apiKey;
+      url = "http://compsci.pingry.k12.nj.us:3000/athletics/sports?api_key="+this.settings.apiKey;
       for(let i = 0; i < this.settings.athleticSubscriptions.length; i++){
         url += "&sport="+this.settings.athleticSubscriptions[i];
       }
     }else{
-      url = "http://compsci.pingry.k12.nj.us:3000/athletics/sports/all?api_key"+this.settings.apiKey;
+      url = "http://compsci.pingry.k12.nj.us:3000/athletics/sports/all?api_key="+this.settings.apiKey;
     }
 
     this.http.get(url).map(data => data.json()).subscribe(data => {

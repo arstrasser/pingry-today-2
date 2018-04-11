@@ -27,7 +27,7 @@ export class MyScheduleProvider {
     });
     //localForage.setItem("myClasses", JSON.parse('{"block":[{"name":"Test","color":"#EE9A00","type":"block","firstLunch":true,"takesFlex":false,"firstFlex":true,"timeType":"","time":{"day":"","id":"4"},"tasks":[]},{"name":"Test 2","color":"#fff","type":"block","firstLunch":false,"takesFlex":true,"firstFlex":true,"timeType":"","time":{"day":"","id":"2"},"tasks":[]}],"flex":[],"CP":[]}'))
     //For old versions of the app
-    localForage.getItem("myClasses").then(a => {
+    /*localForage.getItem("myClasses").then(a => {
       const b:any = a; //Weird bug to satisfy typescript
       if(b){
         console.log("Restoring classes from LocalForage");
@@ -36,7 +36,7 @@ export class MyScheduleProvider {
         this.events.publish("myClassesReady");
         localForage.setItem("myClasses", null);
       }
-    })
+    })*/
 
     //Typical Refreshing
     this.storage.get("myClasses").then(val => {
