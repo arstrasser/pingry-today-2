@@ -21,7 +21,7 @@
 	<ion-list>
 		<ion-item tappable *ngFor="let article of news" (click)="openArticle(article)">
       <ion-avatar item-start>
-        <img [src]="!!article.image?article.image:'assets/img/logo2.jpg'" (error)="article.image = 'assets/img/logo2.jpg'"/>
+        <img [src]="(!!article.image && article.image!='none')?article.image:'assets/img/logo2.jpg'" (error)="article.image = 'assets/img/logo2.jpg'"/>
       </ion-avatar>
       <h2 class="rssTitle">{{article.title}}</h2>
       <p class="rssDescription">{{article.description}}</p>

@@ -46,7 +46,7 @@ export class NotificationsProvider {
     if(date.getTime() >= Date.now()){
       this.notifications.schedule({
         id: id,
-        trigger: date,
+        trigger: {at:date},
         text: desc,
         title: "Pingry",
         led: 'FFFFFF',

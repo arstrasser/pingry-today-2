@@ -25,7 +25,7 @@
       <ion-label>Athletic Team Subscription</ion-label><br>
       <ion-select [(ngModel)]="subscriptions" (ngModelChange)="updateAthleticSubscription()" multiple="true">
         <ion-option [value]="-1">All Calendars</ion-option>
-        <ion-option (click)="console.log('test')" *ngFor="let cal of athleticCalendars" [value]="cal.id">{{cal.name}}</ion-option>
+        <ion-option *ngFor="let cal of athleticCalendars" [value]="cal.id">{{cal.name}}</ion-option>
       </ion-select>
     </ion-item>
 	</ion-list>
