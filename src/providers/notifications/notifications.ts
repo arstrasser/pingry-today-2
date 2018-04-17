@@ -41,17 +41,18 @@ export class NotificationsProvider {
     return new Date(str.substring(0,4), (parseInt(str.substring(5,7))-1), str.substring(8,10), str.substring(11,13), str.substring(14, 16));
   }
 
-  scheduleNotification(id, date, desc){
+  scheduleNotification(id, date:Date, desc){
     //Schedules a notification with the given parameters
     if(date.getTime() >= Date.now()){
       this.notifications.schedule({
         id: id,
-        at: date,
+        trigger: date,
         text: desc,
         title: "Pingry",
         led: 'FFFFFF',
         icon: 'res://notification.png'
       });
+      return true;
     }else{
       console.log("Cancelled scheduling "+desc+" at "+date+" because it was too early.");
     }

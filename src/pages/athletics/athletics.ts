@@ -72,7 +72,7 @@ export class AthleticsPage {
   //Refreshes the announcements
   refresh(refresher?){
     let url = "";
-    if(this.settings.athleticSubscriptions.length > 0){
+    if(this.settings.athleticSubscriptions.length > 0 && this.settings.athleticSubscriptions[0] != -1){
       url = "http://compsci.pingry.k12.nj.us:3000/athletics/sports?api_key="+this.settings.apiKey;
       for(let i = 0; i < this.settings.athleticSubscriptions.length; i++){
         url += "&sport="+this.settings.athleticSubscriptions[i];
@@ -87,7 +87,7 @@ export class AthleticsPage {
       let i = 0;
       let now = Date.now()
       while(data[i].startTime < now) i++;
-      data.splice(i);
+      data = data.slice(i);
 
       //Update local storage
       localStorage.setItem("athleticEvents", JSON.stringify(data));

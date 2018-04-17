@@ -32,7 +32,7 @@ export class SettingsProvider {
 
     temp = localStorage.getItem("athleticSubscriptions");
     if(temp == "" || temp == undefined){
-      this.athleticSubscriptions = [];
+      this.athleticSubscriptions = [-1];
     }else{
       this.athleticSubscriptions = JSON.parse(temp);
     }

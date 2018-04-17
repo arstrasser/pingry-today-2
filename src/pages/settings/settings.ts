@@ -27,7 +27,6 @@ export class SettingsPage {
   athleticMaps:boolean;
   constructor(public navCtrl: NavController, public navParams: NavParams, public iab:InAppBrowser, public settings:SettingsProvider,
      public messages:MessagesProvider, public schedule:ScheduleProvider, public letterDay:LetterDayProvider) {
-
        this.athleticCalendars = this.settings.getAthleticCalendars();
        this.subscriptions = this.settings.getAthleticSubscriptions();
        this.athleticMaps = this.settings.getAthleticMaps();
@@ -39,6 +38,11 @@ export class SettingsPage {
 
   //Updates the athletic maps option to true or false
   updateAthleticSubscription(){
+    console.log(this.subscriptions);
+    if(this.subscriptions.indexOf(-1)!=-1 || this.subscriptions.length == 0){
+      this.messages.showNormal("Subscribed to all calendars");
+      this.subscriptions = [-1];
+    }
     this.settings.setAthleticSubscription(this.subscriptions);
   }
 

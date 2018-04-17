@@ -45,7 +45,7 @@ export class MyApp {
         {title:"To Do List", page:TodoPage},
         {title:"News", page:NewsPage},
         {title:"Announcements", page:AnnouncementsPage},
-        {title:"Activities Calendar", page:ClubCalendarPage},
+//        {title:"Activities Calendar", page:ClubCalendarPage},
         {title:"Athletics", page:AthleticsPage},
         {title:"Lunch Menu", localUrl:"http://www.sagedining.com/menus/pingry"},
         {title:"Web Portal", systemUrl:"https://www.pingry.org/pingrytoday"},
