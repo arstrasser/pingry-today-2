@@ -6,7 +6,7 @@ import 'rxjs/add/operator/map';
 
 @Injectable()
 export class SettingsProvider {
-  public apiKey:string = "rpuChVS3LdQR2qcFSaV0NIxcWm5Q0ep4NInfQRvu";
+  public apiKey:string = "QJxF19F39PV7Lr9qy3sgkXjP8Yx4WNU7CCTDbFXC";
   athleticMaps:boolean;
   athleticSubscriptions:number[];
   athleticCalendars:Array<{id:number, name:string, url:string}> = [];

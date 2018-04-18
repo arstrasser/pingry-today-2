@@ -1,11 +1,10 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="org.pingry.pingryappandroid" version="2.3.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Pingry Today</name>
-    <description>Pingry Today - Any students' necessities at Pingry (By Alex Strasser)</description>
+    <description>Pingry Today - Any student's necessities at Pingry (By Alex Strasser)</description>
     <author email="astrasser2019@pingry.org" href="http://pingry.org/">Alex Strasser '19'</author>
     <content src="index.html" />
     <access origin="*" />
-    <allow-navigation href="http://ionic.local/*" />
     <allow-navigation href="http://ionic.local/*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
