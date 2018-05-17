@@ -32,22 +32,15 @@ export class LetterDayProvider {
       ];
     }
 
-
-
-    this.events.subscribe("newReviewDay", obj => {
-      if(this.times[7].dates.indexOf(obj.date) == -1){
-        this.times[7].dates.push(obj.date);
-      }
-      localStorage.setItem("letterDays", JSON.stringify(this.times));
-    })
-
     this.updateDay(new Date());
+
+    this.refresh();
   }
 
   //Function to refresh all data from the letter day ical
   refresh(callback?){
     this.refreshing = true;
-    const letterDayURL = "http://compsci.pingry.k12.nj.us:3000/letter?api_key="+this.settings.apiKey; //URL of the LetterDay calendar for the Upper School
+    const letterDayURL = "http://compsci.pingry.k12.nj.us:3000/v1/letter?api_key="+this.settings.apiKey; //URL of the LetterDay calendar for the Upper School
     //Returns a subscription so that you can run async functions after this function completes
     //(e.g.Calling LetterDay.refresh.then(function(){code here}))
     return this.http.get(letterDayURL).map(res => res.json()).subscribe((data) => {

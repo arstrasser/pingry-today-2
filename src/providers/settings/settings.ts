@@ -45,13 +45,13 @@ export class SettingsProvider {
   }
 
   refresh(){
-    this.http.get("http://compsci.pingry.k12.nj.us:3000/ddd?api_key="+this.apiKey).map(data => data.json()).subscribe(data => {
+    this.http.get("http://compsci.pingry.k12.nj.us:3000/v1/ddd?api_key="+this.apiKey).map(data => data.json()).subscribe(data => {
       this.ddd = data;
       localStorage.setItem("ddd", JSON.stringify(data));
-      this.events.publish("remoteOverrideRefresh");
+      this.events.publish("dddRefresh");
     })
 
-    this.http.get("http://compsci.pingry.k12.nj.us:3000/athletics/calendarList?api_key="+this.apiKey).map(data => data.json()).subscribe(data => {
+    this.http.get("http://compsci.pingry.k12.nj.us:3000/v1/athletics/calendarList?api_key="+this.apiKey).map(data => data.json()).subscribe(data => {
       this.athleticCalendars = data;
       localStorage.setItem("athleticCalendars", JSON.stringify(data));
     })

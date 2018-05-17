@@ -73,12 +73,12 @@ export class AthleticsPage {
   refresh(refresher?){
     let url = "";
     if(this.settings.athleticSubscriptions.length > 0 && this.settings.athleticSubscriptions[0] != -1){
-      url = "http://compsci.pingry.k12.nj.us:3000/athletics/sports?api_key="+this.settings.apiKey;
+      url = "http://compsci.pingry.k12.nj.us:3000/v1/athletics/sports?api_key="+this.settings.apiKey;
       for(let i = 0; i < this.settings.athleticSubscriptions.length; i++){
         url += "&sport="+this.settings.athleticSubscriptions[i];
       }
     }else{
-      url = "http://compsci.pingry.k12.nj.us:3000/athletics/sports/all?api_key="+this.settings.apiKey;
+      url = "http://compsci.pingry.k12.nj.us:3000/v1/athletics/sports/all?api_key="+this.settings.apiKey;
     }
 
     this.http.get(url).map(data => data.json()).subscribe(data => {

@@ -31,34 +31,34 @@ export class SchedulePage {
   constructor(public navCtrl: NavController, public dfp:DateFunctionsProvider, public messages: MessagesProvider, public events: Events,
               public letterDay:LetterDayProvider, public schedule:ScheduleProvider, public mySched:MyScheduleProvider, public menu:MenuController, public settings:SettingsProvider) {
 
-    this.maxISOday = this.dateToISO(new Date(Date.now()+2*12*30*24*60*60*1000));
-    this.minISOday = this.dateToISO(new Date(2015, 8, 1));
     this.minISOday = "2015-09-01"
     this.maxISOday = (new Date().getFullYear() + 1)+"-08-31";
-    this.events.subscribe("scheduleRefreshComplete", result => {
-      if(result.success || this.letter == "refreshing"){
-        this.refresh();
-      }else{
-        this.messages.showError("Couldn't connect to the internet!");
-      }
-    })
 
-    this.events.subscribe("letterRefreshComplete", result => {
-      if(result.success){
-        this.refresh();
-      }else{
-        this.messages.showError("Couldn't connect to the internet!");
-      }
-    });
+    this.scheduleRefreshHandler = this.scheduleRefreshHandler.bind(this);
+    this.refresh = this.refresh.bind(this);
 
-    this.events.subscribe("myClassesReady", () => this.refresh())
+    this.events.subscribe("scheduleRefreshComplete", this.scheduleRefreshHandler);
+    this.events.subscribe("letterRefreshComplete", this.scheduleRefreshHandler);
+    this.events.subscribe("myClassesReady", this.refresh);
+    this.events.subscribe("dddRefresh", this.refresh);
 
-    this.events.subscribe("remoteOverrideRefresh", () => {
-      console.log("override refreshing");
+    let l = this.letterDay.letter();
+    if(l != "refreshing" && (l === undefined || l.length != 1 || !this.isLetter(l))){
+      //If not connected to the internet
+      this.schedule.refresh();
+      this.letterDay.refresh();
+    }
+
+    this.refresh();
+  }
+
+  scheduleRefreshHandler(result){
+    if(result.success){
       this.refresh();
-    })
-
-    this.letterDay.getNextDatesOf("A");
+    }else if(this.letterDay.letter() != "refreshing"){
+      this.messages.showError("Couldn't connect to the internet!");
+      console.error("Refresh Handler");
+    }
   }
 
   ionViewDidEnter(){
@@ -67,6 +67,13 @@ export class SchedulePage {
 
   ionViewWillLeave(){
     this.menu.swipeEnable(true, "main-menu");
+
+    if((this.events.unsubscribe("scheduleRefreshComplete", this.scheduleRefreshHandler)?0:1)+
+      (this.events.unsubscribe("letterRefreshComplete", this.scheduleRefreshHandler)?0:1)+
+      (this.events.unsubscribe("myClassesReady", this.refresh)?0:1)+
+      (this.events.unsubscribe("dddRefresh", this.refresh)?0:1) > 0){
+        console.error("Error unsubscribing from events")
+    }
   }
 
   dateChange(){
@@ -315,27 +322,6 @@ export class SchedulePage {
       }
 
     }
-    //If today is not a valid letter day
-    else{
-      //If there is no stored letter day schedule
-      if(this.letter == "empty"){
-        //If not connected to the internet
-        this.schedule.refresh().add(val => {
-          if(!val){
-            this.messages.showError("Couldn't connect to the internet!");
-          }
-        });
-        this.letterDay.refresh().add(val => {
-          if(!val){
-            this.messages.showError("Couldn't connect to the internet!");
-          }
-        });
-      }
-      else if(this.letter == "refreshing"){
-        this.messages.showNormal("Refreshing...");
-      }
-    }
-    console.log(this.letter);
   }
 
   swipeEvent(e:any){

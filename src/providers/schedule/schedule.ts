@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/Rx';
 import { Events } from 'ionic-angular';
 
 import { SettingsProvider } from '../settings/settings';
+import { MessagesProvider } from '../messages/messages';
 import { DateFunctionsProvider } from '../date-functions/date-functions';
 
 @Injectable()
@@ -18,7 +19,7 @@ export class ScheduleProvider {
   curScheduleName:string = "";
   curDay:Date;
   refreshing:boolean = false;
-  constructor(public http: Http, public dfp:DateFunctionsProvider, public events:Events, public settings:SettingsProvider) {
+  constructor(public http: Http, public dfp:DateFunctionsProvider, public events:Events, public settings:SettingsProvider, public messages:MessagesProvider) {
     //Initializes the current day to be the system current day
     this.curDay = new Date();
 
@@ -48,10 +49,11 @@ export class ScheduleProvider {
   }
 
   refresh(callback?){
-    const scheduleURL = "http://compsci.pingry.k12.nj.us:3000/schedule/all?api_key="+this.settings.apiKey;
-    const manualURL = "http://compsci.pingry.k12.nj.us:3000/schedule/manual/all?api_key="+this.settings.apiKey;
-    const eventsURL = "http://compsci.pingry.k12.nj.us:3000/schedule/events?api_key="+this.settings.apiKey;
-    const scheduleTypesURL = "http://compsci.pingry.k12.nj.us:3000/schedule/types?api_key="+this.settings.apiKey;
+    this.messages.showNormal("Refreshing...");
+    const scheduleURL = "http://compsci.pingry.k12.nj.us:3000/v1/schedule/all?api_key="+this.settings.apiKey;
+    const manualURL = "http://compsci.pingry.k12.nj.us:3000/v1/schedule/manual/all?api_key="+this.settings.apiKey;
+    const eventsURL = "http://compsci.pingry.k12.nj.us:3000/v1/schedule/events?api_key="+this.settings.apiKey;
+    const scheduleTypesURL = "http://compsci.pingry.k12.nj.us:3000/v1/schedule/types?api_key="+this.settings.apiKey;
 
     this.refreshing = true;
     return Observable.forkJoin([

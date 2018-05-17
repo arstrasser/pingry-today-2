@@ -33,7 +33,7 @@ export class NewsPage {
 
   //Refreshes the announcements
   refresh(refresher?){
-    this.http.get("http://compsci.pingry.k12.nj.us:3000/news?api_key="+this.settings.apiKey).map(data => data.json()).subscribe((data) => {
+    this.http.get("http://compsci.pingry.k12.nj.us:3000/v1/news?api_key="+this.settings.apiKey).map(data => data.json()).subscribe((data) => {
       localStorage.setItem("newsRSS", JSON.stringify(data));
       this.news = data;
     }, ()=> {
