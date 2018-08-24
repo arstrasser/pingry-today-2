@@ -1,0 +1,17 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Announcement</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="close()">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+	<h2 style="text-transform:capitalize; margin-top:5px;">{{announcement.title}}</h2>
+	<div id="announcement-content"></div>
+  <button ion-button block (click)="close()">Close</button>
+</ion-content>

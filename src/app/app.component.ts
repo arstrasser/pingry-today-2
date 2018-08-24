@@ -1,34 +1,60 @@
 import { Component, ViewChild } from '@angular/core';
-import { Platform, Nav } from 'ionic-angular';
-import { StatusBar } from '@ionic-native/status-bar';
-import { SplashScreen } from '@ionic-native/splash-screen';
+
+import { Platform, Nav } from '@ionic/angular';
+import { SplashScreen } from '@ionic-native/splash-screen/ngx';
+import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { InAppBrowser } from '@ionic-native/in-app-browser';
+import { FCM } from '@ionic-native/fcm';
 
-import { SchedulePage } from '../pages/schedule/schedule';
-import { AnnouncementsPage } from '../pages/announcements/announcements';
-import { AboutPage } from '../pages/about/about';
-import { ClubCalendarPage } from '../pages/club-calendar/club-calendar';
-import { NewsPage } from '../pages/news/news';
-import { AthleticsPage } from '../pages/athletics/athletics';
-import { SettingsPage } from '../pages/settings/settings';
-import { TodoPage } from '../pages/todo/todo';
+import { SchedulePage } from './schedule/schedule.page';
+import { AnnouncementsPage } from './announcements/announcements.page';
+import { AboutPage } from './about/about.page';
+import { NewsPage } from './news/news.page';
+import { AthleticsPage } from './athletics/athletics.page';
+import { SettingsPage } from './settings/settings.page';
+import { TodoPage } from './todo/todo.page';
 
-import { MessagesProvider } from '../providers/messages/messages';
-
-declare var FCMPlugin:any;
-
+import { MessagesService } from './messages.service';
 
 @Component({
-  templateUrl: 'app.html'
+  selector: 'app-root',
+  templateUrl: 'app.component.html'
 })
-export class MyApp {
+export class AppComponent {
   @ViewChild(Nav) nav: Nav;
   rootPage:any = SchedulePage;
-  pages:Array<{title:string, page?:any, localUrl?:string, systemUrl?:string}>
-  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, public iab:InAppBrowser, public messages:MessagesProvider) {
-    platform.ready().then(() => {
+  pages:Array<{title:string, page?:any, localUrl?:string, systemUrl?:string}> =
+      [
+          {title:"Schedule", page:SchedulePage},
+          {title:"To Do List", page:TodoPage},
+          {title:"News", page:NewsPage},
+          {title:"Announcements", page:AnnouncementsPage},
+  //        {title:"Activities Calendar", page:ClubCalendarPage},
+          {title:"Athletics", page:AthleticsPage},
+          {title:"Lunch Menu", localUrl:"http://www.sagedining.com/menus/pingry"},
+          {title:"Web Portal", systemUrl:"https://www.pingry.org/pingrytoday"},
+          {title:"Settings", page:SettingsPage},
+          {title:"About", page: AboutPage}
+      ];
+
+  constructor(
+    private platform: Platform,
+    private splashScreen: SplashScreen,
+    private statusBar: StatusBar,
+    public iab:InAppBrowser,
+    public messages:MessagesService,
+    public fcm: FCM
+  ) {
+
+    this.initializeApp();
+  }
+
+  initializeApp() {
+    this.platform.ready().then(() => {
+      this.statusBar.styleDefault();
+      this.splashScreen.hide();
       try {
-        FCMPlugin.onNotification(data => {
+        this.fcm.onNotification().subscribe(data => {
           console.log(data);
           if(data.text){ //Local notification uses .text instead of .body
             this.messages.popup(data.title, data.text);
@@ -37,21 +63,7 @@ export class MyApp {
           }
         });
       }catch(e){console.warn("Unable to register FCM notification handler")}
-      statusBar.styleDefault();
-      splashScreen.hide();
     });
-    this.pages = [
-        {title:"Schedule", page:SchedulePage},
-        {title:"To Do List", page:TodoPage},
-        {title:"News", page:NewsPage},
-        {title:"Announcements", page:AnnouncementsPage},
-//        {title:"Activities Calendar", page:ClubCalendarPage},
-        {title:"Athletics", page:AthleticsPage},
-        {title:"Lunch Menu", localUrl:"http://www.sagedining.com/menus/pingry"},
-        {title:"Web Portal", systemUrl:"https://www.pingry.org/pingrytoday"},
-        {title:"Settings", page:SettingsPage},
-        {title:"About", page: AboutPage}
-    ];
   }
 
   openPage(p){
