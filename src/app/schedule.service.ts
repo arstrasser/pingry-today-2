@@ -52,10 +52,10 @@ export class ScheduleService {
 
   refresh(callback?){
     this.messages.showNormal("Refreshing...");
-    const scheduleURL = "http://compsci.pingry.k12.nj.us:3000/v1/schedule/all?api_key="+this.settings.apiKey;
-    const manualURL = "http://compsci.pingry.k12.nj.us:3000/v1/schedule/manual/all?api_key="+this.settings.apiKey;
-    const eventsURL = "http://compsci.pingry.k12.nj.us:3000/v1/schedule/events?api_key="+this.settings.apiKey;
-    const scheduleTypesURL = "http://compsci.pingry.k12.nj.us:3000/v1/schedule/types?api_key="+this.settings.apiKey;
+    const scheduleURL = "https://compsci.pingry.k12.nj.us:3001/v1/schedule/all?api_key="+this.settings.apiKey;
+    const manualURL = "https://compsci.pingry.k12.nj.us:3001/v1/schedule/manual/all?api_key="+this.settings.apiKey;
+    const eventsURL = "https://compsci.pingry.k12.nj.us:3001/v1/schedule/events?api_key="+this.settings.apiKey;
+    const scheduleTypesURL = "https://compsci.pingry.k12.nj.us:3001/v1/schedule/types?api_key="+this.settings.apiKey;
 
     this.refreshing = true;
     return forkJoin([
@@ -121,7 +121,7 @@ export class ScheduleService {
           return;
         }
       }
-      console.error("Couldn't find schedule: "+this.scheduledDays[this.dfp.dateToDayString(this.curDay)]);
+      console.warn("Couldn't find schedule: "+this.scheduledDays[this.dfp.dateToDayString(this.curDay)]);
     }
     //Fallback
     this.curSchedule = this.typeList[0].schedule;

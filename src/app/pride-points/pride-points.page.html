@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-toggle auto-hide="false">
+        <ion-button>
+          <ion-icon name="menu"></ion-icon>
+        </ion-button>
+      </ion-menu-toggle>
+    </ion-buttons>
+    <ion-title>Settings</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-list>
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title *ngIf="!pointsLoaded" style="white-space:normal">Your points are loading...</ion-card-title>
+        <ion-card-title *ngIf="pointsLoaded" style="white-space:normal">You have {{points}} pride points</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        Earn pride points by going to Pingry Pride events. Once you're there and the event started, click the link below to scan the QR code!
+      </ion-card-content>
+    </ion-card>
+    <br>
+    <ion-button expand="full" (click)="openScanner()">
+      <ion-icon slot="end" name="add"></ion-icon>
+      <ion-label>Scan a code for pride points?</ion-label>
+    </ion-button>
+  </ion-list>
+</ion-content>

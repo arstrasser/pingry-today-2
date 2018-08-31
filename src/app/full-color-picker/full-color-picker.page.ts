@@ -16,14 +16,15 @@ export class FullColorPickerPage implements OnInit {
   ngOnInit() {
     this.color = this.navParams.get("color");
     this.colorPickerWidth = (document.getElementById("pickerIonContent").clientWidth - 32) *0.9;
+    console.log(this.colorPickerWidth);
   }
 
   save(){
-    document.querySelector('ion-modal-controller')[1].dismiss(this.color);
+    document.querySelector('ion-modal-controller').dismiss(this.color);
   }
 
   close(){
-    document.querySelector('ion-modal-controller')[1].dismiss(null);
+    document.querySelector('ion-modal-controller').dismiss(null);
   }
 
 }

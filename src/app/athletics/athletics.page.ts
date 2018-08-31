@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { LoadingController } from '@ionic/angular';
-import { InAppBrowser } from '@ionic-native/in-app-browser';
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { Http } from '@angular/http';
 import {map} from 'rxjs/operators';
 
@@ -15,16 +15,30 @@ import { DateFunctionsService } from '../date-functions.service';
   styleUrls: ['./athletics.page.scss'],
 })
 export class AthleticsPage implements OnInit {
-  events:Array<{title: string, desc:string, startTime:number, endTime?:number, location:string}> = [];
+  events:Array<{
+    title: string,
+    desc:string,
+    startTime:number,
+    event_status?:string,
+    location:string,
+    game_outcome:string,
+    game_placement:string,
+    google_map:string,
+    primary_group:string,
+
+  }> = [];
   displayEvents:Array<any> = [];
   l:any;
   constructor(public iab: InAppBrowser, public http:Http, public messages: MessagesService,
     public settings:SettingsService, public dfp:DateFunctionsService, public loadingCtrl:LoadingController) { }
 
   ngOnInit() {
-    this.l = this.loadingCtrl.create();
-    this.l.present();
-    this.refresh();
+    this.loadingCtrl.create().then((l) => {
+      l.present();
+      this.l = l;
+      this.refresh();
+    })
+
   }
 
   displayMore(infiniteScroll?){
@@ -63,43 +77,47 @@ export class AthleticsPage implements OnInit {
     return this.fixTime(jsTime.getHours(), jsTime.getMinutes())+" "+(jsTime.getMonth()+1)+"/"+jsTime.getDate();
   }
 
-  openMapsLocation(loc){
-    if(this.settings.athleticMaps){
-      this.iab.create("http://maps.google.com/?q="+loc, '_system');
-    }
+  openMapsLocation(event){
+    this.iab.create("http://maps.google.com/?q="+event.location, '_system');
   }
 
-  //Refreshes the announcements
+  eventCancelled(event){
+    return event.event_status == "Cancelled";
+  }
+
+  //Refreshes athletic events
   refresh(refresher?){
     let url = "";
-    if(this.settings.athleticSubscriptions.length > 0 && this.settings.athleticSubscriptions[0] != -1){
-      url = "http://compsci.pingry.k12.nj.us:3000/v1/athletics/sports?api_key="+this.settings.apiKey;
-      for(let i = 0; i < this.settings.athleticSubscriptions.length; i++){
-        url += "&sport="+this.settings.athleticSubscriptions[i];
+    this.settings.getAthleticSubscriptions().then((athleticSubscriptions) => {
+      if(athleticSubscriptions.length > 0 && athleticSubscriptions[0] != '-1'){
+        url = "https://compsci.pingry.k12.nj.us:3001/v1/athletics/sports?api_key="+this.settings.apiKey;
+        for(let i = 0; i < athleticSubscriptions.length; i++){
+          url += "&sport="+athleticSubscriptions[i];
+        }
+      }else{
+        url = "https://compsci.pingry.k12.nj.us:3001/v1/athletics/sports/all?api_key="+this.settings.apiKey;
       }
-    }else{
-      url = "http://compsci.pingry.k12.nj.us:3000/v1/athletics/sports/all?api_key="+this.settings.apiKey;
-    }
 
-    this.http.get(url).pipe(map(data => data.json())).subscribe(data => {
+      this.http.get(url).pipe(map(data => data.json())).subscribe(data => {
 
-      //Delete past events
-      let i = 0;
-      let now = Date.now()
-      while(data[i].startTime < now) i++;
-      data = data.slice(i);
+        //Delete past events
+        let i = 0;
+        let now = Date.now()
+        while(data[i].startTime < now) i++;
+        data = data.slice(i);
 
-      //Update local storage
-      localStorage.setItem("athleticEvents", JSON.stringify(data));
-      this.events = data;
-      this.displayEvents = this.events.slice(0,25);
-    }, ()=>{
-      this.messages.showError("Couldn't connect to the internet!");
-      this.localRefresh();
-    }).add(() => {
-      if(refresher) refresher.complete();
-      if(!!this.l){ this.l.dismissAll(); this.l = null; }
-    });
+        //Update local storage
+        localStorage.setItem("athleticEvents", JSON.stringify(data));
+        this.events = data;
+        this.displayEvents = this.events.slice(0,25);
+      }, ()=>{
+        this.messages.showError("Couldn't connect to the internet!");
+        this.localRefresh();
+      }).add(() => {
+        if(refresher) refresher.complete();
+        if(!!this.l){ this.l.dismiss(); this.l = null; }
+      });
+    })
   }
 
   //Locally refreshes from local storage

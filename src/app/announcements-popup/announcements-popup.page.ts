@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavParams, NavController } from '@ionic/angular';
-import { InAppBrowser } from '@ionic-native/in-app-browser';
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 
 @Component({
   selector: 'app-announcements-popup',
@@ -13,7 +13,7 @@ export class AnnouncementsPopupPage implements OnInit {
 
   ngOnInit() {
     this.announcement = this.navParams.get("announcement");
-    document.getElementsByTagName("page-announcements-popup")[0].addEventListener("click", (e) => {
+    document.getElementsByTagName("app-announcements-popup")[0].addEventListener("click", (e) => {
       e = e ||  window.event;
       let element:any = e.target || e.srcElement;
 

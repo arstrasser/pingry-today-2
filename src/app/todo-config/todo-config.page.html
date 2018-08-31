@@ -1,7 +1,12 @@
 <ion-header>
-  <ion-navbar>
-    <ion-title>To Do Configuration</ion-title>
-  </ion-navbar>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="close()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>To-Do Configuration</ion-title>
+  </ion-toolbar>
 </ion-header>
 
 
@@ -25,7 +30,7 @@
     </ion-item-->
     <ion-item (press)="cls.tasks[taskIndex].date = ''">
       <ion-label>Due Date</ion-label>
-      <ion-datetime [max]="maxDay" [min]="minDay" [(ngModel)]="cls.tasks[taskIndex].date"></ion-datetime>
+      <ion-datetime [max]="maxDay" [min]="minDay" [value]="cls.tasks[taskIndex].date" (ionChange)="dueDateChange($event.target.value)"></ion-datetime>
     </ion-item>
     <ion-item>
       <ion-label>Reminder Enabled</ion-label>
@@ -33,10 +38,10 @@
     </ion-item>
     <ion-item>
       <ion-label>Reminder Time</ion-label>
-      <ion-datetime [(ngModel)]="cls.tasks[taskIndex].reminder" (ngModelChange)="reminderChange()" [disabled]="!cls.tasks[taskIndex].reminder"
+      <ion-datetime [value]="cls.tasks[taskIndex].reminder" (ionChange)="reminderChange($event.target.value)" [disabled]="!cls.tasks[taskIndex].reminder"
             pickerFormat="h mm a M D YY" displayFormat="h:mma M/D/YY" [max]="maxDay" [min]="minDay" placeholder="Disabled"></ion-datetime>
     </ion-item>
   </ion-list>
-  <button ion-button full color="primary" (click)="close()">Save and Close</button>
-  <button ion-button full color="danger" (click)="delete()">Delete</button>
+  <ion-button expand="full" color="primary" (click)="close()">Save and Close</ion-button>
+  <ion-button expand="full" color="danger" (click)="delete()">Delete</ion-button>
 </ion-content>

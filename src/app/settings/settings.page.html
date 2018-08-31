@@ -1,26 +1,59 @@
 <ion-header>
-  <ion-navbar>
-    <button ion-button menuToggle>
-      <ion-icon name="menu"></ion-icon>
-    </button>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-toggle auto-hide="false">
+        <ion-button>
+          <ion-icon name="menu"></ion-icon>
+        </ion-button>
+      </ion-menu-toggle>
+    </ion-buttons>
     <ion-title>Settings</ion-title>
-  </ion-navbar>
+  </ion-toolbar>
 </ion-header>
 
 
 <ion-content padding no-bounce>
   <ion-list>
 		<ion-item tappable (click)="openClassManagement()">Class Management</ion-item>
-		<ion-item>
-      <ion-label>Athletic Event Maps</ion-label>
-      <ion-toggle [(ngModel)]="athleticMaps" (ngModelChange)="updateAthleticMaps(athleticMaps)"></ion-toggle>
-		</ion-item>
     <ion-item>
       <ion-label>Athletic Team Subscription</ion-label><br>
-      <ion-select [(ngModel)]="subscriptions" (ngModelChange)="updateAthleticSubscription()" multiple="true">
-        <ion-option [value]="-1">All Calendars</ion-option>
-        <ion-option *ngFor="let cal of athleticCalendars" [value]="cal.id">{{cal.name}}</ion-option>
+      <ion-select [value]="subscriptions" (ionChange)="updateAthleticSubscription($event.target)" multiple="true">
+        <ion-select-option [selected]="subscriptions==-1" value="-1">All Calendars</ion-select-option>
+        <ion-select-option *ngFor="let cal of athleticCalendars" [value]="cal.id">{{cal.name}}</ion-select-option>
       </ion-select>
     </ion-item>
-	</ion-list>
+    <ion-item style="margin-top: 20px">
+      <ion-label>
+        <h2 style="font-size:20px">Side Menu Page Order:</h2>
+        <p>Whatever is in the first slot will open with the app.</p>
+        <ion-button style="padding:5px;" color="success" expand="block" (click)="updatePages()">Update Order</ion-button>
+        <ion-list>
+          <ion-item-divider>
+            <ion-label>
+              Menu Items
+            </ion-label>
+          </ion-item-divider>
+          <ion-reorder-group id="menuPageReorder" [disabled]="false">
+            <ion-item *ngFor="let item of pages; let i = index" [attr.data-index]="i" [attr.data-hiddenPage]="false">
+              <ion-label>
+                {{item.title}}
+              </ion-label>
+              <ion-reorder *ngIf="item.title != 'About' && item.title != 'Settings'" slot="start"></ion-reorder>
+            </ion-item>
+            <ion-item-divider class="divider">
+              <ion-label>
+                Hidden Items
+              </ion-label>
+            </ion-item-divider>
+            <ion-item *ngFor="let item of hiddenPages; let i = index"  [attr.data-index]="i" [attr.data-hiddenPage]="true">
+              <ion-label>
+                {{item.title}}
+              </ion-label>
+              <ion-reorder slot="start"></ion-reorder>
+            </ion-item>
+          </ion-reorder-group>
+        </ion-list>
+      </ion-label>
+    </ion-item>
+  </ion-list>
 </ion-content>

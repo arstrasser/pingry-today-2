@@ -30,10 +30,15 @@ export class TodoConfigPage implements OnInit {
 
   reminderEnableChange() {
     if(this.cls.tasks[this.taskIndex].reminder){
-      this.cls.tasks[this.taskIndex].reminder = this.dateToISO(new Date());
+      let d = this.dateToISO(new Date(Date.now() + 86400000));
+      this.cls.tasks[this.taskIndex].reminder = d;
     }else{
       this.cls.tasks[this.taskIndex].reminder = null;
     }
+  }
+
+  dueDateChange(newVal){
+    this.cls.tasks[this.taskIndex].date = this.selectorToISO(newVal);
   }
 
   dateToISO(date){
@@ -42,6 +47,11 @@ export class TodoConfigPage implements OnInit {
       (date.getDate()<10?"0":"")+date.getDate()+"T"+
       (date.getHours()<10?"0":"")+date.getHours()+":"+
       (date.getMinutes()<10?"0":"")+date.getMinutes()+":00";
+  }
+
+  selectorToISO(selection){
+    if(!selection.year) return selection;
+    return this.dateToISO(new Date(selection.year.value, selection.month.value-1, selection.day.value));
   }
 
   ISOtoDate(str){
@@ -54,8 +64,9 @@ export class TodoConfigPage implements OnInit {
     document.querySelector('ion-modal-controller').dismiss();
   }
 
-  reminderChange(){
+  reminderChange(newVal){
     if(this.cls.tasks[this.taskIndex].reminder){
+      this.cls.tasks[this.taskIndex].reminder = this.selectorToISO(newVal);
       let reminderTime = this.ISOtoDate(this.cls.tasks[this.taskIndex].reminder).getTime();
       const str = this.cls.tasks[this.taskIndex].date;
       //Day after since minutes and seconds round up

@@ -10,3 +10,52 @@
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
 
+ion-header ion-toolbar:first-child {
+  padding-top: 0 !important;
+}
+
+.color-selection {
+  border-radius: 4px;
+  width: 15% !important;
+  margin: 5% !important;
+}
+
+.color-selection span {
+  opacity: 0 !important;
+}
+
+.color-selection-0 {
+  background-color: #ea3c3c !important;
+}
+.color-selection-1 {
+  background-color: #f9981f !important;
+}
+.color-selection-2 {
+  background-color: #fbf432 !important;
+}
+.color-selection-3 {
+  background-color: #40ef40 !important;
+}
+.color-selection-4 {
+  background-color: #40ff9f !important;
+}
+.color-selection-5 {
+  background-color: #56e8ff !important;
+}
+.color-selection-6 {
+  background-color: #1f78ff !important;
+}
+.color-selection-7 {
+  background-color: #c348e2 !important;
+}
+.color-selection-8 {
+  background-color: #ff4d9e !important;
+}
+.color-selection-9 {
+  background-color: #e2e2e2 !important;
+}
+.color-selection-10 {
+  background-color: #fff !important;
+  border-bottom: 1px solid black !important;
+  border-bottom-color: black !important;
+}

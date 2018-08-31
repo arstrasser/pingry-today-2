@@ -1,0 +1,12 @@
+ion-row {
+  padding-top: 10px;
+  padding-bottom:10px;
+}
+
+.request {
+  display:block;
+  text-align:center;
+  width: calc(100% - calc(2 * var(--ion-padding)));
+  position:absolute;
+  bottom: 40px;
+}

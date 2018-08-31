@@ -1,5 +1,6 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { NavController, NavParams, Events, Content, ModalController } from '@ionic/angular';
+import { ActivatedRoute } from '@angular/router';
+import { Events, Content, ModalController } from '@ionic/angular';
 
 import { DateFunctionsService } from '../date-functions.service';
 import { LetterDayService } from '../letter-day.service';
@@ -21,7 +22,7 @@ export class TodoPage implements OnInit {
   timeouts:any = {};
   maxDay:string = "";
   minDay:string = "";
-  constructor(public navCtrl: NavController, public navParams:NavParams, public dfp:DateFunctionsService, public messages: MessagesService, public events: Events,
+  constructor(public actRoute:ActivatedRoute, public dfp:DateFunctionsService, public messages: MessagesService, public events: Events,
               public letterDay:LetterDayService, public schedule:ScheduleService, public mySched:MyScheduleService, public modalCtrl:ModalController, public notifications:NotificationsService) { }
 
   ngOnInit() {
@@ -31,20 +32,23 @@ export class TodoPage implements OnInit {
   }
 
   ionViewDidEnter(){
-    const blockNum = this.navParams.get("blockNum");
-    if(this.navParams.get("blockNum") != undefined){
-      let elem:HTMLElement = document.getElementById("todo-class-"+blockNum);
-      this.content.scrollToPoint(0, elem.offsetTop - 5, 300);
-      var color = this.mySched.get("block", blockNum).color;
-      if(color == "#fff" || color == "#FFF" || color == "#ffffff" || color == "#FFFFFF"){
-        elem.style.border = "1px solid white";
-        elem.style["border-color"] = "#000"
-        window.setTimeout(()=>{elem.style["border-color"] = "#fff"}, 500);
-      }else{
-        elem.style["background-color"] = color;
-        window.setTimeout(()=>{elem.style["background-color"] = "#fff"}, 500);
+    this.actRoute.params.subscribe(params => {
+      const blockNum = params.blockNum;
+      if(blockNum != undefined){
+        let elem:HTMLElement = document.getElementById("todo-class-"+blockNum);
+        this.content.scrollToPoint(0, elem.offsetTop - 5, 300);
+        var color = this.mySched.get("block", blockNum).color;
+        if(color == "#fff" || color == "#FFF" || color == "#ffffff" || color == "#FFFFFF"){
+          elem.style.border = "1px solid white";
+          elem.style["border-color"] = "#000"
+          window.setTimeout(()=>{elem.style["border-color"] = "#fff"}, 500);
+        }else{
+          elem.style["background-color"] = color;
+          window.setTimeout(()=>{elem.style["background-color"] = "#fff"}, 500);
+        }
       }
-    }
+    })
+
   }
 
   refresh() {
@@ -176,9 +180,9 @@ export class TodoPage implements OnInit {
   }
 
   removeTask(taskIndex, clsIndex, elem) {
-    elem.parentNode.style.opacity = "0";
+    elem.parentNode.parentNode.style.opacity = "0";
     this.timeouts[taskIndex+""+clsIndex] = window.setTimeout(() => {
-      elem.parentNode.style.display = "none";
+      elem.parentNode.parentNode.style.display = "none";
       this.notifications.scheduleAll();
       this.mySched.save();
     }, 1000);
@@ -188,9 +192,9 @@ export class TodoPage implements OnInit {
     if(this.timeouts[taskIndex+""+clsIndex]){
       window.clearTimeout(this.timeouts[taskIndex+""+clsIndex]);
     }
-    elem.parentNode.style["transition-duration"] = '0s';
-    elem.parentNode.style.opacity = 1;
-    setTimeout(()=>elem.parentNode.style["transition-duration"] = '1s', 5);
+    elem.parentNode.parentNode.style["transition-duration"] = '0s';
+    elem.parentNode.parentNode.style.opacity = 1;
+    setTimeout(()=>elem.parentNode.parentNode.style["transition-duration"] = '1s', 5);
   }
 
   oldTaskUnfocus(val, taskIndex, clsIndex){

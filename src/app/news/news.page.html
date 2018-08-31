@@ -1,10 +1,14 @@
 <ion-header>
-  <ion-navbar>
-    <button ion-button menuToggle>
-      <ion-icon name="menu"></ion-icon>
-    </button>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-toggle auto-hide="false">
+        <ion-button>
+          <ion-icon name="menu"></ion-icon>
+        </ion-button>
+      </ion-menu-toggle>
+    </ion-buttons>
     <ion-title>News</ion-title>
-  </ion-navbar>
+  </ion-toolbar>
 </ion-header>
 
 
@@ -14,11 +18,13 @@
 	</ion-refresher>
 	<ion-list>
 		<ion-item tappable *ngFor="let article of news" (click)="openArticle(article)">
-      <ion-avatar item-start>
-        <img [src]="(!!article.image && article.image!='none')?article.image:'assets/img/logo2.jpg'" (error)="article.image = 'assets/img/logo2.jpg'"/>
+      <ion-avatar slot="start">
+        <ion-img [src]="(!!article.image && article.image!='none')?article.image:'assets/img/logo2.jpg'" (error)="article.image = 'assets/img/logo2.jpg'"></ion-img>
       </ion-avatar>
-      <h2 class="rssTitle">{{article.title}}</h2>
-      <p class="rssDescription">{{article.description}}</p>
+      <ion-label>
+        <h2 class="rssTitle">{{article.title}}</h2>
+        <p class="rssDescription">{{article.description}}</p>
+      </ion-label>
 		</ion-item>
 	</ion-list>
 </ion-content>

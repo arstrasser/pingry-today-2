@@ -1,17 +1,22 @@
 <ion-header>
-  <ion-navbar>
-    <ion-title>Advanced Color Picker</ion-title>
-  </ion-navbar>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="back()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Full Color Picker</ion-title>
+  </ion-toolbar>
 </ion-header>
 
 
 <ion-content padding id="pickerIonContent">
   <span [(colorPicker)]="color"
       [cpDialogDisplay]="'inline'"
-      [cpWidth]="colorPickerWidth"
+      [cpWidth]="colorPickerWidth+'px'"
       [cpToggle]="true"
       [cpAlphaChannel]="disabled"
       ></span>
-  <button ion-button full color="primary" (click)="save()">Save</button>
-  <button ion-button full color="light" (click)="close()" class="submit-btn">Cancel</button>
+  <ion-button expand="full" color="primary" (click)="save()">Save</ion-button>
+  <ion-button expand="full" color="light" (click)="close()" class="submit-btn">Cancel</ion-button>
 </ion-content>

@@ -21,6 +21,7 @@ export class ClassManagePage implements OnInit {
     this.myClasses.sort((a,b) => {return a.time.id - b.time.id});
     this.myFlexes = this.mySched.getAll().flex;
     this.myCPs = this.mySched.getAll().CP;
+    console.log(this.myClasses);
   }
 
   addClass(){

@@ -1,10 +1,14 @@
 <ion-header>
-  <ion-navbar>
-    <button ion-button menuToggle>
-      <ion-icon name="menu"></ion-icon>
-    </button>
-    <ion-title>To Do List</ion-title>
-  </ion-navbar>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-toggle auto-hide="false">
+        <ion-button>
+          <ion-icon name="menu"></ion-icon>
+        </ion-button>
+      </ion-menu-toggle>
+    </ion-buttons>
+    <ion-title>To-Do List</ion-title>
+  </ion-toolbar>
 </ion-header>
 
 
@@ -13,24 +17,46 @@
   <div id="todo-class-{{cls.time.id}}" class="todo-class" *ngFor="let cls of classes; let i = index;">
 		<span class="todo-class-title">{{cls.name}}</span>
 		<div class="todo-list">
-			<div class="todo-list-element" *ngFor="let task of cls.tasks; let j = index;">
-        <ion-icon tappable name="square-outline" class="todo-list-box" [hidden]="task.completed" (click)="task.completed=!task.completed; removeTask(j, i, $event.target)"></ion-icon>
-				<ion-icon tappable name="checkbox-outline" class="todo-list-box" [hidden]="!task.completed" (click)="task.completed=!task.completed; readdTask(j, i, $event.target)"></ion-icon>
-				<div class="todo-assignment" tappable (click)="openTodoConfig(i, j)">
-					<div class="todo-assignment-name">{{task.name}}</div>
-          <div class="todo-assignment-date" [ngStyle]="{color:getColor(task)}">{{formatDate(task.date)}}</div>
-				</div>
-			</div>
-			<div class="todo-list-element todo-new-element todo-background-new-assignment">
-        <ion-icon name="square-outline" class="todo-list-box"></ion-icon>
-				<div class="todo-assignment">
-					<input type="text" class="todo-assignment-name todo-new-assignment-name" (blur)="newTaskUnfocus($event.target, i);" (focus)="newTaskFocus($event.target);" (keyup)="newClassKeypress($event, i);">
-				</div>
-			</div>
+      <ion-grid>
+        <ion-row  class="todo-list-element" *ngFor="let task of cls.tasks; let j = index;">
+          <ion-col size="1">
+            <ion-icon tappable name="square-outline" class="todo-list-box" [hidden]="task.completed" (click)="task.completed=!task.completed; removeTask(j, i, $event.target)"></ion-icon>
+    				<ion-icon tappable name="checkbox-outline" class="todo-list-box" [hidden]="!task.completed" (click)="task.completed=!task.completed; readdTask(j, i, $event.target)"></ion-icon>
+          </ion-col>
+          <ion-col size="11" tappable (click)="openTodoConfig(i, j)" class="todo-assignment">
+  					<div class="todo-assignment-name">{{task.name}}</div>
+            <div class="todo-assignment-date" [ngStyle]="{color:getColor(task)}">{{formatDate(task.date)}}</div>
+          </ion-col>
+        </ion-row>
+        <ion-row class="todo-list-element todo-new-element todo-background-new-assignment">
+          <ion-col size="1">
+            <ion-icon name="square-outline" class="todo-list-box"></ion-icon>
+          </ion-col>
+          <ion-col size="11" class="todo-assignment">
+            <input type="text" class="todo-assignment-name todo-new-assignment-name" (blur)="newTaskUnfocus($event.target, i);" (focus)="newTaskFocus($event.target);" (keyup)="newClassKeypress($event, i);">
+          </ion-col>
+        </ion-row>
+      </ion-grid>
 		</div>
 	</div>
 	<div style="height:20px"></div>
 </ion-content>
+
+<!--div class="todo-list-element" *ngFor="let task of cls.tasks; let j = index;">
+  <ion-icon tappable name="square-outline" class="todo-list-box" [hidden]="task.completed" (click)="task.completed=!task.completed; removeTask(j, i, $event.target)"></ion-icon>
+  <ion-icon tappable name="checkbox-outline" class="todo-list-box" [hidden]="!task.completed" (click)="task.completed=!task.completed; readdTask(j, i, $event.target)"></ion-icon>
+  <div class="todo-assignment" tappable (click)="openTodoConfig(i, j)">
+    <div class="todo-assignment-name">{{task.name}}</div>
+    <div class="todo-assignment-date" [ngStyle]="{color:getColor(task)}">{{formatDate(task.date)}}</div>
+  </div>
+</div>
+<div class="todo-list-element todo-new-element todo-background-new-assignment">
+  <ion-icon name="square-outline" class="todo-list-box"></ion-icon>
+  <div class="todo-assignment">
+    <input type="text" class="todo-assignment-name todo-new-assignment-name" (blur)="newTaskUnfocus($event.target, i);" (focus)="newTaskFocus($event.target);" (keyup)="newClassKeypress($event, i);">
+  </div>
+</div-->
+
 
 <!--div id="todo-class-{{cls.time.id}}" class="todo-class" *ngFor="let cls of classes; let i = index;">
   <span class="todo-class-title">{{cls.name}}</span>

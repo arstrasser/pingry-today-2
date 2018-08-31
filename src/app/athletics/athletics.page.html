@@ -1,12 +1,15 @@
 <ion-header>
-  <ion-navbar>
-    <button ion-button menuToggle>
-      <ion-icon name="menu"></ion-icon>
-    </button>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-toggle auto-hide="false">
+        <ion-button>
+          <ion-icon name="menu"></ion-icon>
+        </ion-button>
+      </ion-menu-toggle>
+    </ion-buttons>
     <ion-title>Athletics</ion-title>
-  </ion-navbar>
+  </ion-toolbar>
 </ion-header>
-
 
 <ion-content padding>
   <ion-refresher (ionRefresh)="refresh($event);">
@@ -14,13 +17,15 @@
 	</ion-refresher>
 	<ion-list>
 		<h2 ion-item style="text-align:center; margin-top:25px" *ngIf="events.length == 0">No events found!</h2>
-		<ion-item tappable class="athleticEvent" [ngStyle]="{color:event.desc.toLowerCase().indexOf('cancelled')!=-1?'#F00':'#000'}" *ngFor="let event of displayEvents" (click)="openMapsLocation(event.location)">
-			<div class="athleticEventTitle">{{event.title}}</div>
-			<div class="athleticEventTime">{{formatTime(event.startTime)}}</div>
-			<div class="athleticEventDesc">{{event.desc}}</div>
+		<ion-item tappable class="athleticEvent" [ngStyle]="{color:eventCancelled(event)?'#F00':'#000'}" *ngFor="let event of displayEvents" (click)="openMapsLocation(event)">
+			<ion-label>
+        <div class="athleticEventTitle">{{event.title}}</div>
+  			<div class="athleticEventTime">{{formatTime(event.startTime)}}</div>
+  			<div class="athleticEventDesc">{{event.desc}}</div>
+      </ion-label>
 		</ion-item>
 	</ion-list>
-  <ion-infinite-scroll (ionInfinite)="displayMore($event)">
+  <ion-infinite-scroll (ionInfinite)="displayMore($event.target)">
     <ion-infinite-scroll-content></ion-infinite-scroll-content>
   </ion-infinite-scroll>
 </ion-content>

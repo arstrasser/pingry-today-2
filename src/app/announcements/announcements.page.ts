@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController, LoadingController } from '@ionic/angular';
-import { InAppBrowser } from '@ionic-native/in-app-browser';
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { Http } from '@angular/http';
 import { map } from 'rxjs/operators';
 
@@ -22,9 +22,12 @@ export class AnnouncementsPage implements OnInit {
        public settings: SettingsService, public messages: MessagesService, public loadingCtrl:LoadingController) { }
 
   ngOnInit(){
-    this.l = this.loadingCtrl.create();
-    this.l.present();
-    this.refresh();
+    this.loadingCtrl.create().then((l) => {
+      l.present();
+      this.l = l;
+      this.refresh();
+    });
+
   }
 
   openSystemLink(url){
@@ -33,7 +36,7 @@ export class AnnouncementsPage implements OnInit {
 
   //Refreshes the announcements
   refresh(refresher?){
-    this.http.get("http://compsci.pingry.k12.nj.us:3000/v1/announcements?api_key="+this.settings.apiKey).pipe(map(data => data.json())).subscribe((data) => {
+    this.http.get("https://compsci.pingry.k12.nj.us:3001/v1/announcements?api_key="+this.settings.apiKey).pipe(map(data => data.json())).subscribe((data) => {
       localStorage.setItem("announceRSS", JSON.stringify(data));
       this.rss = data;
     }, ()=>{
@@ -41,7 +44,7 @@ export class AnnouncementsPage implements OnInit {
       this.messages.showError("Couldn't connect to the internet!")
     }).add(() =>{
       if(refresher) refresher.complete();
-      if(!!this.l){ this.l.dismissAll(); this.l = null; }
+      if(!!this.l){ this.l.dismiss(); this.l = null; }
     });
   }
 
@@ -54,7 +57,7 @@ export class AnnouncementsPage implements OnInit {
   }
 
   openAnnounce(announcement){
-    let modal = this.modalCtrl.create({component:AnnouncementsPopupPage, componentProps:{announcement}}).then(modal => modal.present());
+    this.modalCtrl.create({component:AnnouncementsPopupPage, componentProps:{announcement}}).then(modal => modal.present());
   }
 
 }

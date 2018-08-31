@@ -1,18 +1,17 @@
 <ion-header>
-  <ion-navbar>
-    <ion-title>Article</ion-title>
-    <ion-buttons end>
-      <button ion-button icon-only (click)="close()">
-        <ion-icon name="close"></ion-icon>
-      </button>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="close()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
     </ion-buttons>
-  </ion-navbar>
+    <ion-title>Article</ion-title>
+  </ion-toolbar>
 </ion-header>
-
 
 <ion-content padding>
 	<div id="art-messages"></div>
-	<h2 class="article-title" ng-bind="art.title" style="text-align:center;"></h2>
+	<h2 class="article-title" style="text-align:center;">{{article.title}}</h2>
 	<div class="article" id="article-content"></div>
-  <button ion-button block (click)="close()">Close</button>
+  <ion-button expand="block" (click)="close()">Close</ion-button>
 </ion-content>

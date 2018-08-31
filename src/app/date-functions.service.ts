@@ -9,9 +9,7 @@ export class DateFunctionsService {
   weekDays =  ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 
-  constructor(public http: Http) {
-    console.log('Hello DateFunctionsProvider Provider');
-  }
+  constructor(public http: Http) {}
 
   monthNameToInt(str:string){
     switch(str){

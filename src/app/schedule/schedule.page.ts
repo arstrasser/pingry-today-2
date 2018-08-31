@@ -59,11 +59,11 @@ export class SchedulePage implements OnInit {
   }
 
   ionViewDidEnter(){
-    this.menu.swipeEnable(false, "main-menu");
+    //this.menu.swipeEnable(false, "main-menu");
   }
 
   ionViewWillLeave(){
-    this.menu.swipeEnable(true, "main-menu");
+    //this.menu.swipeEnable(true, "main-menu");
 
     if((this.events.unsubscribe("scheduleRefreshComplete", this.scheduleRefreshHandler)?0:1)+
       (this.events.unsubscribe("letterRefreshComplete", this.scheduleRefreshHandler)?0:1)+
@@ -73,8 +73,13 @@ export class SchedulePage implements OnInit {
     }
   }
 
-  dateChange(){
-    this.curDay = this.ISOtoDate(this.curISOday);
+  dateChange(event){
+    if(event.year){
+      this.curDay = new Date(event.year.value, event.month.value-1, event.day.value);
+    }else{
+      console.log(event);
+      this.curDay = this.ISOtoDate(this.curISOday);
+    }
     this.updateDate();
   }
 

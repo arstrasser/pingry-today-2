@@ -41,7 +41,8 @@ export class EditClassPage implements OnInit {
     e.cancelBubble = true;
   }
 
-  takesFlexChange(){
+  takesFlexChange(e){
+    this.cls.takesFlex = e.target.value;
     if(this.cls.takesFlex !== "" && this.cls.takesFlex !== "before"){
       this.cls.firstLunch = true;
     }
@@ -52,7 +53,7 @@ export class EditClassPage implements OnInit {
     let buttons = [];
     for(let i = 0; i < colors.length; i++){
       let j = i;
-      buttons.push({text:".", handler:() => {this.cls.color = colors[j]}, cssClass:"color-picker-"+i+" color-picker"})
+      buttons.push({text:".", handler:() => {this.cls.color = colors[j]}, cssClass:"color-selection-"+i+" color-selection"})
     }
     buttons.push({text:"Other...", handler:()=>this.openFullColorPicker()})
     buttons.push({text:"Cancel", role:"cancel"});
@@ -66,8 +67,9 @@ export class EditClassPage implements OnInit {
     this.modalCtrl.create({component:FullColorPickerPage, componentProps:{color:this.cls.color}}).then(modal => {
       modal.present();
       modal.onDidDismiss((color) => {
-        if(color){
-          this.cls.color = color;
+        if(color.data){
+          console.log(color);
+          this.cls.color = color.data;
         }
       })
     });

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Events } from '@ionic/angular';
 import { map } from 'rxjs/operators';
+import { Storage } from '@ionic/storage';
 
 @Injectable({
   providedIn: 'root'
@@ -9,33 +10,64 @@ import { map } from 'rxjs/operators';
 export class SettingsService {
   public apiKey:string = "QJxF19F39PV7Lr9qy3sgkXjP8Yx4WNU7CCTDbFXC";
   athleticMaps:boolean;
-  athleticSubscriptions:number[];
+  athleticSubscriptions:string[] = ["-1"];
   athleticCalendars:Array<{id:number, name:string, url:string}> = [];
-  superMode:boolean;
   extraOptions:Array<string>;
   athleticSubscriptionChanged:boolean = false;
   ddd:any = {};
+  pages:Array<{title:string, page?:string, localUrl?:string, systemUrl?:string}> = [];
+  possiblePages:Array<{title:string, page?:string, localUrl?:string, systemUrl?:string}> = [
+      {title:"Schedule", page:"/schedule"},
+      {title:"To Do List", page:"/todo"},
+      {title:"News", page:"/news"},
+      {title:"Announcements", page:"/announcements"},
+      {title:"Pride Points", page:"/pridePoints"},
+      {title:"Athletics", page:"/athletics"},
+      {title:"Lunch Menu", localUrl:"http://www.sagedining.com/menus/pingry"},
+      {title:"Photos", systemUrl:"https://www.pingry.org/hp/photos-and-media"},
+      {title:"Bookstore", systemUrl:"http://www.pingrybookstore.org"},
+      {title:"Web Portal", systemUrl:"https://www.pingry.org/pingrytoday"},
+      {title:"Veracross", systemUrl:"https://portals.veracross.com/pingry"},
+      {title:"Settings", page:"/settings"},
+      {title:"About", page: "/about"}
+  ];
+  startPageIndex:number = 0;
 
-  constructor(public http: Http, public events: Events) {
-    let temp = localStorage.getItem("athleticMaps");
-    if(temp == "" || temp == undefined || temp == "true"){
-      this.athleticMaps = true;
-    }else{
-      this.athleticMaps = false;
-    }
+  settingsLoaded:boolean = false;
 
-    temp = localStorage.getItem("athleticCalendars");
+  constructor(public http: Http, public events: Events, public storage:Storage) {
+    this.storage.get("settings").then((val) => {
+      if(val){
+        this.pages = val.pages;
+        this.startPageIndex = val.startPageIndex
+        this.athleticSubscriptions = val.athleticSubscriptions;
+        this.settingsLoaded = true;
+      }else{
+        this.pages = [
+          {title:"Schedule", page:"/schedule"},
+          {title:"To Do List", page:"/todo"},
+          {title:"News", page:"/news"},
+          {title:"Announcements", page:"/announcements"},
+          {title:"Pride Points", page:"/pridePoints"},
+          {title:"Athletics", page:"/athletics"},
+          {title:"Web Portal", systemUrl:"https://www.pingry.org/pingrytoday"},
+          {title:"Settings", page:"/settings"},
+          {title:"About", page: "/about"}
+        ];
+
+        this.saveSettings();
+        this.settingsLoaded = true;
+      }
+
+      this.events.publish("settingsLoaded");
+      this.events.publish("pagesUpdated");
+    })
+
+    let temp = localStorage.getItem("athleticCalendars");
     if(temp == "" || temp == undefined){
       this.athleticCalendars = [];
     }else{
       this.athleticCalendars = JSON.parse(temp);
-    }
-
-    temp = localStorage.getItem("athleticSubscriptions");
-    if(temp == "" || temp == undefined){
-      this.athleticSubscriptions = [-1];
-    }else{
-      this.athleticSubscriptions = JSON.parse(temp);
     }
 
     temp = localStorage.getItem("ddd");
@@ -45,14 +77,59 @@ export class SettingsService {
     this.refresh();
   }
 
+  getPages():Promise<{pages:{title:string, page?:string, localUrl?:string, systemUrl?:string}[], startPageIndex:number}>{
+    return new Promise(resolve => {
+      if(this.settingsLoaded){
+        return resolve({pages:this.pages, startPageIndex:this.startPageIndex});
+      }
+      this.events.subscribe("settingsLoaded", () => {
+        return resolve({pages:this.pages, startPageIndex:this.startPageIndex});
+      })
+    })
+  }
+
+  getAthleticSubscriptions():Promise<string[]>{
+    return new Promise(resolve => {
+      if(this.settingsLoaded){
+        return resolve(this.athleticSubscriptions);
+      }
+      this.events.subscribe("settingsLoaded", () => {
+        return resolve(this.athleticSubscriptions);
+      })
+    })
+  }
+
+  async savePages(newPages, startPageIndex){
+    this.pages = newPages;
+    this.startPageIndex;
+    this.events.publish("pagesUpdated");
+    return await this.saveSettings();
+  }
+
+  async setAthleticSubscription(newVal){
+    this.athleticSubscriptions = newVal;
+    this.athleticSubscriptionChanged = true;
+    localStorage.setItem("athleticEventsRefreshTime", "");
+    return await this.saveSettings();
+  }
+
+  async saveSettings(){
+    let v = await this.storage.set("settings", {
+      pages:this.pages,
+      startPageIndex:this.startPageIndex,
+      athleticSubscriptions:this.athleticSubscriptions
+    });
+    return v;
+  }
+
   refresh(){
-    this.http.get("http://compsci.pingry.k12.nj.us:3000/v1/ddd?api_key="+this.apiKey).pipe(map(data => data.json())).subscribe(data => {
+    this.http.get("https://compsci.pingry.k12.nj.us:3001/v1/ddd?api_key="+this.apiKey).pipe(map(data => data.json())).subscribe(data => {
       this.ddd = data;
       localStorage.setItem("ddd", JSON.stringify(data));
       this.events.publish("dddRefresh");
     })
 
-    this.http.get("http://compsci.pingry.k12.nj.us:3000/v1/athletics/calendarList?api_key="+this.apiKey).pipe(map(data => data.json())).subscribe(data => {
+    this.http.get("https://compsci.pingry.k12.nj.us:3001/v1/athletics/calendarList?api_key="+this.apiKey).pipe(map(data => data.json())).subscribe(data => {
       this.athleticCalendars = data;
       localStorage.setItem("athleticCalendars", JSON.stringify(data));
     })
@@ -60,18 +137,6 @@ export class SettingsService {
 
   getAthleticCalendars(){
     return this.athleticCalendars;
-  }
-
-  getAthleticSubscriptions(){
-    return this.athleticSubscriptions;
-  }
-
-  setAthleticSubscription(newVal){
-    this.athleticSubscriptions = newVal;
-    this.athleticSubscriptionChanged = true;
-    localStorage.setItem("athleticSubscriptions", JSON.stringify(this.athleticSubscriptions));
-    localStorage.setItem("athleticEvents", null);
-    localStorage.setItem("athleticEventsRefreshTime", "");
   }
 
   getAthleticSubscriptionChanged(){

@@ -1,51 +1,58 @@
 import { Component, ViewChild } from '@angular/core';
 
-import { Platform, Nav } from '@ionic/angular';
+import { Platform, MenuController, Events } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
-import { InAppBrowser } from '@ionic-native/in-app-browser';
-import { FCM } from '@ionic-native/fcm';
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
+import { FCM } from '@ionic-native/fcm/ngx';
+import { Router } from '@angular/router';
 
-import { SchedulePage } from './schedule/schedule.page';
-import { AnnouncementsPage } from './announcements/announcements.page';
-import { AboutPage } from './about/about.page';
-import { NewsPage } from './news/news.page';
-import { AthleticsPage } from './athletics/athletics.page';
-import { SettingsPage } from './settings/settings.page';
-import { TodoPage } from './todo/todo.page';
+// import { SchedulePage } from './schedule/schedule.page';
+// import { AnnouncementsPage } from './announcements/announcements.page';
+// import { AboutPage } from './about/about.page';
+// import { NewsPage } from './news/news.page';
+// import { AthleticsPage } from './athletics/athletics.page';
+// import { SettingsPage } from './settings/settings.page';
+// import { TodoPage } from './todo/todo.page';
 
+import { MyScheduleService } from './my-schedule.service';
 import { MessagesService } from './messages.service';
+import { SettingsService } from './settings.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html'
 })
 export class AppComponent {
-  @ViewChild(Nav) nav: Nav;
-  rootPage:any = SchedulePage;
-  pages:Array<{title:string, page?:any, localUrl?:string, systemUrl?:string}> =
-      [
-          {title:"Schedule", page:SchedulePage},
-          {title:"To Do List", page:TodoPage},
-          {title:"News", page:NewsPage},
-          {title:"Announcements", page:AnnouncementsPage},
-  //        {title:"Activities Calendar", page:ClubCalendarPage},
-          {title:"Athletics", page:AthleticsPage},
-          {title:"Lunch Menu", localUrl:"http://www.sagedining.com/menus/pingry"},
-          {title:"Web Portal", systemUrl:"https://www.pingry.org/pingrytoday"},
-          {title:"Settings", page:SettingsPage},
-          {title:"About", page: AboutPage}
-      ];
-
+  pages:Array<{title:string, page?:string, localUrl?:string, systemUrl?:string}> = [];
+  startPageIndex = 0;
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     public iab:InAppBrowser,
     public messages:MessagesService,
-    public fcm: FCM
+    public fcm: FCM,
+    public menuCtrl: MenuController,
+    public m: MyScheduleService,  //Don't actually use, but gets all the classes loaded from storage
+    public settings: SettingsService,
+    public router:Router,
+    private events:Events
   ) {
+    this.settings.getPages().then((vals) => {
+      console.log(vals);
+      this.pages = vals.pages;
+      this.startPageIndex = vals.startPageIndex;
+      this.platform.ready().then(() => {
+        this.openPage(this.pages[vals.startPageIndex]);
+      });
+    });
 
+    this.events.subscribe("pagesUpdated", () => {
+      this.settings.getPages().then((vals) => {
+        this.pages = vals.pages;
+      });
+    })
     this.initializeApp();
   }
 
@@ -53,26 +60,25 @@ export class AppComponent {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
-      try {
-        this.fcm.onNotification().subscribe(data => {
-          console.log(data);
-          if(data.text){ //Local notification uses .text instead of .body
-            this.messages.popup(data.title, data.text);
-          }else{
-            this.messages.popup(data.title, data.body);
-          }
-        });
-      }catch(e){console.warn("Unable to register FCM notification handler")}
+      this.fcm.onNotification().subscribe(data => {
+        console.log(data);
+        if(data.text){ //Local notification uses .text instead of .body
+          this.messages.popup(data.title, data.text);
+        }else{
+          this.messages.popup(data.title, data.body);
+        }
+      });
     });
   }
 
   openPage(p){
+    this.menuCtrl.close();
     if(p.systemUrl){
       this.iab.create(p.systemUrl, "_system");
     }else if(p.localUrl){
       this.iab.create(p.localUrl, "_blank", {location:"yes",enableViewportScale:"yes"});
     }else if(p.page){
-      this.nav.setRoot(p.page);
+      this.router.navigateByUrl(p.page);
     }
   }
 }

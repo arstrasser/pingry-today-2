@@ -42,7 +42,7 @@ export class LetterDayService {
   //Function to refresh all data from the letter day ical
   refresh(callback?){
     this.refreshing = true;
-    const letterDayURL = "http://compsci.pingry.k12.nj.us:3000/v1/letter?api_key="+this.settings.apiKey; //URL of the LetterDay calendar for the Upper School
+    const letterDayURL = "https://compsci.pingry.k12.nj.us:3001/v1/letter?api_key="+this.settings.apiKey; //URL of the LetterDay calendar for the Upper School
     //Returns a subscription so that you can run async functions after this function completes
     //(e.g.Calling LetterDay.refresh.then(function(){code here}))
     return this.http.get(letterDayURL).pipe(map(res => res.json())).subscribe((data) => {
