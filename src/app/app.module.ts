@@ -24,6 +24,8 @@ import { FullColorPickerPage } from './full-color-picker/full-color-picker.page'
 import { FullColorPickerPageModule } from './full-color-picker/full-color-picker.module';
 import { ArticlePage } from './article/article.page';
 import { ArticlePageModule } from './article/article.module';
+import { LoginPage } from './login/login.page';
+import { LoginPageModule } from './login/login.module';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -35,7 +37,8 @@ import { AppRoutingModule } from './app-routing.module';
     TodoConfigPage,
     EditClassPage,
     FullColorPickerPage,
-    ArticlePage
+    ArticlePage,
+    LoginPage
   ],
   imports: [
     BrowserModule,
@@ -47,7 +50,8 @@ import { AppRoutingModule } from './app-routing.module';
     TodoConfigPageModule,
     EditClassPageModule,
     FullColorPickerPageModule,
-    ArticlePageModule
+    ArticlePageModule,
+    LoginPageModule
   ],
   providers: [
     StatusBar,

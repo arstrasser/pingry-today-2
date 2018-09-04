@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController } from '@ionic/angular';
+import { NavController, ModalController } from '@ionic/angular';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 
 import { SettingsService } from '../settings.service';
 import { MessagesService } from '../messages.service';
 import { ScheduleService } from '../schedule.service';
 import { LetterDayService } from '../letter-day.service';
+import { UserService } from '../user.service';
 
 import { ClassManagePage } from '../class-manage/class-manage.page';
+import { LoginPage } from '../login/login.page';
 
 
 @Component({
@@ -23,8 +25,9 @@ export class SettingsPage implements OnInit {
   selectedPage:number = 0;
   possiblePages:{title:string}[] = [];
   hiddenPages:{title:string}[] = [];
-  constructor(public navCtrl: NavController, public iab:InAppBrowser, public settings:SettingsService,
-     public messages:MessagesService, public schedule:ScheduleService, public letterDay:LetterDayService) { }
+  constructor(private navCtrl: NavController, private iab:InAppBrowser, private settings:SettingsService,
+     private messages:MessagesService, private schedule:ScheduleService, private letterDay:LetterDayService,
+     private user:UserService, private modalCtrl:ModalController) { }
 
   ngOnInit() {
     this.athleticCalendars = this.settings.getAthleticCalendars();
@@ -91,4 +94,16 @@ export class SettingsPage implements OnInit {
     this.settings.setAthleticMaps(val);
   }
 
+  isLoggedIn(){
+    return this.user.isLoggedIn();
+  }
+
+  login(){
+    this.modalCtrl.create({component:LoginPage}).then(modal => modal.present());
+  }
+
+  logout(){
+    this.user.logout();
+    this.messages.showNormal("Logged out");
+  }
 }

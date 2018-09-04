@@ -33,7 +33,7 @@
   	</div>
   	<div class="nonSchoolDay" *ngIf="letter==''">No school!</div>
     <div class="nonSchoolDay" *ngIf="letter!='' && !isLetter(letter) && letter !='refreshing' && letter!='empty'">{{letter}}</div>
-    <ion-grid style="padding:0; margin-top:2px" id="scheduleSwipe">
+    <ion-grid style="padding:0; margin-top:1px" id="scheduleSwipe">
       <ion-row *ngFor="let cls of classes" tappable (click)="clickedClass(cls)" class="row class-{{cls.type}}" [ngStyle]="{background: cls.color}">
         <ion-col size="4" class="class-time">
           <div style="display: inline" class="startTime">{{formatTime(cls.startTime)}}</div>

@@ -16,7 +16,7 @@ export class MessagesService {
   }
 
   showNormal(message:string){
-    return this.toast.create({message, duration:3000}).then((toast) => toast.present());
+    return this.toast.create({message, duration:3000, cssClass:"toast-normal"}).then((toast) => toast.present());
   }
 
   popup(header:string, message:string){
@@ -32,12 +32,12 @@ export class MessagesService {
       message,
       buttons: [
         {
-          text:"No",
+          text:"Cancel",
           role:"cancel",
           handler: () => {if(callback){callback(false)}}
         },
         {
-          text:"Yes",
+          text:"Ok",
           handler: () => {if(callback){callback(true)}}
         }
       ]
