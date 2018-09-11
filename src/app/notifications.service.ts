@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
-import { map } from 'rxjs/operators';
 
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Events } from '@ionic/angular';
-import { map } from 'rxjs/operators';
 import { Storage } from '@ionic/storage';
 
 @Injectable({
@@ -123,15 +122,15 @@ export class SettingsService {
   }
 
   refresh(){
-    this.http.get("https://compsci.pingry.k12.nj.us:3001/v1/ddd?api_key="+this.apiKey).pipe(map(data => data.json())).subscribe(data => {
-      this.ddd = data;
-      localStorage.setItem("ddd", JSON.stringify(data));
+    this.http.get("https://pingrytoday.pingry.org:3001/v1/ddd?api_key="+this.apiKey).subscribe(data => {
+      this.ddd = data.json();
+      localStorage.setItem("ddd", JSON.stringify(this.ddd));
       this.events.publish("dddRefresh");
     })
 
-    this.http.get("https://compsci.pingry.k12.nj.us:3001/v1/athletics/calendarList?api_key="+this.apiKey).pipe(map(data => data.json())).subscribe(data => {
-      this.athleticCalendars = data;
-      localStorage.setItem("athleticCalendars", JSON.stringify(data));
+    this.http.get("https://pingrytoday.pingry.org:3001/v1/athletics/calendarList?api_key="+this.apiKey).subscribe(data => {
+      this.athleticCalendars = data.json();
+      localStorage.setItem("athleticCalendars", JSON.stringify(this.athleticCalendars));
     })
   }
 

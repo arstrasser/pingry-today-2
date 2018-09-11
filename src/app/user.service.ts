@@ -34,7 +34,7 @@ export class UserService {
   submitCode(code){
     return new Promise((resolve, reject) => {
       if(!this.settings.apiKey) reject("No accessToken");
-      this.http.get("https://compsci.pingry.k12.nj.us:3001/v1/user/addPrideEvent?apiKey="+this.settings.apiKey+"&accessToken="+this.accessToken+"&code="+code).pipe(map(res => res.json())).subscribe((res) => {
+      this.http.get("https://pingrytoday.pingry.org:3001/v1/user/addPrideEvent?apiKey="+this.settings.apiKey+"&accessToken="+this.accessToken+"&code="+code).subscribe((res) => {
         resolve();
       }, (err) => this.errorHandler(err, reject));
     });
@@ -45,9 +45,9 @@ export class UserService {
       if(username.indexOf("@") == -1){
         username += "@pingry.org";
       }
-      this.http.get("https://compsci.pingry.k12.nj.us:3001/v1/user/accessToken?apiKey="+this.settings.apiKey+"&username="+username+"&password="+password).pipe(map(res => res.json())).subscribe((res) => {
-        this.accessToken = res;
-        localStorage.setItem("accessToken", res);
+      this.http.get("https://pingrytoday.pingry.org:3001/v1/user/accessToken?apiKey="+this.settings.apiKey+"&username="+username+"&password="+password).subscribe((res) => {
+        this.accessToken = res.json();
+        localStorage.setItem("accessToken", this.accessToken);
         resolve();
       }, (err) => reject(err));
     });
@@ -56,8 +56,8 @@ export class UserService {
   getPrideLeaderboard(){
     return new Promise((resolve, reject) => {
       if(!this.settings.apiKey) reject("No accessToken");
-      this.http.get("https://compsci.pingry.k12.nj.us:3001/v1/pride/leaderboard?apiKey="+this.settings.apiKey+"&accessToken="+this.accessToken).pipe(map(res => res.json())).subscribe((res) => {
-        resolve(JSON.parse(res));
+      this.http.get("https://pingrytoday.pingry.org:3001/v1/pride/leaderboard?apiKey="+this.settings.apiKey+"&accessToken="+this.accessToken).subscribe((res) => {
+        resolve(JSON.parse(res.json()));
       }, (err) => this.errorHandler(err, reject));
     });
   }
@@ -65,8 +65,8 @@ export class UserService {
   getUserPoints(){
     return new Promise((resolve, reject) => {
       if(!this.settings.apiKey) reject("No accessToken");
-      this.http.get("https://compsci.pingry.k12.nj.us:3001/v1/user/pride_points?apiKey="+this.settings.apiKey+"&accessToken="+this.accessToken).pipe(map(res => res.json())).subscribe((res:number) => {
-        resolve(res);
+      this.http.get("https://pingrytoday.pingry.org:3001/v1/user/pride_points?apiKey="+this.settings.apiKey+"&accessToken="+this.accessToken).subscribe((res) => {
+        resolve(res.json());
       }, (err) => this.errorHandler(err, reject));
     });
   }

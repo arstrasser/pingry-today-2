@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController, LoadingController } from '@ionic/angular';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { Http } from '@angular/http';
-import { map } from 'rxjs/operators';
 
 import { ArticlePage } from '../article/article.page';
 
@@ -36,9 +35,9 @@ export class NewsPage implements OnInit {
 
   //Refreshes the announcements
   refresh(refresher?){
-    this.http.get("https://compsci.pingry.k12.nj.us:3001/v1/news?api_key="+this.settings.apiKey).pipe(map(data => data.json())).subscribe((data) => {
-      localStorage.setItem("newsRSS", JSON.stringify(data));
-      this.news = data;
+    this.http.get("https://pingrytoday.pingry.org:3001/v1/news?api_key="+this.settings.apiKey).subscribe((data) => {
+      this.news = data.json();
+      localStorage.setItem("newsRSS", JSON.stringify(this.news));
     }, ()=> {
       this.localRefresh();
       this.messages.showError("Couldn't connect to the internet!")

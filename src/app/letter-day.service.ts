@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Events } from '@ionic/angular';
-import { map } from 'rxjs/operators';
 
 import { DateFunctionsService } from "./date-functions.service";
 import { ScheduleService } from "./schedule.service";
@@ -42,11 +41,11 @@ export class LetterDayService {
   //Function to refresh all data from the letter day ical
   refresh(callback?){
     this.refreshing = true;
-    const letterDayURL = "https://compsci.pingry.k12.nj.us:3001/v1/letter?api_key="+this.settings.apiKey; //URL of the LetterDay calendar for the Upper School
+    const letterDayURL = "https://pingrytoday.pingry.org:3001/v1/letter?api_key="+this.settings.apiKey; //URL of the LetterDay calendar for the Upper School
     //Returns a subscription so that you can run async functions after this function completes
     //(e.g.Calling LetterDay.refresh.then(function(){code here}))
-    return this.http.get(letterDayURL).pipe(map(res => res.json())).subscribe((data) => {
-      this.times = data;
+    return this.http.get(letterDayURL).subscribe((data) => {
+      this.times = data.json();
 
       //Update localStorage items
       localStorage.setItem("letterDays", JSON.stringify(this.times));

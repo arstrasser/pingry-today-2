@@ -1,7 +1,7 @@
 MAIN:
- - change API key
  - check that news local refresh works
  - Fix Refresh errors
+ - Fix and Test Cordova Hot Code Push
 
 Remote Database:
  - Snow Days

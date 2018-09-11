@@ -52,33 +52,33 @@ export class ScheduleService {
 
   refresh(callback?){
     this.messages.showNormal("Refreshing...");
-    const scheduleURL = "https://compsci.pingry.k12.nj.us:3001/v1/schedule/all?api_key="+this.settings.apiKey;
-    const manualURL = "https://compsci.pingry.k12.nj.us:3001/v1/schedule/manual/all?api_key="+this.settings.apiKey;
-    const eventsURL = "https://compsci.pingry.k12.nj.us:3001/v1/schedule/events?api_key="+this.settings.apiKey;
-    const scheduleTypesURL = "https://compsci.pingry.k12.nj.us:3001/v1/schedule/types?api_key="+this.settings.apiKey;
+    const scheduleURL = "https://pingrytoday.pingry.org:3001/v1/schedule/all?api_key="+this.settings.apiKey;
+    const manualURL = "https://pingrytoday.pingry.org:3001/v1/schedule/manual/all?api_key="+this.settings.apiKey;
+    const eventsURL = "https://pingrytoday.pingry.org:3001/v1/schedule/events?api_key="+this.settings.apiKey;
+    const scheduleTypesURL = "https://pingrytoday.pingry.org:3001/v1/schedule/types?api_key="+this.settings.apiKey;
 
     this.refreshing = true;
     return forkJoin([
       //Faculty collaboration day schedule refresh
-      this.http.get(scheduleURL).pipe(map(data => data.json())),
-      this.http.get(manualURL).pipe(map(data => data.json())),
-      this.http.get(eventsURL).pipe(map(data => data.json())),
-      this.http.get(scheduleTypesURL).pipe(map(data => data.json()))
+      this.http.get(scheduleURL),
+      this.http.get(manualURL),
+      this.http.get(eventsURL),
+      this.http.get(scheduleTypesURL)
     ]).subscribe((values) =>{
         //Get the special schedules
-        this.scheduledDays = values[0];
+        this.scheduledDays = values[0].json();
         localStorage.setItem("scheduledDays", JSON.stringify(this.scheduledDays));
 
         //Get the special manual schedules
-        this.manualSchedules = values[1];
+        this.manualSchedules = values[1].json();
         localStorage.setItem("manualSchedules", JSON.stringify(this.manualSchedules));
 
         //Get CP and CT events
-        this.scheduledEvents = values[2];
+        this.scheduledEvents = values[2].json();
         localStorage.setItem("scheduledEvents", JSON.stringify(this.scheduledEvents));
 
         //Get default schedule configurations
-        this.typeList = values[3];
+        this.typeList = values[3].json();
         localStorage.setItem("typeList", JSON.stringify(this.typeList));
 
         console.log(this.typeList);

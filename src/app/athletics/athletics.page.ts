@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { LoadingController } from '@ionic/angular';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { Http } from '@angular/http';
-import {map} from 'rxjs/operators';
 
 import { MessagesService } from '../messages.service';
 import { SettingsService } from '../settings.service';
@@ -90,25 +89,25 @@ export class AthleticsPage implements OnInit {
     let url = "";
     this.settings.getAthleticSubscriptions().then((athleticSubscriptions) => {
       if(athleticSubscriptions.length > 0 && athleticSubscriptions[0] != '-1'){
-        url = "https://compsci.pingry.k12.nj.us:3001/v1/athletics/sports?api_key="+this.settings.apiKey;
+        url = "https://pingrytoday.pingry.org:3001/v1/athletics/sports?api_key="+this.settings.apiKey;
         for(let i = 0; i < athleticSubscriptions.length; i++){
           url += "&sport="+athleticSubscriptions[i];
         }
       }else{
-        url = "https://compsci.pingry.k12.nj.us:3001/v1/athletics/sports/all?api_key="+this.settings.apiKey;
+        url = "https://pingrytoday.pingry.org:3001/v1/athletics/sports/all?api_key="+this.settings.apiKey;
       }
 
-      this.http.get(url).pipe(map(data => data.json())).subscribe(data => {
-
+      this.http.get(url).subscribe(data => {
+        let temp = data.json()
         //Delete past events
         let i = 0;
         let now = Date.now()
-        while(data[i].startTime < now) i++;
-        data = data.slice(i);
+        while(temp[i].startTime < now) i++;
+        temp = temp.slice(i);
 
         //Update local storage
-        localStorage.setItem("athleticEvents", JSON.stringify(data));
-        this.events = data;
+        localStorage.setItem("athleticEvents", JSON.stringify(temp));
+        this.events = temp;
         this.displayEvents = this.events.slice(0,25);
       }, ()=>{
         this.messages.showError("Couldn't connect to the internet!");

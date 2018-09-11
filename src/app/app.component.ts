@@ -7,14 +7,6 @@ import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { FCM } from '@ionic-native/fcm/ngx';
 import { Router } from '@angular/router';
 
-// import { SchedulePage } from './schedule/schedule.page';
-// import { AnnouncementsPage } from './announcements/announcements.page';
-// import { AboutPage } from './about/about.page';
-// import { NewsPage } from './news/news.page';
-// import { AthleticsPage } from './athletics/athletics.page';
-// import { SettingsPage } from './settings/settings.page';
-// import { TodoPage } from './todo/todo.page';
-
 import { MyScheduleService } from './my-schedule.service';
 import { MessagesService } from './messages.service';
 import { SettingsService } from './settings.service';
@@ -37,7 +29,7 @@ export class AppComponent {
     public m: MyScheduleService,  //Don't actually use, but gets all the classes loaded from storage
     public settings: SettingsService,
     public router:Router,
-    private events:Events
+    private events:Events,
   ) {
     this.settings.getPages().then((vals) => {
       console.log(vals);

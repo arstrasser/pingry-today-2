@@ -15,12 +15,12 @@
 <ion-content padding no-bounce>
   <ion-list>
 		<ion-item tappable (click)="openClassManagement()">Class Management</ion-item>
-    <ion-button expand="full" *ngIf="isLoggedIn()" (click)="login()">Log in</ion-button>
-    <ion-button expand="full" color="warning" *ngIf="!isLoggedIn()" (click)="logout()">Logout</ion-button>
+    <!--ion-button expand="full" *ngIf="isLoggedIn()" (click)="login()">Log in</ion-button>
+    <ion-button expand="full" color="warning" *ngIf="!isLoggedIn()" (click)="logout()">Logout</ion-button-->
     <ion-item>
       <ion-label>Athletic Team Subscription</ion-label><br>
       <ion-select [value]="subscriptions" (ionChange)="updateAthleticSubscription($event.target)" multiple="true">
-        <ion-select-option [selected]="subscriptions==-1" value="-1">All Calendars</ion-select-option>
+        <ion-select-option [selected]="subscriptions==['-1']" value="-1">All Calendars</ion-select-option>
         <ion-select-option *ngFor="let cal of athleticCalendars" [value]="cal.id">{{cal.name}}</ion-select-option>
       </ion-select>
     </ion-item>
