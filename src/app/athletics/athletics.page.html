@@ -13,15 +13,16 @@
 
 <ion-content padding>
   <ion-refresher (ionRefresh)="refresh($event);">
-    <ion-refresher-content>Pull to Refresh</ion-refresher-content>
+    <ion-refresher-content></ion-refresher-content>
 	</ion-refresher>
 	<ion-list>
 		<h2 ion-item style="text-align:center; margin-top:25px" *ngIf="events.length == 0">No events found!</h2>
-		<ion-item tappable class="athleticEvent" [ngStyle]="{color:eventCancelled(event)?'#F00':'#000'}" *ngFor="let event of displayEvents" (click)="openMapsLocation(event)">
+		<ion-item tappable class="athleticEvent" [ngStyle]="{color:eventCancelled(event)?'#F00':'#000'}" *ngFor="let event of displayEvents">
 			<ion-label>
         <div class="athleticEventTitle">{{event.title}}</div>
   			<div class="athleticEventTime">{{formatTime(event.startTime)}}</div>
-  			<div class="athleticEventDesc">{{event.desc}}</div>
+  			<p class="athleticEventDesc">{{event.desc}}</p>
+        <a (click)="openMapsLocation(event)" *ngIf="event.location">{{event.location}}</a>
       </ion-label>
 		</ion-item>
 	</ion-list>

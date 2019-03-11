@@ -20,11 +20,10 @@ export class AthleticsPage implements OnInit {
     startTime:number,
     event_status?:string,
     location:string,
-    game_outcome:string,
-    game_placement:string,
-    google_map:string,
-    primary_group:string,
-
+    game_outcome?:string,
+    game_placement?:string,
+    google_map?:string,
+    primary_group?:string
   }> = [];
   displayEvents:Array<any> = [];
   l:any;
@@ -77,6 +76,9 @@ export class AthleticsPage implements OnInit {
   }
 
   openMapsLocation(event){
+    if(event.google_map){
+      this.iab.create(event.google_map, '_system');
+    }
     this.iab.create("http://maps.google.com/?q="+event.location, '_system');
   }
 

@@ -11,6 +11,8 @@ export class SettingsService {
   athleticMaps:boolean;
   athleticSubscriptions:string[] = ["-1"];
   athleticCalendars:Array<{id:number, name:string, url:string}> = [];
+  classClickAction:string = "Tasks";
+  possibleClassClickActions:string[] = ["Tasks", "Nothing"];
   extraOptions:Array<string>;
   athleticSubscriptionChanged:boolean = false;
   ddd:any = {};
@@ -31,8 +33,6 @@ export class SettingsService {
       {title:"About", page: "/about"}
   ];
   startPageIndex:number = 0;
-
-  classClickAction:string = "todo";
 
   settingsLoaded:boolean = false;
 

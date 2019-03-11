@@ -21,6 +21,7 @@ export class SettingsPage implements OnInit {
   possiblePages:{title:string}[] = [];
   hiddenPages:{title:string}[] = [];
   classAction:string = "todo";
+  possibleClassClickActions:string[];
   constructor(private navCtrl: NavController, private settings:SettingsService,
      private messages:MessagesService, private user:UserService, private modalCtrl:ModalController) { }
 
@@ -34,6 +35,7 @@ export class SettingsPage implements OnInit {
       this.updateHiddenPages();
     })
     this.athleticMaps = this.settings.getAthleticMaps();
+    this.possibleClassClickActions = this.settings.possibleClassClickActions;
   }
 
   onReorder(e){

@@ -18,9 +18,7 @@
     <ion-item>
       <ion-label>Class Click Action</ion-label><br>
       <ion-select [value]="classAction" (ionChange)="updateClassAction($event.target)">
-        <ion-select-option value="none">Do Nothing</ion-select-option>
-        <ion-select-option value="todo">To-do List</ion-select-option>
-        <ion-select-option value="config">Open Configuration</ion-select-option>
+        <ion-select-option *ngFor="let option of possibleClassClickActions">{{option}}</ion-select-option>
       </ion-select>
     </ion-item>
     <ion-item expand="full" *ngIf="!isLoggedIn()" (click)="login()"><ion-label>Log in</ion-label></ion-item>
