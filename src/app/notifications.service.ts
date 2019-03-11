@@ -14,7 +14,7 @@ export class NotificationsService {
 
   constructor(public http: Http, public dfp: DateFunctionsService, public letterDay:LetterDayService, public notifications: LocalNotifications, public mySched:MyScheduleService) {}
 
-  scheduleAll(){
+  async scheduleAll(){
     //Removes all prior scheduled notifications
     return this.notifications.cancelAll().then(() => {
       //For each class

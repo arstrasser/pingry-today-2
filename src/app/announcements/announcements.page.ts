@@ -42,7 +42,9 @@ export class AnnouncementsPage implements OnInit {
       this.localRefresh();
       this.messages.showError("Couldn't connect to the internet!")
     }).add(() =>{
-      if(refresher) refresher.complete();
+      if(refresher){
+        refresher.target.complete();
+      }
       if(!!this.l){ this.l.dismiss(); this.l = null; }
     });
   }

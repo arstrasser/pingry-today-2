@@ -13,7 +13,7 @@
 
 <ion-content padding>
   <ion-refresher (ionRefresh)="refresh($event)">
-    <ion-refresher-content>Pull to Refresh</ion-refresher-content>
+    <ion-refresher-content></ion-refresher-content>
 	</ion-refresher>
 	<ion-list lines="inset">
 		<ion-item tappable *ngFor="let feedItem of rss" (click)="openAnnounce(feedItem)">

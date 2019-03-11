@@ -32,6 +32,8 @@ export class SettingsService {
   ];
   startPageIndex:number = 0;
 
+  classClickAction:string = "todo";
+
   settingsLoaded:boolean = false;
 
   constructor(public http: Http, public events: Events, public storage:Storage) {
@@ -40,6 +42,7 @@ export class SettingsService {
         this.pages = val.pages;
         this.startPageIndex = val.startPageIndex
         this.athleticSubscriptions = val.athleticSubscriptions;
+        this.classClickAction = val.classClickAction || "todo";
         this.settingsLoaded = true;
       }else{
         this.pages = [
@@ -98,7 +101,23 @@ export class SettingsService {
     })
   }
 
-  async savePages(newPages, startPageIndex){
+  getClassClickAction():Promise<string>{
+    return new Promise(resolve => {
+      if(this.settingsLoaded){
+        return resolve(this.classClickAction);
+      }
+      this.events.subscribe("settingsLoaded", () => {
+        return resolve(this.classClickAction);
+      })
+    })
+  }
+
+  async setClassClickAction(newAction:string){
+    this.classClickAction = newAction;
+    return await this.saveSettings();
+  }
+
+  async savePages(newPages){
     this.pages = newPages;
     this.startPageIndex;
     this.events.publish("pagesUpdated");
@@ -116,7 +135,8 @@ export class SettingsService {
     let v = await this.storage.set("settings", {
       pages:this.pages,
       startPageIndex:this.startPageIndex,
-      athleticSubscriptions:this.athleticSubscriptions
+      athleticSubscriptions:this.athleticSubscriptions,
+      classClickAction: this.classClickAction
     });
     return v;
   }

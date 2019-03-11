@@ -19,6 +19,10 @@ export class MessagesService {
     return this.toast.create({message, duration:3000, cssClass:"toast-normal"}).then((toast) => toast.present());
   }
 
+  showShort(message:string){
+    return this.toast.create({message, duration:500, cssClass:"toast-normal"}).then((toast) => toast.present());
+  }
+
   popup(header:string, message:string){
     return this.alertCtrl.create({
       header,

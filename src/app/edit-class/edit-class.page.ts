@@ -33,6 +33,7 @@ export class EditClassPage implements OnInit {
       this.modifying = true;
       //Get the class
       this.cls = JSON.parse(JSON.stringify(this.mySched.getAll()[this.clsType][this.clsId]));
+      this.updateColor(this.cls.color);
     }
   }
 
@@ -48,16 +49,21 @@ export class EditClassPage implements OnInit {
     }
   }
 
+  updateColor(color){
+    this.cls.color = color;
+    document.getElementsByClassName("color-picker")[0].setAttribute("style", "--background:"+color);
+  }
+
   openColorPicker(){
     const colors = ["#ea3c3c", "#f9981f", "#fbf432", "#40ef40", "#40ff9f", "#56e8ff", "#1f78ff", "#c348e2", "#ff4d9e", "#e2e2e2", "#fff"];
     let buttons = [];
     for(let i = 0; i < colors.length; i++){
       let j = i;
-      buttons.push({text:".", handler:() => {this.cls.color = colors[j]}, cssClass:"color-selection-"+i+" color-selection"})
+      buttons.push({text:".", handler:() => {this.updateColor(colors[j])}, cssClass:"color-selection-"+i+" color-selection"})
     }
     buttons.push({text:"Other...", handler:()=>this.openFullColorPicker()})
     buttons.push({text:"Cancel", role:"cancel"});
-    let alert = this.actionSheetCtrl.create({
+    this.actionSheetCtrl.create({
       header:"Color Picker",
       buttons
     }).then(alert => alert.present());
@@ -66,10 +72,9 @@ export class EditClassPage implements OnInit {
   openFullColorPicker(){
     this.modalCtrl.create({component:FullColorPickerPage, componentProps:{color:this.cls.color}}).then(modal => {
       modal.present();
-      modal.onDidDismiss((color) => {
+      modal.onDidDismiss().then((color) => {
         if(color.data){
-          console.log(color);
-          this.cls.color = color.data;
+          this.updateColor(color.data);
         }
       })
     });

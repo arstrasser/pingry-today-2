@@ -11,21 +11,42 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
-  <ion-list>
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title *ngIf="!pointsLoaded" style="white-space:normal">Your points are loading...</ion-card-title>
-        <ion-card-title *ngIf="pointsLoaded" style="white-space:normal">You have {{points}} pride points</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        Earn pride points by going to Pingry Pride events. Once you're there and the event started, click the link below to scan the QR code!
-      </ion-card-content>
-    </ion-card>
-    <br>
-    <ion-button expand="full" (click)="openScanner()">
-      <ion-icon slot="end" name="add"></ion-icon>
-      <ion-label>Scan a code for pride points?</ion-label>
-    </ion-button>
-  </ion-list>
+<ion-content>
+  <div style="height:100%" [ngClass]="{'white-background':!scanning}">
+    <ion-list class="pride-list">
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title *ngIf="!pointsLoaded" style="white-space:normal">Your points are loading...</ion-card-title>
+          <ion-card-title *ngIf="pointsLoaded" style="white-space:normal">You have {{points}} pride points</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          Earn pride points by going to Pingry Pride events. Once you're there and the event started, click the button below to scan the QR code!
+        </ion-card-content>
+      </ion-card>
+      <br>
+      <ion-button expand="full" *ngIf="!scanning" (click)="openScanner()">
+        <ion-icon slot="end" name="add"></ion-icon>
+        <ion-label>Scan a code for pride points</ion-label>
+      </ion-button>
+      <ion-button expand="full" color="danger" *ngIf="scanning" (click)="closeScanner()">
+        <ion-label>Cancel Scanning</ion-label>
+      </ion-button>
+      <br>
+      <ion-card *ngIf="!scanning">
+        <ion-card-header>
+          <ion-card-title style="white-space:normal">Leaderboard</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-grid style="color: #444">
+            <ion-row *ngFor="let grade of leaderboard; let i = index">
+              <ion-col size="1">{{i+1}}.</ion-col>
+              <ion-col size="8"><b>{{grade.name}}</b></ion-col>
+              <ion-col size="3">{{grade.total}}</ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-card-content>
+      </ion-card>
+    </ion-list>
+    <img [hidden]="!scanning" src="/assets/img/scanner-outline.png" style="width:100%">
+  </div>
 </ion-content>

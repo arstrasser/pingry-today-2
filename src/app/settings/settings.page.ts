@@ -1,14 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController, ModalController } from '@ionic/angular';
-import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 
 import { SettingsService } from '../settings.service';
 import { MessagesService } from '../messages.service';
-import { ScheduleService } from '../schedule.service';
-import { LetterDayService } from '../letter-day.service';
 import { UserService } from '../user.service';
 
-import { ClassManagePage } from '../class-manage/class-manage.page';
 import { LoginPage } from '../login/login.page';
 
 
@@ -22,23 +18,27 @@ export class SettingsPage implements OnInit {
   subscriptions:string[];
   athleticMaps:boolean;
   pages:{title:string}[] = [];
-  selectedPage:number = 0;
   possiblePages:{title:string}[] = [];
   hiddenPages:{title:string}[] = [];
-  constructor(private navCtrl: NavController, private iab:InAppBrowser, private settings:SettingsService,
-     private messages:MessagesService, private schedule:ScheduleService, private letterDay:LetterDayService,
-     private user:UserService, private modalCtrl:ModalController) { }
+  classAction:string = "todo";
+  constructor(private navCtrl: NavController, private settings:SettingsService,
+     private messages:MessagesService, private user:UserService, private modalCtrl:ModalController) { }
 
   ngOnInit() {
     this.athleticCalendars = this.settings.getAthleticCalendars();
-    this.settings.getAthleticSubscriptions().then((s) => this.subscriptions = s);
+    this.settings.getAthleticSubscriptions().then(s => this.subscriptions = s);
+    this.settings.getClassClickAction().then(action => this.classAction = action);
     this.settings.getPages().then(vals => {
       this.pages = vals.pages;
-      this.selectedPage = vals.startPageIndex;
       this.possiblePages = this.settings.possiblePages;
       this.updateHiddenPages();
     })
     this.athleticMaps = this.settings.getAthleticMaps();
+  }
+
+  onReorder(e){
+    e.detail.complete(true);
+    this.updatePages();
   }
 
   updatePages(){
@@ -55,7 +55,7 @@ export class SettingsPage implements OnInit {
     this.pages = newPages;
     console.log(this.pages);
     this.updateHiddenPages();
-    this.settings.savePages(this.pages, this.selectedPage).then(() => {
+    this.settings.savePages(this.pages).then(() => {
       this.messages.showNormal("Order Updated");
     });
   }
@@ -74,12 +74,11 @@ export class SettingsPage implements OnInit {
   }
 
   openClassManagement(){
-    this.navCtrl.goForward("/classManage");
+    this.navCtrl.navigateForward("/classManage");
   }
 
   //Updates the athletic maps option to true or false
   updateAthleticSubscription(elem){
-    console.log(elem.value);
     this.subscriptions = elem.value;
     if(this.subscriptions.indexOf("-1")!=-1 || this.subscriptions.length == 0){
       this.messages.showNormal("Subscribed to all calendars");
@@ -88,6 +87,11 @@ export class SettingsPage implements OnInit {
     elem.value = this.subscriptions;
     console.log(elem.value);
     this.settings.setAthleticSubscription(this.subscriptions);
+  }
+
+  updateClassAction(elem){
+    this.classAction = elem.value;
+    this.settings.setClassClickAction(this.classAction);
   }
 
   updateAthleticMaps(val){

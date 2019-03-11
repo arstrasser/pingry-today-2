@@ -1,6 +1,6 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Events, Content, ModalController } from '@ionic/angular';
+import { Events, ModalController } from '@ionic/angular';
 
 import { DateFunctionsService } from '../date-functions.service';
 import { LetterDayService } from '../letter-day.service';
@@ -17,7 +17,6 @@ import { TodoConfigPage } from '../todo-config/todo-config.page';
   styleUrls: ['./todo.page.scss'],
 })
 export class TodoPage implements OnInit {
-  @ViewChild(Content) content:Content;
   classes:Array<any>;
   timeouts:any = {};
   maxDay:string = "";
@@ -36,7 +35,7 @@ export class TodoPage implements OnInit {
       const blockNum = params.blockNum;
       if(blockNum != undefined){
         let elem:HTMLElement = document.getElementById("todo-class-"+blockNum);
-        this.content.scrollToPoint(0, elem.offsetTop - 5, 300);
+        //this.content.scrollToPoint(0, elem.offsetTop - 5, 300);
         var color = this.mySched.get("block", blockNum).color;
         if(color == "#fff" || color == "#FFF" || color == "#ffffff" || color == "#FFFFFF"){
           elem.style.border = "1px solid white";
@@ -130,7 +129,7 @@ export class TodoPage implements OnInit {
   openTodoConfig(clsIndex, taskIndex){
     this.modalCtrl.create({component: TodoConfigPage, componentProps:{clsId:this.classes[clsIndex].time.id, taskIndex}}).then(modal => {
       modal.present();
-      modal.onWillDismiss(()=>{
+      modal.onWillDismiss().then(() => {
         this.refresh();
       })
     })

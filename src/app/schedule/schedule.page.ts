@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Events, MenuController } from '@ionic/angular';
+import { Events, MenuController, ModalController } from '@ionic/angular';
 
+import { EditClassPage } from '../edit-class/edit-class.page';
 import { DateFunctionsService } from '../date-functions.service';
 import { LetterDayService } from '../letter-day.service';
 import { ScheduleService } from '../schedule.service';
@@ -24,8 +25,8 @@ export class SchedulePage implements OnInit {
   periodList:string = "";
   schedRefreshOverride:boolean = false;
   ddd:string = "";
-  constructor(public dfp:DateFunctionsService, public messages: MessagesService, public events: Events, public router:Router,
-              public letterDay:LetterDayService, public schedule:ScheduleService, public mySched:MyScheduleService, public menu:MenuController, public settings:SettingsService) {
+  constructor(private dfp:DateFunctionsService, private messages: MessagesService, private events: Events, private router:Router, private modalCtrl:ModalController,
+              private letterDay:LetterDayService, private schedule:ScheduleService, private mySched:MyScheduleService, private menu:MenuController, private settings:SettingsService) {
     this.scheduleRefreshHandler = this.scheduleRefreshHandler.bind(this);
     this.refresh = this.refresh.bind(this);
   }
@@ -393,8 +394,23 @@ export class SchedulePage implements OnInit {
 
   clickedClass(cls){
     if(!!cls.clickUrl){
-      this.schedRefreshOverride = true;
-      this.router.navigate(["/todo", {blockNum:cls.clickUrl}]);
+      this.settings.getClassClickAction().then(action => {
+        console.log(cls.clickUrl);
+        if(action == "todo"){
+          this.schedRefreshOverride = true;
+          this.router.navigate(["/todo", {blockNum:cls.clickUrl}]);
+        }else if(action == "config"){
+          let classes = this.mySched.getAllType("block");
+          for(var i = 0; i < classes.length; i++){
+            if(classes[i].time.id == cls.clickUrl){
+              this.modalCtrl.create({component: EditClassPage, componentProps:{clsType:"block", clsId:i}}).then(modal => {
+                modal.present();
+                modal.onDidDismiss().then(()=>this.refresh());
+              });
+            }
+          }
+        }
+      })
     }
   }
 

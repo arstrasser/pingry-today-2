@@ -15,8 +15,16 @@
 <ion-content padding no-bounce>
   <ion-list>
 		<ion-item tappable (click)="openClassManagement()">Class Management</ion-item>
-    <!--ion-button expand="full" *ngIf="isLoggedIn()" (click)="login()">Log in</ion-button>
-    <ion-button expand="full" color="warning" *ngIf="!isLoggedIn()" (click)="logout()">Logout</ion-button-->
+    <ion-item>
+      <ion-label>Class Click Action</ion-label><br>
+      <ion-select [value]="classAction" (ionChange)="updateClassAction($event.target)">
+        <ion-select-option value="none">Do Nothing</ion-select-option>
+        <ion-select-option value="todo">To-do List</ion-select-option>
+        <ion-select-option value="config">Open Configuration</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item expand="full" *ngIf="!isLoggedIn()" (click)="login()"><ion-label>Log in</ion-label></ion-item>
+    <ion-item expand="full" *ngIf="isLoggedIn()" (click)="logout()"><ion-label>Logout</ion-label></ion-item>
     <ion-item>
       <ion-label>Athletic Team Subscription</ion-label><br>
       <ion-select [value]="subscriptions" (ionChange)="updateAthleticSubscription($event.target)" multiple="true">
@@ -28,19 +36,19 @@
       <ion-label>
         <h2 style="font-size:20px">Side Menu Page Order:</h2>
         <p>Whatever is in the first slot will open with the app.</p>
-        <ion-button style="padding:5px;" color="success" expand="block" (click)="updatePages()">Update Order</ion-button>
         <ion-list>
           <ion-item-divider>
             <ion-label>
               Menu Items
             </ion-label>
           </ion-item-divider>
-          <ion-reorder-group id="menuPageReorder" [disabled]="false">
+          <ion-reorder-group id="menuPageReorder" [disabled]="false" (ionItemReorder)="onReorder($event)">
             <ion-item *ngFor="let item of pages; let i = index" [attr.data-index]="i" [attr.data-hiddenPage]="false">
               <ion-label>
                 {{item.title}}
               </ion-label>
               <ion-reorder *ngIf="item.title != 'About' && item.title != 'Settings'" slot="start"></ion-reorder>
+              <ion-icon *ngIf="item.title == 'About' || item.title == 'Settings'" slot="start" name="lock"></ion-icon>
             </ion-item>
             <ion-item-divider class="divider">
               <ion-label>

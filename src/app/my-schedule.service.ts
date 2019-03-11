@@ -8,7 +8,7 @@ import { Events } from '@ionic/angular';
   providedIn: 'root'
 })
 export class MyScheduleService {
-  myClasses:any/*{block:Array<any>, flex:Array<any>, CP:Array<any>}*/ = {"block":[], "flex":[], "CP":[]};;
+  myClasses:{block:Array<any>, flex:Array<any>, CP:Array<any>} = {"block":[], "flex":[], "CP":[]};;
   modified:boolean = false;
   constructor(public http: Http, public events:Events, public storage:Storage) {
     //Typical Refreshing
@@ -36,11 +36,11 @@ export class MyScheduleService {
     this.modified = val; //Modifier for whether or not user classes were updated
   }
 
-  getAll(){
+  getAll():{block:Array<any>, flex:Array<any>, CP:Array<any>}{
     return this.myClasses; //returns all classes
   }
 
-  getAllType(id){
+  getAllType(id):Array<any>{
     return this.myClasses[id]; //returns all classes of type "id"
   }
 
@@ -73,13 +73,16 @@ export class MyScheduleService {
     }
     return false;
   }
+  
   removeClassById(type, id){
     this.myClasses[type].splice(id,1);
   }
+
   addClass(cls){
     console.log(cls);
     this.myClasses[cls.type].push(cls);
   }
+
   addClassWithType(type, cls){
     //Deprecated function to add a class to a specific place
     console.warn("Add Class with Type is deprecated, please use Add Class");

@@ -30,9 +30,9 @@ export class ClassManagePage implements OnInit {
   }
 
   editClass(clsType:string, clsId:number){
-    let modal = this.modalCtrl.create({component: EditClassPage, componentProps:{clsType, clsId}}).then(modal => {
+    this.modalCtrl.create({component: EditClassPage, componentProps:{clsType, clsId}}).then(modal => {
       modal.present();
-      modal.onDidDismiss(()=>this.myClasses.sort((a,b) => {return a.time.id - b.time.id}));
+      modal.onDidDismiss().then(()=>this.myClasses.sort((a,b) => {return a.time.id - b.time.id}));
     });
   }
 }

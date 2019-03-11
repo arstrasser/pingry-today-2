@@ -11,7 +11,7 @@
       <ion-label fixed>Name</ion-label>
       <ion-input type="text" [(ngModel)]="cls.name"></ion-input>
     </ion-item>
-		<ion-item tappable (click)="openColorPicker()" [ngStyle]="{'background-color':cls.color, 'text-align':'center'}">
+		<ion-item class="color-picker" tappable (click)="openColorPicker()">
       <ion-label>
 	      Color
       </ion-label>

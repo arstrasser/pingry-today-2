@@ -2,6 +2,7 @@ MAIN:
  - check that news local refresh works
  - Fix Refresh errors
  - Fix and Test Cordova Hot Code Push
+ - Scroll to Position for to-do list
 
 Remote Database:
  - Snow Days

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { forkJoin } from "rxjs";
-import { map } from "rxjs/operators";
 
 import { Events } from '@ionic/angular';
 
@@ -51,7 +50,7 @@ export class ScheduleService {
   }
 
   refresh(callback?){
-    this.messages.showNormal("Refreshing...");
+    this.messages.showShort("Refreshing...");
     const scheduleURL = "https://pingrytoday.pingry.org:3001/v1/schedule/all?api_key="+this.settings.apiKey;
     const manualURL = "https://pingrytoday.pingry.org:3001/v1/schedule/manual/all?api_key="+this.settings.apiKey;
     const eventsURL = "https://pingrytoday.pingry.org:3001/v1/schedule/events?api_key="+this.settings.apiKey;
