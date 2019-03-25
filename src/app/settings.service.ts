@@ -12,7 +12,7 @@ export class SettingsService {
   athleticSubscriptions:string[] = ["-1"];
   athleticCalendars:Array<{id:number, name:string, url:string}> = [];
   classClickAction:string = "Tasks";
-  possibleClassClickActions:string[] = ["Tasks", "Nothing"];
+  possibleClassClickActions:string[] = ["Tasks", "Config", "Nothing"];
   extraOptions:Array<string>;
   athleticSubscriptionChanged:boolean = false;
   ddd:any = {};

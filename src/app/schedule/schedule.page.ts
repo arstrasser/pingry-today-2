@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Events, MenuController, ModalController } from '@ionic/angular';
+import { Events, ModalController } from '@ionic/angular';
 
 import { EditClassPage } from '../edit-class/edit-class.page';
 import { DateFunctionsService } from '../date-functions.service';
@@ -26,7 +26,7 @@ export class SchedulePage implements OnInit {
   schedRefreshOverride:boolean = false;
   ddd:string = "";
   constructor(private dfp:DateFunctionsService, private messages: MessagesService, private events: Events, private router:Router, private modalCtrl:ModalController,
-              private letterDay:LetterDayService, private schedule:ScheduleService, private mySched:MyScheduleService, private menu:MenuController, private settings:SettingsService) {
+              private letterDay:LetterDayService, private schedule:ScheduleService, private mySched:MyScheduleService, private settings:SettingsService) {
     this.scheduleRefreshHandler = this.scheduleRefreshHandler.bind(this);
     this.refresh = this.refresh.bind(this);
   }
@@ -396,10 +396,10 @@ export class SchedulePage implements OnInit {
     if(!!cls.clickUrl){
       this.settings.getClassClickAction().then(action => {
         console.log(cls.clickUrl);
-        if(action == "todo"){
+        if(action == "Tasks"){
           this.schedRefreshOverride = true;
           this.router.navigate(["/todo", {blockNum:cls.clickUrl}]);
-        }else if(action == "config"){
+        }else if(action == "Config"){
           let classes = this.mySched.getAllType("block");
           for(var i = 0; i < classes.length; i++){
             if(classes[i].time.id == cls.clickUrl){
