@@ -50,16 +50,22 @@ export class TodoPage implements OnInit {
 
   }
 
+  //Refresh the list of todos
   refresh() {
+    //Figure out what the next class is by time. (Next class in the day)
     let startingClass;
+    //Get the next day (including today) that has classes.
     let nextDate = this.letterDay.nextLetterDayDate(new Date());
     console.log(nextDate);
     if(nextDate !== undefined){
       var classes = this.letterDay.classesOf(nextDate);
+      //If today has classes, we have to figure out the next class based on time
       if(this.dfp.dateToDayString(nextDate) == this.dfp.dateToDayString(new Date())){
         var sched = this.schedule.getForDay(nextDate);
+        //Loop through the schedule and find out the time of each class.
         for(var j = 0; j < sched.length; j++){
           thisClass = sched[j];
+          //Deal with swap classes for lunch
           if(sched[j].type == "swap"){
             if(!this.mySched.get("block", classes[2]) || this.mySched.get("block", classes[2]).firstLunch){
               thisClass = thisClass.options[0];
@@ -71,16 +77,19 @@ export class TodoPage implements OnInit {
             var d = new Date();
             d.setHours(parseInt(thisClass.endTime.substring(0,2)));
             d.setMinutes(parseInt(thisClass.endTime.substring(3,5)));
+            //If this class hasn't occured yet, we're done
             if(d.getTime() > nextDate.getTime()){
               startingClass = classes[parseInt(thisClass.id) - 1];
               break;
             }
           }
         }
+        //If we didn't find a class, then the next class is tomorrow
         if(startingClass == undefined){
           nextDate.setDate(nextDate.getDate()+1);
           nextDate = this.letterDay.nextLetterDayDate(nextDate);
           if(nextDate == undefined){
+            //Use 1st period as backup
             startingClass = 1;
           }else{
             startingClass = this.letterDay.classesOf(nextDate)[0];
@@ -91,9 +100,11 @@ export class TodoPage implements OnInit {
         startingClass = classes[0];
       }
     }else{
+      //Use 1st period as backup
       startingClass = 1;
     }
 
+    //Now that we know our next class, we can order the rest of the todo's
     var classList = [];
     for(var i = 0; i < 7; i++){
       console.log(startingClass);
@@ -103,6 +114,7 @@ export class TodoPage implements OnInit {
       }
     }
 
+    //Cut out the completed tasks, if there are any.
     for(var i = 0; i < classList.length; i++){
       for(var j = 0; j < classList[i].tasks.length; j++){
         if(classList[i].tasks[j].completed == true){
@@ -110,6 +122,7 @@ export class TodoPage implements OnInit {
           j--;
         }
       }
+      //Sort the tasks in order of due date
       classList[i].tasks.sort((a,b)=> {
         if(!a.date && !b.date){return 0}
         if(!a.date) return 1;
@@ -122,10 +135,9 @@ export class TodoPage implements OnInit {
       });
     }
     this.classes = classList;
-    //this.classes[0].tasks[0].date = this.dateToISO(new Date());
-    console.log(this.classes);
   }
 
+  //Opens the configuration modal for a specific todo
   openTodoConfig(clsIndex, taskIndex){
     this.modalCtrl.create({component: TodoConfigPage, componentProps:{clsId:this.classes[clsIndex].time.id, taskIndex}}).then(modal => {
       modal.present();
@@ -148,6 +160,7 @@ export class TodoPage implements OnInit {
     return new Date(str.substring(0,4), (parseInt(str.substring(5,7))-1), str.substring(8,10), str.substring(11,13), str.substring(14, 16));
   }
 
+  //Fet the color for a task.
   getColor(task){
     let dueDate = new Date(task.date.substring(0,4), (parseInt(task.date.substring(5,7))-1), task.date.substring(8,10));
     const now = new Date();
@@ -179,7 +192,9 @@ export class TodoPage implements OnInit {
   }
 
   removeTask(taskIndex, clsIndex, elem) {
+    //Fade out the task (fade due to css animation)
     elem.parentNode.parentNode.style.opacity = "0";
+    //Set a timeout to actually remove the event
     this.timeouts[taskIndex+""+clsIndex] = window.setTimeout(() => {
       elem.parentNode.parentNode.style.display = "none";
       this.notifications.scheduleAll();
@@ -187,15 +202,19 @@ export class TodoPage implements OnInit {
     }, 1000);
   }
 
+  //If a task is fading away but we uncheck the box
   readdTask(taskIndex, clsIndex, elem) {
+    //Cancel the timeout to remove the event
     if(this.timeouts[taskIndex+""+clsIndex]){
       window.clearTimeout(this.timeouts[taskIndex+""+clsIndex]);
     }
+    //Cancel the animation
     elem.parentNode.parentNode.style["transition-duration"] = '0s';
     elem.parentNode.parentNode.style.opacity = 1;
     setTimeout(()=>elem.parentNode.parentNode.style["transition-duration"] = '1s', 5);
   }
 
+  //Delete a task if the name is empty.
   oldTaskUnfocus(val, taskIndex, clsIndex){
     if(val == ""){
       this.classes[clsIndex].tasks.splice(taskIndex, 1);
@@ -204,6 +223,7 @@ export class TodoPage implements OnInit {
   }
 
   oldClassKeypress(e){
+    //If you hit enter
     if(e.keyCode == 13){
       e.target.blur();
       this.mySched.save();

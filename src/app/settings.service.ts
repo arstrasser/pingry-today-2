@@ -22,7 +22,7 @@ export class SettingsService {
       {title:"To Do List", page:"/todo"},
       {title:"News", page:"/news"},
       {title:"Announcements", page:"/announcements"},
-      {title:"Pride Points", page:"/pridePoints"},
+      //{title:"Pride Points", page:"/pridePoints"},
       {title:"Athletics", page:"/athletics"},
       {title:"Lunch Menu", localUrl:"http://www.sagedining.com/menus/pingry"},
       {title:"Photos", systemUrl:"https://www.pingry.org/hp/photos-and-media"},
@@ -32,25 +32,27 @@ export class SettingsService {
       {title:"Settings", page:"/settings"},
       {title:"About", page: "/about"}
   ];
-  startPageIndex:number = 0;
+  startPageIndex:number = 0; //For now, this is staying at 0 since we always load the first page.
 
   settingsLoaded:boolean = false;
 
   constructor(public http: Http, public events: Events, public storage:Storage) {
     this.storage.get("settings").then((val) => {
       if(val){
+        //Initialize settings to stored settings
         this.pages = val.pages;
         this.startPageIndex = val.startPageIndex
         this.athleticSubscriptions = val.athleticSubscriptions;
         this.classClickAction = val.classClickAction || "todo";
         this.settingsLoaded = true;
       }else{
+        //Set up default settings since couldn't get stored settings
         this.pages = [
           {title:"Schedule", page:"/schedule"},
           {title:"To Do List", page:"/todo"},
           {title:"News", page:"/news"},
           {title:"Announcements", page:"/announcements"},
-          {title:"Pride Points", page:"/pridePoints"},
+          //{title:"Pride Points", page:"/pridePoints"},
           {title:"Athletics", page:"/athletics"},
           {title:"Web Portal", systemUrl:"https://www.pingry.org/pingrytoday"},
           {title:"Settings", page:"/settings"},
@@ -65,6 +67,7 @@ export class SettingsService {
       this.events.publish("pagesUpdated");
     })
 
+    //Try to get athletic calendars and dress down day schedules from localstorage
     let temp = localStorage.getItem("athleticCalendars");
     if(temp == "" || temp == undefined){
       this.athleticCalendars = [];
@@ -79,17 +82,21 @@ export class SettingsService {
     this.refresh();
   }
 
+  //Get all the pages and the starting page index.
   getPages():Promise<{pages:{title:string, page?:string, localUrl?:string, systemUrl?:string}[], startPageIndex:number}>{
     return new Promise(resolve => {
+      //Returns a promise in case we haven't loaded the settings yet.
       if(this.settingsLoaded){
         return resolve({pages:this.pages, startPageIndex:this.startPageIndex});
       }
+      //Add a listener for when they are loaded
       this.events.subscribe("settingsLoaded", () => {
         return resolve({pages:this.pages, startPageIndex:this.startPageIndex});
       })
     })
   }
 
+  //Gets our athletics subscriptions
   getAthleticSubscriptions():Promise<string[]>{
     return new Promise(resolve => {
       if(this.settingsLoaded){
@@ -141,6 +148,7 @@ export class SettingsService {
     return v;
   }
 
+  //Refresh data for dress down days and the calendar list
   refresh(){
     this.http.get("https://pingrytoday.pingry.org:3001/v1/ddd?api_key="+this.apiKey).subscribe(data => {
       this.ddd = data.json();
@@ -170,6 +178,7 @@ export class SettingsService {
   getAthleticMaps(){
     return this.athleticMaps;
   }
+  
   //Sets whether or not athletic maps are enabled
   setAthleticMaps(val){
     this.athleticMaps = val;

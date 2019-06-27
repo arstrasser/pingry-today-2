@@ -36,10 +36,12 @@ export class AppComponent {
       this.pages = vals.pages;
       this.startPageIndex = vals.startPageIndex;
       this.platform.ready().then(() => {
+        //Open the first page
         this.openPage(this.pages[vals.startPageIndex]);
       });
     });
 
+    //If we reorder the pages, update the menu
     this.events.subscribe("pagesUpdated", () => {
       this.settings.getPages().then((vals) => {
         this.pages = vals.pages;
@@ -52,6 +54,7 @@ export class AppComponent {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
+      //Register for firebase notifications
       this.fcm.onNotification().subscribe(data => {
         console.log(data);
         if(data.text){ //Local notification uses .text instead of .body

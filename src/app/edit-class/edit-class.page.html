@@ -32,10 +32,10 @@
 			<ion-label>Science</ion-label>
 			<ion-select (ionChange)="takesFlexChange($event)">
         <ion-select-option [selected]="cls.takesFlex == ''" value="">No flexes</ion-select-option>
-        <ion-select-option [selected]="cls.takesFlex == 'both'" value="both">All adjacent flexes</ion-select-option>
-        <ion-select-option [selected]="cls.takesFlex == 'before'" value="before">Only flexes before the class</ion-select-option>
-        <ion-select-option [selected]="cls.takesFlex == 'after'" value="after">Only flexes after the class</ion-select-option>
-        <ion-select-option [selected]="cls.takesFlex == 'cp'" value="cp">All adjacent flexes and CP</ion-select-option>
+        <ion-select-option [selected]="cls.takesFlex == 'both'" value="both">All flexes</ion-select-option>
+        <ion-select-option [selected]="cls.takesFlex == 'before'" value="before">Only flexes before</ion-select-option>
+        <ion-select-option [selected]="cls.takesFlex == 'after'" value="after">Only flexes after</ion-select-option>
+        <ion-select-option [selected]="cls.takesFlex == 'cp'" value="cp">All flexes and CP</ion-select-option>
       </ion-select>
 		</ion-item>
     <ion-item *ngIf="cls.type=='block'">

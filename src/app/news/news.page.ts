@@ -25,11 +25,10 @@ export class NewsPage implements OnInit {
       l.present();
       this.l = l;
       this.refresh();
-    })
-
+    });
   }
 
-  openSystemLink(url){
+  openSystemLink(url:string){
     this.iab.create(url, '_system')
   }
 
@@ -37,6 +36,7 @@ export class NewsPage implements OnInit {
   refresh(refresher?){
     this.http.get("https://pingrytoday.pingry.org:3001/v1/news?api_key="+this.settings.apiKey).subscribe((data) => {
       this.news = data.json();
+      //Store the news locally as backup in case we go offline.
       localStorage.setItem("newsRSS", JSON.stringify(this.news));
     }, ()=> {
       this.localRefresh();
@@ -56,6 +56,7 @@ export class NewsPage implements OnInit {
   }
 
   openArticle(article){
+    //Opens an article and passes in the relevant information through navParams.
     this.modalCtrl.create({component: ArticlePage, componentProps:{article}}).then(modal => modal.present());
   }
 

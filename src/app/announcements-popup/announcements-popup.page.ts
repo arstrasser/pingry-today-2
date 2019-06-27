@@ -12,15 +12,19 @@ export class AnnouncementsPopupPage implements OnInit {
   constructor(public navCtrl: NavController, public navParams: NavParams, public iab: InAppBrowser) {}
 
   ngOnInit() {
+    //Get the details on the announcement from the navigation parameters.
     this.announcement = this.navParams.get("announcement");
     document.getElementsByTagName("app-announcements-popup")[0].addEventListener("click", (e) => {
-      e = e ||  window.event;
+      //Override the click event on links to use in app browser.
+      e = e || window.event;
       let element:any = e.target || e.srcElement;
 
+      //If you are clicking on an <a> tag for a link
       if (element.tagName == 'A') {
         this.iab.create(element.href, "_system");
         return false;
       }
+      //If you are clicking on the child of an <a> tag for a link
       else if(element.parentNode.tagName =='A') {
         this.iab.create(element.parentNode.href, "_system");
         return false;

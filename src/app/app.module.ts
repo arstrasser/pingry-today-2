@@ -12,7 +12,7 @@ import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { FCM } from '@ionic-native/fcm/ngx';
 import { AppVersion } from '@ionic-native/app-version/ngx';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
-import { QRScanner } from '@ionic-native/qr-scanner/ngx'
+//import { QRScanner } from '@ionic-native/qr-scanner/ngx'
 
 import { AnnouncementsPopupPage } from './announcements-popup/announcements-popup.page';
 import { AnnouncementsPopupPageModule } from './announcements-popup/announcements-popup.module';
@@ -60,7 +60,7 @@ import { AppRoutingModule } from './app-routing.module';
     FCM,
     AppVersion,
     LocalNotifications,
-    QRScanner,
+//    QRScanner,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

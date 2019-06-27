@@ -29,7 +29,7 @@ export class AnnouncementsPage implements OnInit {
 
   }
 
-  openSystemLink(url){
+  openSystemLink(url:string){
     this.iab.create(url, '_system')
   }
 
@@ -58,6 +58,7 @@ export class AnnouncementsPage implements OnInit {
   }
 
   openAnnounce(announcement){
+    //Open a modal for the announcement and pass on the details on the announcement
     this.modalCtrl.create({component:AnnouncementsPopupPage, componentProps:{announcement}}).then(modal => modal.present());
   }
 

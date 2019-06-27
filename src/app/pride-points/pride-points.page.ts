@@ -1,3 +1,8 @@
+/*
+//This is an untested implementation of the pride points interface.
+//Please test thoroughly with the Pingry API before uncommenting.
+//This file will depend on an ionic native qr scanner
+
 import { Component, OnInit, NgZone } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
@@ -96,3 +101,4 @@ export class PridePointsPage implements OnInit {
   }
 
 }
+*/

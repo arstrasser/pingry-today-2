@@ -46,7 +46,7 @@ export class LetterDayService {
     //(e.g.Calling LetterDay.refresh.then(function(){code here}))
     return this.http.get(letterDayURL).subscribe((data) => {
       this.times = data.json();
-
+      console.log(this.times);
       //Update localStorage items
       localStorage.setItem("letterDays", JSON.stringify(this.times));
 
@@ -169,6 +169,7 @@ export class LetterDayService {
     let i = 0;
     while(this.getIndexOf(this.dfp.dateToDayString(d)) == -1){
       d.setDate(d.getDate()+1);
+      //Only try for 200 days.
       if(++i > 200){
         return undefined;
       }

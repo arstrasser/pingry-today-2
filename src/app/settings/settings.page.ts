@@ -26,6 +26,7 @@ export class SettingsPage implements OnInit {
      private messages:MessagesService, private user:UserService, private modalCtrl:ModalController) { }
 
   ngOnInit() {
+    //Update all the object properties from the settings service
     this.athleticCalendars = this.settings.getAthleticCalendars();
     this.settings.getAthleticSubscriptions().then(s => this.subscriptions = s);
     this.settings.getClassClickAction().then(action => this.classAction = action);
@@ -39,14 +40,17 @@ export class SettingsPage implements OnInit {
   }
 
   onReorder(e){
+    //After reordering the list of classes
     e.detail.complete(true);
     this.updatePages();
   }
 
   updatePages(){
+    //Update the page list
     let elems = document.getElementById("menuPageReorder").children;
     let newPages = [];
     for(var i = 0; i < elems.length; i++){
+      //If the element is a divider, skip it
       if(elems[i].classList.contains("divider")) break;
       if(elems[i].attributes.getNamedItem("data-hiddenPage").value == "true"){
         newPages.push(this.hiddenPages[elems[i].attributes.getNamedItem("data-index").value]);
@@ -55,13 +59,13 @@ export class SettingsPage implements OnInit {
       }
     }
     this.pages = newPages;
-    console.log(this.pages);
     this.updateHiddenPages();
     this.settings.savePages(this.pages).then(() => {
       this.messages.showNormal("Order Updated");
     });
   }
 
+  //Update the list of hidden pages
   updateHiddenPages(){
     this.hiddenPages = [];
     for(var i = 0; i < this.possiblePages.length; i++){
@@ -81,12 +85,14 @@ export class SettingsPage implements OnInit {
 
   //Updates the athletic maps option to true or false
   updateAthleticSubscription(elem){
-    this.subscriptions = elem.value;
-    if(this.subscriptions.indexOf("-1")!=-1 || this.subscriptions.length == 0){
+    if(elem.value.indexOf("-1")!=-1|| elem.value.length == 0){
       this.messages.showNormal("Subscribed to all calendars");
-      this.subscriptions = ["-1"];
+      if(elem.value.length != 1){
+        elem.value = ["-1"];
+      }
     }
-    elem.value = this.subscriptions;
+    this.subscriptions = elem.value;
+
     console.log(elem.value);
     this.settings.setAthleticSubscription(this.subscriptions);
   }

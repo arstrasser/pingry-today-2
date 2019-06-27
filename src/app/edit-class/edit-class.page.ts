@@ -14,6 +14,7 @@ import { MyScheduleService } from '../my-schedule.service';
   styleUrls: ['./edit-class.page.scss'],
 })
 export class EditClassPage implements OnInit {
+  //Default class configuation
   cls:any = {"name":"", "color":"", "type":"", "firstLunch":false, "takesFlex":"", "firstFlex":true, "timeType":"", "time":{"day":"", "id":false}, "tasks":[]};;
   clsType:string;
   clsId:number;
@@ -23,6 +24,7 @@ export class EditClassPage implements OnInit {
 
 
   ngOnInit() {
+    //Get class information from the navigation parameters
     this.clsType = this.navParams.get("clsType");
     this.clsId = this.navParams.get("clsId");
     //If we aren't passed parameters or we are passed invalid parameters that specify a class to modify
@@ -44,6 +46,7 @@ export class EditClassPage implements OnInit {
 
   takesFlexChange(e){
     this.cls.takesFlex = e.target.value;
+    //If the class takes flex, it should be first lunch so we can autofill that.
     if(this.cls.takesFlex !== "" && this.cls.takesFlex !== "before"){
       this.cls.firstLunch = true;
     }
@@ -51,16 +54,21 @@ export class EditClassPage implements OnInit {
 
   updateColor(color){
     this.cls.color = color;
+    //Force update the background color to be the selected color.
     document.getElementsByClassName("color-picker")[0].setAttribute("style", "--background:"+color);
   }
 
+  //Open the generic action sheet with colors
   openColorPicker(){
+    //The colors for easy selection
     const colors = ["#ea3c3c", "#f9981f", "#fbf432", "#40ef40", "#40ff9f", "#56e8ff", "#1f78ff", "#c348e2", "#ff4d9e", "#e2e2e2", "#fff"];
     let buttons = [];
     for(let i = 0; i < colors.length; i++){
+      //Create a dummy variable here to help with function currying.
       let j = i;
       buttons.push({text:".", handler:() => {this.updateColor(colors[j])}, cssClass:"color-selection-"+i+" color-selection"})
     }
+    //Opens the full color picker for manual selection
     buttons.push({text:"Other...", handler:()=>this.openFullColorPicker()})
     buttons.push({text:"Cancel", role:"cancel"});
     this.actionSheetCtrl.create({
@@ -70,6 +78,7 @@ export class EditClassPage implements OnInit {
   }
 
   openFullColorPicker(){
+    //Manual selection of a custom color
     this.modalCtrl.create({component:FullColorPickerPage, componentProps:{color:this.cls.color}}).then(modal => {
       modal.present();
       modal.onDidDismiss().then((color) => {
@@ -81,7 +90,7 @@ export class EditClassPage implements OnInit {
   }
 
   delete(){
-    this.messages.confirm("Delete this class?", "", answer => {
+    this.messages.confirm("Delete this class?", "", (answer:boolean) => {
       if(answer == true){
         this.mySched.removeClassById(this.clsType, this.clsId);
         this.mySched.save();
@@ -90,6 +99,7 @@ export class EditClassPage implements OnInit {
     });
   }
 
+  //Update the class in the settings.
   update (cls){
     this.mySched.removeClassById(this.clsType, this.clsId);
     this.mySched.addClass(cls)
@@ -98,6 +108,7 @@ export class EditClassPage implements OnInit {
     this.back();
   }
 
+  //Add the class to our classes.
   submit(cls){
     this.mySched.addClass(cls);
     this.messages.showNormal("Class added!");
@@ -105,10 +116,12 @@ export class EditClassPage implements OnInit {
     this.back();
   }
 
+  //Cancel editing
   back(){
     document.querySelector('ion-modal-controller').dismiss();
   }
 
+  //Only allow updating/adding if the current class configuation is valid.
   isValid(cls){
     //Class has a name
     if(cls.name == ""){

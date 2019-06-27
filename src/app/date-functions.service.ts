@@ -39,6 +39,7 @@ export class DateFunctionsService {
     }
   }
 
+  //Sometimes Safari does weird things with JS dates, so I wrote my own parser.
   parseStringForTime(d:Date, str:string):number{
     var local = false;
     if(str.indexOf("Z") == -1){

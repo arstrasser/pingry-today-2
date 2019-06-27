@@ -1,4 +1,10 @@
-/*import { Component, OnInit } from '@angular/core';
+/*
+//The club calendar was not being used and was removed from the app.
+//This is old code and should ONLY be used as reference.
+//If you would like to implement a club calendar feed, implement it first interface the Pingry API.
+
+
+import { Component, OnInit } from '@angular/core';
 import { LoadingController } from '@ionic/angular';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';

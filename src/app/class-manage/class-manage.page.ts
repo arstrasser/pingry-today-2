@@ -17,21 +17,26 @@ export class ClassManagePage implements OnInit {
   constructor(public mySched:MyScheduleService, public modalCtrl: ModalController) {}
 
   ngOnInit() {
+    //Get all the classes
     this.myClasses = this.mySched.getAll().block;
+    //Sort classes by block to put them in order
     this.myClasses.sort((a,b) => {return a.time.id - b.time.id});
     this.myFlexes = this.mySched.getAll().flex;
     this.myCPs = this.mySched.getAll().CP;
-    console.log(this.myClasses);
   }
 
   addClass(){
-    this.modalCtrl.create({component:EditClassPage}).then(modal => modal.present());
-    this.myClasses.sort((a,b) => {return a.time.id - b.time.id});
+    this.modalCtrl.create({component:EditClassPage}).then(modal => {
+      modal.present();
+      //Resort when done
+      modal.onDidDismiss().then(()=>this.myClasses.sort((a,b) => {return a.time.id - b.time.id}));
+    });
   }
 
   editClass(clsType:string, clsId:number){
     this.modalCtrl.create({component: EditClassPage, componentProps:{clsType, clsId}}).then(modal => {
       modal.present();
+      //Resort when done
       modal.onDidDismiss().then(()=>this.myClasses.sort((a,b) => {return a.time.id - b.time.id}));
     });
   }

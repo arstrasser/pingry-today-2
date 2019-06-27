@@ -1,3 +1,11 @@
+
+//This page is for logging into the Pingry API user database.
+//Users in the Pingry API is an unfinished feature and is unmanaged.
+//This was meant to be a login for pride points.
+//Please thoroughly test this feature on the Pingry API before implementation.
+
+
+
 import { Component, OnInit } from '@angular/core';
 
 import { UserService } from '../user.service';

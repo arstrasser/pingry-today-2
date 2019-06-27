@@ -51,7 +51,6 @@ export class ScheduleService {
 
   refresh(callback?){
     const scheduleURL = "https://pingrytoday.pingry.org:3001/v1/schedule/all?api_key="+this.settings.apiKey;
-    const manualURL = "https://pingrytoday.pingry.org:3001/v1/schedule/manual/all?api_key="+this.settings.apiKey;
     const eventsURL = "https://pingrytoday.pingry.org:3001/v1/schedule/events?api_key="+this.settings.apiKey;
     const scheduleTypesURL = "https://pingrytoday.pingry.org:3001/v1/schedule/types?api_key="+this.settings.apiKey;
 
@@ -59,7 +58,6 @@ export class ScheduleService {
     return forkJoin([
       //Faculty collaboration day schedule refresh
       this.http.get(scheduleURL),
-      this.http.get(manualURL),
       this.http.get(eventsURL),
       this.http.get(scheduleTypesURL)
     ]).subscribe((values) =>{
@@ -67,16 +65,12 @@ export class ScheduleService {
         this.scheduledDays = values[0].json();
         localStorage.setItem("scheduledDays", JSON.stringify(this.scheduledDays));
 
-        //Get the special manual schedules
-        this.manualSchedules = values[1].json();
-        localStorage.setItem("manualSchedules", JSON.stringify(this.manualSchedules));
-
         //Get CP and CT events
-        this.scheduledEvents = values[2].json();
+        this.scheduledEvents = values[1].json();
         localStorage.setItem("scheduledEvents", JSON.stringify(this.scheduledEvents));
 
         //Get default schedule configurations
-        this.typeList = values[3].json();
+        this.typeList = values[2].json();
         localStorage.setItem("typeList", JSON.stringify(this.typeList));
 
         console.log(this.typeList);
@@ -105,21 +99,21 @@ export class ScheduleService {
     }
     var d = this.dfp.dateToDayString(this.curDay);
     if(this.scheduledDays && this.scheduledDays[d] != undefined){
-      if(this.scheduledDays[d] == "manual"){
-        this.curSchedule = this.manualSchedules[d];
+      if(this.scheduledDays[d].type == "manual"){
+        this.curSchedule = this.scheduledDays[d].schedule;
         this.curScheduleName = "manual";
         return;
       }
       //Iterate over the schedule types
       for(let i = 0; i < this.typeList.length; i++){
         //if found the respective schedule for the day
-        if(this.typeList[i].name == this.scheduledDays[this.dfp.dateToDayString(this.curDay)]){
+        if(this.typeList[i].name == this.scheduledDays[d].name){
           this.curSchedule = this.typeList[i].schedule;
           this.curScheduleName = this.typeList[i].name;
           return;
         }
       }
-      console.warn("Couldn't find schedule: "+this.scheduledDays[this.dfp.dateToDayString(this.curDay)]);
+      console.warn("Couldn't find schedule: "+this.scheduledDays[this.dfp.dateToDayString(this.curDay)].name);
     }
     //Fallback
     this.curSchedule = this.typeList[0].schedule;

@@ -36,7 +36,6 @@ export class AthleticsPage implements OnInit {
       this.l = l;
       this.refresh();
     })
-
   }
 
   displayMore(infiniteScroll?){
@@ -44,7 +43,7 @@ export class AthleticsPage implements OnInit {
     if(infiniteScroll){infiniteScroll.complete();}
   }
 
-  ionViewBeforeEnter(){
+  ionViewWillEnter(){
     if(this.settings.getAthleticSubscriptionChanged()){
       this.events = [];
       this.displayEvents = [];
@@ -101,10 +100,12 @@ export class AthleticsPage implements OnInit {
 
       this.http.get(url).subscribe(data => {
         let temp = data.json()
+
+        console.log(temp);
         //Delete past events
         let i = 0;
         let now = Date.now()
-        while(temp[i].startTime < now) i++;
+        while(i < temp.length && temp[i].startTime < now) i++;
         temp = temp.slice(i);
 
         //Update local storage

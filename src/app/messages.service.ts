@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AlertController, ToastController } from '@ionic/angular';
 
+//Service to show toast messages and alerts in a consistent, easy, callable format
 @Injectable({
   providedIn: 'root'
 })

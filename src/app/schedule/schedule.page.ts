@@ -32,7 +32,8 @@ export class SchedulePage implements OnInit {
   }
 
   ngOnInit() {
-    this.minISOday = "2015-09-01"
+    //Setup minimum and maximum navigation dates so you can't go too far away.
+    this.minISOday = (new Date().getFullYear() - 2)+"-09-01";
     this.maxISOday = (new Date().getFullYear() + 1)+"-08-31";
 
     this.events.subscribe("scheduleRefreshComplete", this.scheduleRefreshHandler);
@@ -50,6 +51,7 @@ export class SchedulePage implements OnInit {
     this.refresh();
   }
 
+  //Handle a schedule refresh from the schedule service
   scheduleRefreshHandler(result){
     if(result.success){
       this.refresh();
@@ -66,6 +68,7 @@ export class SchedulePage implements OnInit {
   ionViewWillLeave(){
     //this.menu.swipeEnable(true, "main-menu");
 
+    //Unsubscribe from all the events since we will just refresh on re-entry.
     if((this.events.unsubscribe("scheduleRefreshComplete", this.scheduleRefreshHandler)?0:1)+
       (this.events.unsubscribe("letterRefreshComplete", this.scheduleRefreshHandler)?0:1)+
       (this.events.unsubscribe("myClassesReady", this.refresh)?0:1)+
@@ -84,6 +87,7 @@ export class SchedulePage implements OnInit {
     this.updateDate();
   }
 
+  //Converts a javascript date to an ISO string.
   dateToISO(date){
     return date.getFullYear()+"-"+
       (date.getMonth()+1<10?"0":"")+(date.getMonth()+1)+"-"+
@@ -92,10 +96,12 @@ export class SchedulePage implements OnInit {
       (date.getMinutes()<10?"0":"")+date.getMinutes()+":00";
   }
 
+  //Converts an ISO string to a javascript date.
   ISOtoDate(str){
     return new Date(str.substring(0,4), (parseInt(str.substring(5,7))-1), str.substring(8,10), str.substring(11,13), str.substring(14, 16));
   }
 
+  //Explains what a dress down day is.
   dddHelp() {
     switch(this.ddd){
       case "charity":
@@ -119,6 +125,7 @@ export class SchedulePage implements OnInit {
     return str == "A" || str == "B" || str == "C" || str == "D" || str == "E" || str == "F" || str == "G" || str=="R";
   }
 
+  //Format the date for the upper datepicker
   formatDate(d){
     //If the current day is the same as today, just say that it's today
     let now = new Date();
@@ -320,10 +327,7 @@ export class SchedulePage implements OnInit {
       if(this.schedule.getCurrentScheduleName() == "Unknown Assembly"){
         this.messages.popup("Unknown Assembly Schedule", "This day has an assembly schedule that is not recognized.\n"+
               "A normal schedule is shown, but please only use it as a guideline.");
-      }else if(this.letter == "R"){
-        this.periodList = "Review";
       }
-
     }
   }
 
@@ -392,10 +396,11 @@ export class SchedulePage implements OnInit {
     this.updateDate();
   }
 
+  //If a class is clicked
   clickedClass(cls){
     if(!!cls.clickUrl){
+      //Figure out what we're supposed to do based on the users settings.
       this.settings.getClassClickAction().then(action => {
-        console.log(cls.clickUrl);
         if(action == "Tasks"){
           this.schedRefreshOverride = true;
           this.router.navigate(["/todo", {blockNum:cls.clickUrl}]);
@@ -413,5 +418,4 @@ export class SchedulePage implements OnInit {
       })
     }
   }
-
 }

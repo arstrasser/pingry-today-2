@@ -10,7 +10,8 @@ import { SettingsService } from './settings.service'
   providedIn: 'root'
 })
 export class UserService {
-  accessToken:string = "KbRnKFghmAaejrTT353pNMV8lch3Iek0I8QWP5OZ";
+  //The user's access token for their data
+  accessToken:string = "";
   constructor(private http:Http, private storage:Storage, private events: Events,
      private settings:SettingsService, private messages:MessagesService) {
     this.storage.get("accessToken").then(val => {
@@ -30,6 +31,7 @@ export class UserService {
     this.storage.set("accessToken", this.accessToken);
   }
 
+  //Submit a pride event code
   submitCode(code){
     return new Promise((resolve, reject) => {
       if(!this.settings.apiKey) return reject("No API key");
@@ -40,6 +42,7 @@ export class UserService {
     });
   }
 
+  //Login with a username and password
   login(username, password){
     return new Promise((resolve, reject) => {
       if(username.indexOf("@") == -1){
@@ -53,6 +56,7 @@ export class UserService {
     });
   }
 
+  //Gets the pride leaderboard
   getPrideLeaderboard(){
     return new Promise((resolve, reject) => {
       if(!this.settings.apiKey) return reject("No API key");
@@ -62,6 +66,7 @@ export class UserService {
     });
   }
 
+  //Gets how many pride points the user has
   getUserPoints(){
     return new Promise((resolve, reject) => {
       if(!this.settings.apiKey) return reject("No API key");
@@ -73,6 +78,7 @@ export class UserService {
   }
 
   errorHandler(err, rej){
+    //If you're unauthorized (HTTP error 401), the access token is probably invalid and we should force a new log in.
     if(err.status == 401){
       this.logout();
       this.messages.showError("Sorry, you have been logged out...");

@@ -1,7 +1,0 @@
-{
-  "name": "PingryApp2",
-  "ios_identifier": "8NB67J6DZ9.org.pingry.pingryapp",
-  "android_identifier": "org.pingry.pingryappandroid",
-  "update": "resume",
-  "content_url": "https://pingrytoday.pingry.org:3001/remoteAppUpdate/www"
-}

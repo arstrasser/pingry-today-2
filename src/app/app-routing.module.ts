@@ -17,7 +17,7 @@ const routes: Routes = [
   { path: 'settings', loadChildren: './settings/settings.module#SettingsPageModule' },
   { path: 'todo', loadChildren: './todo/todo.module#TodoPageModule' },
   { path: 'todoConfig', loadChildren: './todo-config/todo-config.module#TodoConfigPageModule' },
-  { path: 'pridePoints', loadChildren: './pride-points/pride-points.module#PridePointsPageModule' },  { path: 'login', loadChildren: './login/login.module#LoginPageModule' },
+  //{ path: 'pridePoints', loadChildren: './pride-points/pride-points.module#PridePointsPageModule' },  { path: 'login', loadChildren: './login/login.module#LoginPageModule' },
 
 ];
 
