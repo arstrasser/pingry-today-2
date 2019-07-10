@@ -93,7 +93,6 @@ export class SettingsPage implements OnInit {
     }
     this.subscriptions = elem.value;
 
-    console.log(elem.value);
     this.settings.setAthleticSubscription(this.subscriptions);
   }
 

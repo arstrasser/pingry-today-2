@@ -34,7 +34,7 @@ export class NewsPage implements OnInit {
 
   //Refreshes the announcements
   refresh(refresher?){
-    this.http.get("https://pingrytoday.pingry.org:3001/v1/news?api_key="+this.settings.apiKey).subscribe((data) => {
+    this.http.get("https://pingrytoday.pingry.org/v1/news?api_key="+this.settings.apiKey).subscribe((data) => {
       this.news = data.json();
       //Store the news locally as backup in case we go offline.
       localStorage.setItem("newsRSS", JSON.stringify(this.news));

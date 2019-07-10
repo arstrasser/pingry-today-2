@@ -90,18 +90,16 @@ export class AthleticsPage implements OnInit {
     let url = "";
     this.settings.getAthleticSubscriptions().then((athleticSubscriptions) => {
       if(athleticSubscriptions.length > 0 && athleticSubscriptions[0] != '-1'){
-        url = "https://pingrytoday.pingry.org:3001/v1/athletics/sports?api_key="+this.settings.apiKey;
+        url = "https://pingrytoday.pingry.org/v1/athletics/sports?api_key="+this.settings.apiKey;
         for(let i = 0; i < athleticSubscriptions.length; i++){
           url += "&sport="+athleticSubscriptions[i];
         }
       }else{
-        url = "https://pingrytoday.pingry.org:3001/v1/athletics/sports/all?api_key="+this.settings.apiKey;
+        url = "https://pingrytoday.pingry.org/v1/athletics/sports/all?api_key="+this.settings.apiKey;
       }
 
       this.http.get(url).subscribe(data => {
         let temp = data.json()
-
-        console.log(temp);
         //Delete past events
         let i = 0;
         let now = Date.now()

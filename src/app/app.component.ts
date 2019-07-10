@@ -32,7 +32,6 @@ export class AppComponent {
     private events:Events,
   ) {
     this.settings.getPages().then((vals) => {
-      console.log(vals);
       this.pages = vals.pages;
       this.startPageIndex = vals.startPageIndex;
       this.platform.ready().then(() => {
@@ -52,7 +51,6 @@ export class AppComponent {
 
   initializeApp() {
     this.platform.ready().then(() => {
-      this.statusBar.styleDefault();
       this.splashScreen.hide();
       //Register for firebase notifications
       this.fcm.onNotification().subscribe(data => {

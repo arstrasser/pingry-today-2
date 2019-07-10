@@ -35,7 +35,7 @@ export class AnnouncementsPage implements OnInit {
 
   //Refreshes the announcements
   refresh(refresher?){
-    this.http.get("https://pingrytoday.pingry.org:3001/v1/announcements?api_key="+this.settings.apiKey).subscribe((data) => {
+    this.http.get("https://pingrytoday.pingry.org/v1/announcements?api_key="+this.settings.apiKey).subscribe((data) => {
       this.rss = data.json()
       localStorage.setItem("announceRSS", JSON.stringify(this.rss));
     }, ()=>{

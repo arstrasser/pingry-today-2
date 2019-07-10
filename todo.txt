@@ -3,9 +3,10 @@ MAIN:
  - Fix Refresh errors
  - Fix and Test Cordova Hot Code Push
  - Scroll to Position for to-do list
+ - Android App Bundle
 
 Remote Database:
- - Snow Days
+ - Notifications
 
 Features:
  - Add an easter egg

@@ -150,13 +150,13 @@ export class SettingsService {
 
   //Refresh data for dress down days and the calendar list
   refresh(){
-    this.http.get("https://pingrytoday.pingry.org:3001/v1/ddd?api_key="+this.apiKey).subscribe(data => {
+    this.http.get("https://pingrytoday.pingry.org/v1/ddd?api_key="+this.apiKey).subscribe(data => {
       this.ddd = data.json();
       localStorage.setItem("ddd", JSON.stringify(this.ddd));
       this.events.publish("dddRefresh");
     })
 
-    this.http.get("https://pingrytoday.pingry.org:3001/v1/athletics/calendarList?api_key="+this.apiKey).subscribe(data => {
+    this.http.get("https://pingrytoday.pingry.org/v1/athletics/calendarList?api_key="+this.apiKey).subscribe(data => {
       this.athleticCalendars = data.json();
       localStorage.setItem("athleticCalendars", JSON.stringify(this.athleticCalendars));
     })

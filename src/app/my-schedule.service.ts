@@ -23,9 +23,7 @@ export class MyScheduleService {
               val.block[i].takesFlex = "";
             }
           }
-          console.log(val.block[i]);
         }
-        console.log(val);
         this.myClasses = val;
         this.events.publish("myClassesReady");
       }
@@ -73,13 +71,12 @@ export class MyScheduleService {
     }
     return false;
   }
-  
+
   removeClassById(type, id){
     this.myClasses[type].splice(id,1);
   }
 
   addClass(cls){
-    console.log(cls);
     this.myClasses[cls.type].push(cls);
   }
 

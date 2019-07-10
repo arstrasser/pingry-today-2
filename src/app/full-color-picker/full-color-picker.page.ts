@@ -16,7 +16,6 @@ export class FullColorPickerPage implements OnInit {
   ngOnInit() {
     this.color = this.navParams.get("color");
     this.colorPickerWidth = (document.getElementById("pickerIonContent").clientWidth - 32) *0.9;
-    console.log(this.colorPickerWidth);
   }
 
   save(){

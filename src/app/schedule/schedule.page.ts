@@ -81,7 +81,6 @@ export class SchedulePage implements OnInit {
     if(event.year){
       this.curDay = new Date(event.year.value, event.month.value-1, event.day.value);
     }else{
-      console.log(event);
       this.curDay = this.ISOtoDate(this.curISOday);
     }
     this.updateDate();

@@ -36,7 +36,7 @@ export class UserService {
     return new Promise((resolve, reject) => {
       if(!this.settings.apiKey) return reject("No API key");
       if(!this.accessToken) return reject("No accessToken");
-      this.http.get("https://pingrytoday.pingry.org:3001/v1/user/addPrideEvent?api_key="+this.settings.apiKey+"&accessToken="+this.accessToken+"&code="+code).subscribe((res) => {
+      this.http.get("https://pingrytoday.pingry.org/v1/user/addPrideEvent?api_key="+this.settings.apiKey+"&accessToken="+this.accessToken+"&code="+code).subscribe((res) => {
         resolve();
       }, (err) => this.errorHandler(err, reject));
     });
@@ -48,7 +48,7 @@ export class UserService {
       if(username.indexOf("@") == -1){
         username += "@pingry.org";
       }
-      this.http.get("https://pingrytoday.pingry.org:3001/v1/user/accessToken?api_key="+this.settings.apiKey+"&username="+username+"&password="+password).subscribe((res) => {
+      this.http.get("https://pingrytoday.pingry.org/v1/user/accessToken?api_key="+this.settings.apiKey+"&username="+username+"&password="+password).subscribe((res) => {
         this.accessToken = res.json();
         this.storage.set("accessToken", this.accessToken);
         resolve();
@@ -60,7 +60,7 @@ export class UserService {
   getPrideLeaderboard(){
     return new Promise((resolve, reject) => {
       if(!this.settings.apiKey) return reject("No API key");
-      this.http.get("https://pingrytoday.pingry.org:3001/v1/pride/leaderboard?api_key="+this.settings.apiKey+"&accessToken="+this.accessToken).subscribe((res) => {
+      this.http.get("https://pingrytoday.pingry.org/v1/pride/leaderboard?api_key="+this.settings.apiKey+"&accessToken="+this.accessToken).subscribe((res) => {
         resolve(res.json());
       }, (err) => this.errorHandler(err, reject));
     });
@@ -71,7 +71,7 @@ export class UserService {
     return new Promise((resolve, reject) => {
       if(!this.settings.apiKey) return reject("No API key");
       if(!this.accessToken) return reject("No accessToken");
-      this.http.get("https://pingrytoday.pingry.org:3001/v1/user/pride_points?api_key="+this.settings.apiKey+"&accessToken="+this.accessToken).subscribe((res) => {
+      this.http.get("https://pingrytoday.pingry.org/v1/user/pride_points?api_key="+this.settings.apiKey+"&accessToken="+this.accessToken).subscribe((res) => {
         resolve(res.json());
       }, (err) => this.errorHandler(err, reject));
     });

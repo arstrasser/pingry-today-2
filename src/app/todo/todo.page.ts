@@ -56,7 +56,6 @@ export class TodoPage implements OnInit {
     let startingClass;
     //Get the next day (including today) that has classes.
     let nextDate = this.letterDay.nextLetterDayDate(new Date());
-    console.log(nextDate);
     if(nextDate !== undefined){
       var classes = this.letterDay.classesOf(nextDate);
       //If today has classes, we have to figure out the next class based on time
@@ -107,7 +106,6 @@ export class TodoPage implements OnInit {
     //Now that we know our next class, we can order the rest of the todo's
     var classList = [];
     for(var i = 0; i < 7; i++){
-      console.log(startingClass);
       var thisClass = this.mySched.get("block", (startingClass-1+i)%7 + 1);
       if(thisClass != undefined){
         classList.push(thisClass);

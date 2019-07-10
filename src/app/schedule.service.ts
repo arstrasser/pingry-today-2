@@ -50,9 +50,9 @@ export class ScheduleService {
   }
 
   refresh(callback?){
-    const scheduleURL = "https://pingrytoday.pingry.org:3001/v1/schedule/all?api_key="+this.settings.apiKey;
-    const eventsURL = "https://pingrytoday.pingry.org:3001/v1/schedule/events?api_key="+this.settings.apiKey;
-    const scheduleTypesURL = "https://pingrytoday.pingry.org:3001/v1/schedule/types?api_key="+this.settings.apiKey;
+    const scheduleURL = "https://pingrytoday.pingry.org/v1/schedule/all?api_key="+this.settings.apiKey;
+    const eventsURL = "https://pingrytoday.pingry.org/v1/schedule/events?api_key="+this.settings.apiKey;
+    const scheduleTypesURL = "https://pingrytoday.pingry.org/v1/schedule/types?api_key="+this.settings.apiKey;
 
     this.refreshing = true;
     return forkJoin([
@@ -73,7 +73,6 @@ export class ScheduleService {
         this.typeList = values[2].json();
         localStorage.setItem("typeList", JSON.stringify(this.typeList));
 
-        console.log(this.typeList);
         if(this.curScheduleName == ""){
           this.curSchedule = this.typeList[0].schedule;
           this.curScheduleName = this.typeList[0].name;
