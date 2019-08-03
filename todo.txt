@@ -1,14 +1,15 @@
 MAIN:
  - Scroll to Position for to-do list
  - Fix class background color in class manager
+ - Pull classes from Veracross/Schoology
  - Android App Bundle
+ - Parent (and middle school?) version
+ - Pride Points
+ - PSPA Calendar
+
+ - Use this code in the Chrome Extension
 
 Remote Database:
  - Notifications
-
-Features:
- - Add an easter egg
- - Veracross Connection
- - Add Cordova Hot Code Push
 
 Always search for other TODO's!!!
