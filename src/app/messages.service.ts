@@ -8,30 +8,30 @@ import { AlertController, ToastController } from '@ionic/angular';
 export class MessagesService {
   constructor(public toast:ToastController, public alertCtrl: AlertController) {}
 
-  showError(message:string){
+  async showError(message:string){
     return this.toast.create({message, duration:3000, cssClass:"toast-error"}).then((toast) => toast.present());
   }
 
-  showSuccess(message:string){
+  async showSuccess(message:string){
     return this.toast.create({message, duration:3000, cssClass:"toast-success"}).then((toast) => toast.present());
   }
 
-  showNormal(message:string){
+  async showNormal(message:string){
     return this.toast.create({message, duration:3000, cssClass:"toast-normal"}).then((toast) => toast.present());
   }
 
-  showShort(message:string){
+  async showShort(message:string){
     return this.toast.create({message, duration:500, cssClass:"toast-normal"}).then((toast) => toast.present());
   }
 
-  popup(header:string, message:string){
+  async popup(header:string, message:string){
     return this.alertCtrl.create({
       header,
       message
     }).then(alert => alert.present())
   }
 
-  confirm(header:string, message:string, callback?){
+  async confirm(header:string, message:string, callback?){
     return this.alertCtrl.create({
       header,
       message,

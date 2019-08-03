@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 
 import { Platform, MenuController, Events } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
-import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { FCM } from '@ionic-native/fcm/ngx';
 import { Router } from '@angular/router';
@@ -21,7 +20,6 @@ export class AppComponent {
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
-    private statusBar: StatusBar,
     public iab:InAppBrowser,
     public messages:MessagesService,
     public fcm: FCM,

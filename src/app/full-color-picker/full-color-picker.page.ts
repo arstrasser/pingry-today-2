@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController, NavParams } from '@ionic/angular';
+import { NavParams, ModalController } from '@ionic/angular';
 
 
 @Component({
@@ -10,7 +10,7 @@ import { NavController, NavParams } from '@ionic/angular';
 export class FullColorPickerPage implements OnInit {
   color:string;
   colorPickerWidth:number;
-  constructor(public navCtrl: NavController, public navParams: NavParams) {}
+  constructor(public navParams: NavParams, private modalCtrl:ModalController) {}
 
 
   ngOnInit() {
@@ -19,11 +19,11 @@ export class FullColorPickerPage implements OnInit {
   }
 
   save(){
-    document.querySelector('ion-modal-controller').dismiss(this.color);
+    this.modalCtrl.dismiss(this.color);
   }
 
   close(){
-    document.querySelector('ion-modal-controller').dismiss(null);
+    this.modalCtrl.dismiss(null);
   }
 
 }

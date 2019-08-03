@@ -1,8 +1,6 @@
 MAIN:
- - check that news local refresh works
- - Fix Refresh errors
- - Fix and Test Cordova Hot Code Push
  - Scroll to Position for to-do list
+ - Fix class background color in class manager
  - Android App Bundle
 
 Remote Database:
@@ -11,5 +9,6 @@ Remote Database:
 Features:
  - Add an easter egg
  - Veracross Connection
+ - Add Cordova Hot Code Push
 
-Search for other TODO's
+Always search for other TODO's!!!

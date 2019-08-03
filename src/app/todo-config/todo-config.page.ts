@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavParams } from '@ionic/angular';
+import { NavParams, ModalController } from '@ionic/angular';
 
 import { MyScheduleService } from '../my-schedule.service';
 import { MessagesService } from '../messages.service';
@@ -17,7 +17,8 @@ export class TodoConfigPage implements OnInit {
   cls:any;
   maxDay:string = "";
   minDay:string = "";
-  constructor(public navParams: NavParams, public mySched:MyScheduleService, public messages:MessagesService, public notifications:NotificationsService) {
+  constructor(private navParams: NavParams, private mySched:MyScheduleService, private messages:MessagesService,
+          private notifications:NotificationsService, private modalCtrl:ModalController) {
     this.maxDay = (new Date().getFullYear() + 1)+"-08-31";
     this.minDay = (new Date().getFullYear() - 1)+"-08-31";
   }
@@ -61,7 +62,7 @@ export class TodoConfigPage implements OnInit {
   close(){
     this.mySched.save();
     this.notifications.scheduleAll();
-    document.querySelector('ion-modal-controller').dismiss();
+    this.modalCtrl.dismiss();
   }
 
   reminderChange(newVal){

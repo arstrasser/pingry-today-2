@@ -7,6 +7,7 @@
 
 
 import { Component, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 
 import { UserService } from '../user.service';
 import { MessagesService } from '../messages.service';
@@ -18,7 +19,7 @@ import { MessagesService } from '../messages.service';
 export class LoginPage implements OnInit {
   username:string = "";
   password:string = "";
-  constructor(private user:UserService, private messages:MessagesService) { }
+  constructor(private user:UserService, private messages:MessagesService, private modalCtrl:ModalController) { }
 
   ngOnInit() {}
 
@@ -44,6 +45,6 @@ export class LoginPage implements OnInit {
   }
 
   close(){
-    document.querySelector('ion-modal-controller').dismiss(null);
+    this.modalCtrl.dismiss(null);
   }
 }

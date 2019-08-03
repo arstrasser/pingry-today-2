@@ -118,7 +118,7 @@ export class EditClassPage implements OnInit {
 
   //Cancel editing
   back(){
-    document.querySelector('ion-modal-controller').dismiss();
+    this.modalCtrl.dismiss();
   }
 
   //Only allow updating/adding if the current class configuation is valid.

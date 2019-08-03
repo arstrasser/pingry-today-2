@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavParams, NavController } from '@ionic/angular';
+import { NavParams, NavController, ModalController } from '@ionic/angular';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 
 
@@ -10,7 +10,7 @@ import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 })
 export class ArticlePage implements OnInit {
   article:any = {title:"",description:"",rawDescription:""}
-  constructor(public navCtrl: NavController, public navParams: NavParams, public iab: InAppBrowser) {}
+  constructor(public navCtrl: NavController, public navParams: NavParams, public iab: InAppBrowser, private modalCtrl:ModalController) {}
 
   ngOnInit() {
     //Get the details on the article from the navigation parameters.
@@ -35,7 +35,7 @@ export class ArticlePage implements OnInit {
   }
 
   close() {
-    document.querySelector('ion-modal-controller').dismiss();
+    this.modalCtrl.dismiss();
   }
 
 }
