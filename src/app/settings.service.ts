@@ -24,7 +24,7 @@ export class SettingsService {
       {title:"Announcements", page:"/announcements"},
       //{title:"Pride Points", page:"/pridePoints"},
       {title:"Athletics", page:"/athletics"},
-      {title:"Lunch Menu", localUrl:"http://www.sagedining.com/menus/pingry"},
+      {title:"Lunch Menu", systemUrl:"http://www.sagedining.com/menus/pingry"},
       {title:"Photos", systemUrl:"https://www.pingry.org/hp/photos-and-media"},
       {title:"Bookstore", systemUrl:"http://www.pingrybookstore.org"},
       {title:"Web Portal", systemUrl:"https://www.pingry.org/pingrytoday"},
@@ -178,7 +178,7 @@ export class SettingsService {
   getAthleticMaps(){
     return this.athleticMaps;
   }
-  
+
   //Sets whether or not athletic maps are enabled
   setAthleticMaps(val){
     this.athleticMaps = val;

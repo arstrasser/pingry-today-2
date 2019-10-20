@@ -18,9 +18,8 @@
 </ion-header>
 
 
-<ion-content no-bounce padding style="overflow-x:hidden" id="scheduleContent">
-  <div class="scroll-content" style="height:100%" (swipeleft)="nextDay()" (swiperight)="prevDay()">
-  	<div style="display:block">
+<ion-content padding style="overflow-x:hidden" id="scheduleContent" (swipeleft)="nextDay()" (swiperight)="prevDay()">
+  	<div style="display:block; overflow:hidden">
   		<div id="changeDayMenu" (press)="resetDate()">
   			<div id="changeDayLeft" tappable (click)="prevDay()"><ion-icon name="arrow-dropleft" class="changeDayIcon"></ion-icon></div>
         <ion-datetime id="currentDay" [max]="maxISOday" [min]="minISOday" displayFormat="DDD MMM D YYYY" pickerFormat="MMM D YYYY" [(ngModel)]="curISOday" (ngModelChange)="dateChange($event)"></ion-datetime>
@@ -33,7 +32,7 @@
   	</div>
   	<div class="nonSchoolDay" *ngIf="letter==''">No school!</div>
     <div class="nonSchoolDay" *ngIf="letter!='' && !isLetter(letter) && letter !='refreshing' && letter!='empty'">{{letter}}</div>
-    <ion-grid style="padding:0; margin-top:1px" id="scheduleSwipe">
+    <ion-grid style="padding:0" id="scheduleSwipe">
       <ion-row *ngFor="let cls of classes" tappable (click)="clickedClass(cls)" class="row class-{{cls.type}}" [ngStyle]="{background: cls.color}">
         <ion-col size="4" class="class-time">
           <div style="display: inline" class="startTime">{{formatTime(cls.startTime)}}</div>
@@ -57,5 +56,4 @@
   			<div class="col col-67 class-name col-center" style="white-space:initial;">{{cls.name}}</div>
   		</div>
   	</div-->
-  </div>
 </ion-content>
